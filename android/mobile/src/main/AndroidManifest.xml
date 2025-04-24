@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Eggi"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".common.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.simple.SimpleActivity"
+        <activity android:name=".person.ui.PersonActivity"
             android:exported="false" />
     </application>
 

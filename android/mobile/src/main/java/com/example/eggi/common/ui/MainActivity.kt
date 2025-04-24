@@ -1,4 +1,4 @@
-package com.example.eggi.ui.main
+package com.example.eggi.common.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -8,7 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import android.content.Intent
 import android.widget.Button
 import com.example.eggi.R
-import com.example.eggi.ui.simple.SimpleActivity
+import com.example.eggi.person.ui.PersonActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         // 클릭 이벤트 설정
         btnGoToSimple.setOnClickListener {
-            val intent = Intent(this, SimpleActivity::class.java)
+            val intent = Intent(this, PersonActivity::class.java)
             startActivity(intent)
         }
     }

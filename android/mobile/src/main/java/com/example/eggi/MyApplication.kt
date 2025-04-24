@@ -1,6 +1,7 @@
 package com.example.eggi
 
 import android.app.Application
+import io.realm.kotlin.Realm
 
 class MyApplication : Application() {
     override fun onCreate() {
