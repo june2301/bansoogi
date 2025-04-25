@@ -2,18 +2,17 @@ package com.example.eggi.person.ui
 
 import android.os.Bundle
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.example.eggi.R
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.example.eggi.person.controller.PersonController
+import com.example.eggi.person.data.model.Person
+import com.example.eggi.person.view.PersonView
 
-class PersonActivity : AppCompatActivity() {
+class PersonActivity : AppCompatActivity(), PersonView {
 
     private lateinit var peopleTextView: TextView
 
-    private val viewModel: PersonViewModel by viewModels()
+    private lateinit var controller: PersonController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,14 +20,15 @@ class PersonActivity : AppCompatActivity() {
 
         peopleTextView = findViewById(R.id.textViewPeople)
 
-        lifecycleScope.launch {
-            viewModel.people.collectLatest { people ->
-                // 간단하게 텍스트뷰에 목록 표시
-                val peopleText = people.joinToString("\n\n") {
-                    "이름: ${it.name}\nID: ${it.id}"
-                }
-                peopleTextView.text = peopleText
-            }
+        controller = PersonController(this)
+        controller.initialize()
+
+    }
+
+    override fun displayPeople(people: List<Person>) {
+        val peopleText = people.joinToString("\n\n") {
+            "이름: ${it.name}\nID: ${it.id}"
         }
+        peopleTextView.text = peopleText
     }
 }
