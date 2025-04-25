@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".person.ui.PersonActivity"
             android:exported="false" />
+        <activity android:name=".main.ui.MainPageActivity" />
     </application>
 
 </manifest>
