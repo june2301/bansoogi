@@ -1,4 +1,4 @@
-package com.example.eggi.common.ui
+package com.example.eggi
 
 import android.content.Intent
 import android.os.Bundle
@@ -20,9 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.eggi.main.ui.MainPageActivity
+import com.example.eggi.main.ui.MainActivity
 
-class MainActivity : ComponentActivity() {
+class LandingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainScreen(
                 onNavigateToMainPage = {
-                    val intent = Intent(this, MainPageActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
             )
