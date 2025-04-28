@@ -1,11 +1,10 @@
 package com.example.prototype.presentation.theme
 
-import androidx.compose.runtime.Composable
 import androidx.wear.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
 
 @Composable
-fun ProtoTypeTheme(
-    content: @Composable () -> Unit
+fun protoTypeTheme(content: @Composable () -> Unit
 ) {
     /**
      * Empty theme to customize for your app.

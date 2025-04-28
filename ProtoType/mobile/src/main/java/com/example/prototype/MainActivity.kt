@@ -1,20 +1,122 @@
 package com.example.prototype
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import android.widget.Toast
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.asFlow
+import kotlinx.coroutines.flow.Flow
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val REQUEST_FOREGROUND_SERVICE_DATA_SYNC = 1002
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        if (android.os.Build.VERSION.SDK_INT >= 34) {
+            val permission = "android.permission.FOREGROUND_SERVICE_DATA_SYNC"
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    permission,
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(permission),
+                    REQUEST_FOREGROUND_SERVICE_DATA_SYNC,
+                )
+            } else {
+                // 권한이 이미 허용됨, 서비스 시작
+                startService(Intent(this, ProtoBleReceiverService::class.java))
+            }
+        } else {
+            // Android 13 이하에서는 기존처럼 서비스 바로 시작
+            startService(Intent(this, ProtoBleReceiverService::class.java))
         }
+
+        setContent {
+            MaterialTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    PostureDetectionScreen(ProtoBleReceiverService.postureLiveData.asFlow())
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_FOREGROUND_SERVICE_DATA_SYNC) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한 승인됨, 서비스 시작
+                startService(Intent(this, ProtoBleReceiverService::class.java))
+            } else {
+                Toast.makeText(this, "데이터 동기화용 포그라운드 서비스 권한이 필요합니다", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+}
+
+@Composable
+fun PostureDetectionScreen(postureFlow: Flow<Posture>) {
+    val posture by postureFlow.collectAsState(initial = Posture.SITTING)
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "현재 자세",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Text(
+            text = when(posture) {
+                Posture.SITTING -> "앉음"
+                Posture.STANDING -> "서있음"
+                Posture.LYING -> "누움"
+            },
+            fontSize = 48.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp)
+        )
     }
 }
