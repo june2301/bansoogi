@@ -11,8 +11,9 @@ import com.example.eggi.main.ui.HomeScreen
 import com.example.eggi.myInfo.ui.MyInfoScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController,
-                modifier: Modifier = Modifier
+fun AppNavGraph(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
