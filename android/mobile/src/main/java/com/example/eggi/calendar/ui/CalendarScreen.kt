@@ -44,6 +44,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.draw.blur
@@ -60,6 +61,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.text.font.FontWeight
 import java.nio.file.WatchEvent
 import java.time.LocalDate
 import java.time.Year
@@ -238,6 +240,17 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
         // 셀 클릭 시, 회색 창 제거
         val interactionSource = remember { MutableInteractionSource() }
 
+        // 날짜 색
+        val dayColor = if (isCurrentDay) {
+            Color.White // 오늘 날자
+        } else {
+            when(dayOfWeek) {
+                0 -> Color.Red  // 일요일
+                6 -> Color.Blue // 토요일
+                else -> Color.Black
+            }
+        }
+
         // 날짜 출력
         Box(
             modifier = Modifier
@@ -246,26 +259,29 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
                     interactionSource = interactionSource,
                     indication = null, // 리플 효과(회색 창) 제거
                     onClick = { })
-                .clip(RectangleShape)
-                .let {
-                    if (isCurrentDay) {
-                        it.background(Color.Magenta) // 오늘 날짜는 배경색 추가
-                    } else {
-                        it
-                    }
-                },
+                .clip(RectangleShape),
             contentAlignment = Alignment.Center
         ) {
+            // 오늘 날짜일 경우 원형 배경 추가
+            if (isCurrentDay) {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp) // 원의 크기 설정
+                        .background(
+                            Color.Red, // 원의 배경색
+                            shape = CircleShape // 색 모양
+                        )
+                        .align(Alignment.TopCenter)
+                )
+            }
+
             // 날짜 번호는 위쪽에 표시
             Text(
                 text = day.toString(),
                 fontSize = 20.sp,
-                color = when (dayOfWeek) {
-                    0 -> Color.Red  // 일요일
-                    6 -> Color.Blue // 토요일
-                    else -> Color.Black
-                },
+                color = dayColor,
                 modifier = Modifier
+                    .padding(6.dp)
                     .align(Alignment.TopCenter)
             )
 
