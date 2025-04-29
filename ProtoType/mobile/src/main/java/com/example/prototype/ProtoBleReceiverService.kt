@@ -29,6 +29,7 @@ class ProtoBleReceiverService :
 
         // DataLayer paths
         private const val SENSOR_DATA_PATH = "/sensor_data"
+        private const val ACTIVITY_UPDATE_PATH = "/activity_update"
 
         // LiveData for activity state
         private val _stateLiveData = MutableLiveData<ActivityState>()
@@ -96,6 +97,8 @@ class ProtoBleReceiverService :
         if (messageEvent.path == SENSOR_DATA_PATH) {
             val data = messageEvent.data
             processData(data)
+        } else if (messageEvent.path == ACTIVITY_UPDATE_PATH) {
+            processActivityUpdate(messageEvent.data)
         }
     }
 
@@ -131,6 +134,21 @@ class ProtoBleReceiverService :
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun processActivityUpdate(data: ByteArray) {
+        if (data.size < 4) return
+        val type =
+            java.nio.ByteBuffer
+                .wrap(data)
+                .int
+        val mapped =
+            when (type) {
+                com.google.android.gms.location.DetectedActivity.WALKING -> ActivityState.WALKING
+                com.google.android.gms.location.DetectedActivity.RUNNING -> ActivityState.RUNNING
+                else -> ActivityState.EXERCISE // treat other ON_FOOT etc as exercise
+            }
+        ActivityPipeline.updateExternalDynamic(mapped)
     }
 
     // ByteArray에서 데이터 읽기 확장 함수
