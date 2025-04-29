@@ -30,9 +30,9 @@ class ProtoBleReceiverService :
         // DataLayer paths
         private const val SENSOR_DATA_PATH = "/sensor_data"
 
-        // LiveData for posture
-        private val _postureLiveData = MutableLiveData<Posture>()
-        val postureLiveData: LiveData<Posture> = _postureLiveData
+        // LiveData for activity state
+        private val _stateLiveData = MutableLiveData<ActivityState>()
+        val stateLiveData: LiveData<ActivityState> = _stateLiveData
     }
 
     private lateinit var dataClient: DataClient
@@ -104,7 +104,7 @@ class ProtoBleReceiverService :
             // 바이트 배열에서 센서 데이터 파싱
             val buffer = data.inputStream()
 
-            // {t, ax, ay, az, gx, gy, gz, p} 형식으로 가정
+            // {t, ax, ay, az, gx, gy, gz, p, stepFlag} 형식으로 가정
             val timestamp = buffer.readDouble()
             val ax = buffer.readDouble()
             val ay = buffer.readDouble()
@@ -113,19 +113,21 @@ class ProtoBleReceiverService :
             val gy = buffer.readDouble()
             val gz = buffer.readDouble()
             val pressure = buffer.readDouble()
+            val stepFlag = buffer.readDouble() // 0.0 or 1.0
 
-            // 자세 분류 (새 시그니처)
-            val posture =
-                PostureClassifier.classify(
-                    ax,
-                    ay,
-                    az,
-                    gx,
-                    gy,
-                    gz,
-                    pressure,
-            )
-            _postureLiveData.postValue(posture)
+            val state =
+                ActivityPipeline.feed(
+                    timestamp = timestamp.toLong(),
+                    ax = ax,
+                    ay = ay,
+                    az = az,
+                    gx = gx,
+                    gy = gy,
+                    gz = gz,
+                    pressure = pressure,
+                    stepEvt = (stepFlag > 0.5),
+                )
+            _stateLiveData.postValue(state)
         } catch (e: Exception) {
             e.printStackTrace()
         }
