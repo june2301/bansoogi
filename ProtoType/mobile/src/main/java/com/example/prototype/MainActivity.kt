@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PostureDetectionScreen(ProtoBleReceiverService.postureLiveData.asFlow())
+                    ActivityDetectionScreen(ProtoBleReceiverService.stateLiveData.asFlow())
                 }
             }
         }
@@ -86,9 +86,9 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun PostureDetectionScreen(postureFlow: Flow<Posture>) {
-    val posture by postureFlow.collectAsState(initial = Posture.SITTING)
-    
+fun ActivityDetectionScreen(stateFlow: Flow<ActivityState>) {
+    val state by stateFlow.collectAsState(initial = ActivityState.TRANSIENT)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,7 +97,7 @@ fun PostureDetectionScreen(postureFlow: Flow<Posture>) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "현재 자세",
+            text = "현재 상태",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -105,12 +105,19 @@ fun PostureDetectionScreen(postureFlow: Flow<Posture>) {
         )
         
         Text(
-            text = when(posture) {
-                Posture.SITTING -> "앉음"
-                Posture.STANDING -> "서있음"
-                Posture.LYING -> "누움"
+            text =
+                when (state) {
+                    ActivityState.SITTING -> "앉음"
+                    ActivityState.STANDING -> "서있음"
+                    ActivityState.LYING -> "누움"
+                    ActivityState.WALKING -> "걷기"
+                    ActivityState.RUNNING -> "달리기"
+                    ActivityState.STAIR_UP -> "+1 층"
+                    ActivityState.EXERCISE -> "운동"
+                    ActivityState.DYNAMIC_GENERIC -> "동적"
+                    ActivityState.TRANSIENT -> "전환 중"
             },
-            fontSize = 48.sp,
+                fontSize = 48.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
