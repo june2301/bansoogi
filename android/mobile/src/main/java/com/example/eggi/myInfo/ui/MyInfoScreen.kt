@@ -91,7 +91,7 @@ fun MyInfoContent(myInfo: MyInfo) {
                 .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, RoundedCornerShape(12.dp))
         )
         Spacer(modifier = Modifier.height(12.dp))
-        Text(myInfo.name, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        Text(myInfo.nickname, fontSize = 28.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             myInfo.birthDate,
@@ -262,7 +262,7 @@ fun MyInfoContentPreview() {
         MyInfoContent(
             myInfo = MyInfo(
                 userId               = "0123456789abcdef",
-                name                 = "엄계란",
+                nickname                 = "엄계란",
                 birthDate            = "2000.02.16",
                 profileBansoogiId    = R.drawable.bansoogi_default_profile,
                 wakeUpTime           = "07:00",

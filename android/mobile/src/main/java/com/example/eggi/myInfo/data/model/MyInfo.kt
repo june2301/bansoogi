@@ -2,7 +2,7 @@ package com.example.eggi.myInfo.data.model
 
 data class MyInfo(
     val userId: String,
-    val name: String,
+    val nickname: String,
     val birthDate: String,
     val profileBansoogiId: Int,
     val wakeUpTime: String,

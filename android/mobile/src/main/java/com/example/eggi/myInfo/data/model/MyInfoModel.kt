@@ -11,7 +11,7 @@ class MyInfoModel {
         dataSource.getMyInfo().map { entity ->
             MyInfo(
                 userId             = entity.userId.toString(),
-                name               = entity.name,
+                nickname           = entity.nickname,
                 birthDate          = entity.birthDate,
                 profileBansoogiId  = entity.profileBansoogiId,
                 wakeUpTime         = entity.wakeUpTime,

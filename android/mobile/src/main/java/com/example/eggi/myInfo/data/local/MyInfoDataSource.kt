@@ -21,7 +21,7 @@ class MyInfoDataSource {
         if (!hasUser) {
             realm.write {
                 copyToRealm(User().apply {
-                    name = "엄계란"
+                    nickname = "엄계란"
                     birthDate = "2000.02.16"
                     profileBansoogiId = R.drawable.bansoogi_default_profile
                     wakeUpTime = "07:00"

@@ -9,7 +9,7 @@ class User : RealmObject {
     @PrimaryKey
     var userId: ObjectId = ObjectId()
 
-    var name: String = ""
+    var nickname: String = ""
     var birthDate: String = ""
     var profileBansoogiId: Int = R.drawable.bansoogi_default_profile
 
