@@ -3,23 +3,28 @@ package com.example.prototype
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.asFlow
 import kotlinx.coroutines.flow.Flow
 
@@ -87,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun ActivityDetectionScreen(stateFlow: Flow<ActivityState>) {
-    val state by stateFlow.collectAsState(initial = ActivityState.TRANSIENT)
+    val state by stateFlow.collectAsState(initial = ActivityState.STILL)
 
     Column(
         modifier = Modifier
@@ -108,15 +113,13 @@ fun ActivityDetectionScreen(stateFlow: Flow<ActivityState>) {
             text =
                 when (state) {
                     ActivityState.SITTING -> "앉음"
+                    ActivityState.STILL -> "정지"
                     ActivityState.STANDING -> "서있음"
                     ActivityState.LYING -> "누움"
                     ActivityState.WALKING -> "걷기"
                     ActivityState.RUNNING -> "달리기"
-                    ActivityState.STAIR_UP -> "+1 층"
-                    ActivityState.EXERCISE -> "운동"
-                    ActivityState.DYNAMIC_GENERIC -> "동적"
-                    ActivityState.TRANSIENT -> "전환 중"
-            },
+                    else -> "기타"
+                },
                 fontSize = 48.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,

@@ -6,8 +6,8 @@ package com.example.prototype
  */
 class StairUpDetector(
     private val floorHeight: Float = 3.0f, // metres
-    private val windowMillis: Long = 6_000L,
-    private val minSteps: Int = 4,
+    private val windowMillis: Long = 3_000L,
+    private val minSteps: Int = 3,
 ) {
     private var alt0: Float? = null
     private var windowStart: Long = 0L

@@ -5,17 +5,13 @@ package com.example.prototype
  */
 enum class ActivityState {
     // Dynamic
-    STAIR_UP,
     RUNNING,
     WALKING,
-    EXERCISE,
-    DYNAMIC_GENERIC,
 
+    // Static (device not moving)
+    STILL,
     // Static
     SITTING,
     STANDING,
     LYING,
-
-    // Transitional / Unknown
-    TRANSIENT,
 }

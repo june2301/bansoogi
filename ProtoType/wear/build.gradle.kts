@@ -1,3 +1,6 @@
+// Add the necessary permission to the AndroidManifest.xml file
+// <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -38,7 +41,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.play.services.location)
     implementation(libs.play.services.wearable)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -49,6 +51,7 @@ dependencies {
     implementation(libs.androidx.wear.tooling.preview)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.gms.play.services.location)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)

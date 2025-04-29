@@ -1,13 +1,14 @@
 package com.example.prototype
 
 // ---------- import ----------
+import android.Manifest
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -16,17 +17,24 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
-// ★ Google Play Services Activity Recognition
-import com.google.android.gms.location.ActivityRecognition // ★
-import com.google.android.gms.location.ActivityRecognitionClient // ★
-import com.google.android.gms.location.ActivityRecognitionResult // ★
+import com.google.android.gms.location.ActivityRecognition
+import com.google.android.gms.location.ActivityRecognitionClient
+import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Node
+import com.google.android.gms.wearable.NodeClient
 import com.google.android.gms.wearable.Wearable
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
+
 // ---------- end import ----------
 
 class ProtoWearSensorService :
@@ -38,7 +46,7 @@ class ProtoWearSensorService :
         // 센서 주기
         private const val ACC_GYRO_SAMPLING_RATE = SensorManager.SENSOR_DELAY_GAME // ≈25 Hz
         private const val BARO_SAMPLING_RATE = SensorManager.SENSOR_DELAY_UI // ≈10 Hz
-        private const val STEP_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL
+        private const val STEP_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL // ≈5 Hz
 
         // 패킷 전송 주기
         private const val PACKET_INTERVAL_MS = 250L
@@ -56,7 +64,7 @@ class ProtoWearSensorService :
     private lateinit var wakeLock: PowerManager.WakeLock
 
     // ---------- Wearable(노드·메시지) ----------
-    private lateinit var nodeClient: com.google.android.gms.wearable.NodeClient
+    private lateinit var nodeClient: NodeClient
     private lateinit var messageClient: MessageClient
     private var connectedNode: Node? = null
 
@@ -72,6 +80,10 @@ class ProtoWearSensorService :
             ) {
                 val result = ActivityRecognitionResult.extractResult(intent ?: return) ?: return
                 val most = result.mostProbableActivity ?: return
+                Log.d(
+                    TAG,
+                    "ActivityRecognition received type=${most.type} confidence=${most.confidence}"
+                )
                 sendActivityUpdate(most.type)
             }
         }
@@ -91,7 +103,7 @@ class ProtoWearSensorService :
     private var gy = 0f
     private var gz = 0f
     private var pressure = 0f
-    private var stepEventPending = false
+    private var stepFlag = 0f
 
     // ---------- 코루틴 ----------
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -130,7 +142,18 @@ class ProtoWearSensorService :
             @Suppress("DEPRECATION")
             registerReceiver(activityReceiver, arFilter)
         }
-        activityClient.requestActivityUpdates(3_000L, pendingActivityPI) // 3 s 주기
+
+        // -------- Permission check --------
+        if (checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "ACTIVITY_RECOGNITION permission not granted. Stopping service.")
+            stopSelf()
+            return
+        }
+
+        activityClient
+            .requestActivityUpdates(3_000L, pendingActivityPI) // 3 s 
+            .addOnSuccessListener { Log.d(TAG, "requestActivityUpdates success") }
+            .addOnFailureListener { e -> Log.e(TAG, "requestActivityUpdates fail", e) }
 
         // 4) SensorManager & 센서 등록
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
@@ -138,6 +161,16 @@ class ProtoWearSensorService :
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+
+        // Register sensors only if permission is still granted (may have been revoked)
+        if (checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
+            accelerometer?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
+            gyroscope?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
+            barometer?.let { sensorManager.registerListener(this, it, BARO_SAMPLING_RATE) }
+            stepDetector?.let { sensorManager.registerListener(this, it, STEP_SAMPLING_RATE) }
+        } else {
+            Log.w(TAG, "Permission lost before sensor registration")
+        }
 
         // 5) DataLayer 전송 태스크 & 노드 탐색
         startPacketLoop()
@@ -196,7 +229,7 @@ class ProtoWearSensorService :
                 pressure = e.values[0] // hPa
             }
             Sensor.TYPE_STEP_DETECTOR -> {
-                stepEventPending = true
+                stepFlag = 1f
             }
         }
     }
@@ -244,13 +277,14 @@ class ProtoWearSensorService :
                 putDouble(gy.toDouble())
                 putDouble(gz.toDouble())
                 putDouble(pressure.toDouble())
-                putDouble(if (stepEventPending) 1.0 else 0.0)
+                putDouble(stepFlag.toDouble())
             }
 
         messageClient
             .sendMessage(nodeId, SENSOR_DATA_PATH, buf.array())
             .addOnSuccessListener {
-                stepEventPending = false
+                stepFlag = 0f // reset after sending
+                // Success
             }.addOnFailureListener { e ->
                 Log.e(TAG, "sendSensorPacket error", e)
                 findConnectedNode()
@@ -260,6 +294,9 @@ class ProtoWearSensorService :
     private fun sendActivityUpdate(type: Int) {
         val nodeId = connectedNode?.id ?: return
         val bytes = ByteBuffer.allocate(4).putInt(type).array()
-        messageClient.sendMessage(nodeId, ACTIVITY_UPDATE_PATH, bytes)
+        Log.d(TAG, "sendActivityUpdate to node=$nodeId type=$type")
+        messageClient
+            .sendMessage(nodeId, ACTIVITY_UPDATE_PATH, bytes)
+            .addOnFailureListener { e -> Log.e(TAG, "sendActivityUpdate error", e) }
     }
 }
