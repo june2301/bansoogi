@@ -146,7 +146,7 @@ fun Divider() {
 
 
 @Composable
-fun TodayScreen(
+fun DayTimeModal(
     onDismissRequest: () -> Unit,
     onNavigateToToday: () -> Unit
 ) {
