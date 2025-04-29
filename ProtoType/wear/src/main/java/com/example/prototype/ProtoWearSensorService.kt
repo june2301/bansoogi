@@ -32,6 +32,7 @@ class ProtoWearSensorService :
         // 센서 샘플링 속도
         private const val ACC_GYRO_SAMPLING_RATE = SensorManager.SENSOR_DELAY_GAME // ~25 Hz
         private const val BARO_SAMPLING_RATE = SensorManager.SENSOR_DELAY_UI // ~10 Hz
+        private const val STEP_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL
 
         // 패킷 크기 및 전송 간격
         private const val PACKET_INTERVAL_MS = 250L
@@ -53,6 +54,7 @@ class ProtoWearSensorService :
     private var accelerometer: Sensor? = null
     private var gyroscope: Sensor? = null
     private var barometer: Sensor? = null
+    private var stepDetector: Sensor? = null
 
     // 센서 데이터 버퍼
     private var timestamp: Long = 0
@@ -63,6 +65,7 @@ class ProtoWearSensorService :
     private var gy: Float = 0f
     private var gz: Float = 0f
     private var pressure: Float = 0f
+    private var stepEventPending: Boolean = false
 
     // 코루틴 스코프
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -90,6 +93,7 @@ class ProtoWearSensorService :
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
+        stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
 
         // 태스크 시작
         setupDataTransferTask()
@@ -110,6 +114,9 @@ class ProtoWearSensorService :
         }
         barometer?.let {
             sensorManager.registerListener(this, it, BARO_SAMPLING_RATE)
+        }
+        stepDetector?.let {
+            sensorManager.registerListener(this, it, STEP_SAMPLING_RATE)
         }
 
         return START_STICKY
@@ -147,6 +154,9 @@ class ProtoWearSensorService :
             }
             Sensor.TYPE_PRESSURE -> {
                 pressure = event.values[0] // hPa
+            }
+            Sensor.TYPE_STEP_DETECTOR -> {
+                stepEventPending = true
             }
         }
     }
@@ -191,7 +201,8 @@ class ProtoWearSensorService :
         val nodeId = connectedNode?.id ?: return
 
         // ByteBuffer로 센서 데이터 직렬화
-        val buffer = ByteBuffer.allocate(8 * 8) // 8 doubles (t, ax, ay, az, gx, gy, gz, p)
+        val buffer =
+            ByteBuffer.allocate(9 * 8) // 9 doubles (t, ax, ay, az, gx, gy, gz, p, stepFlag)
 
         // 센서 데이터 추가
         buffer.putDouble(timestamp.toDouble())
@@ -202,12 +213,14 @@ class ProtoWearSensorService :
         buffer.putDouble(gy.toDouble())
         buffer.putDouble(gz.toDouble())
         buffer.putDouble(pressure.toDouble())
+        buffer.putDouble(if (stepEventPending) 1.0 else 0.0)
 
         // 메시지 전송
         messageClient
             .sendMessage(nodeId, SENSOR_DATA_PATH, buffer.array())
             .addOnSuccessListener {
                 Log.v(TAG, "Data sent successfully")
+                stepEventPending = false
             }.addOnFailureListener { e ->
                 Log.e(TAG, "Error sending data", e)
                 // 노드 연결이 끊어진 경우 재연결 시도
