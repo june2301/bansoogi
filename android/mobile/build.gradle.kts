@@ -73,6 +73,9 @@ dependencies {
     // navigation
     implementation(libs.androidx.navigation.compose)
 
+    // 화면 스크롤 페이저
+    implementation(libs.androidx.foundation)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
