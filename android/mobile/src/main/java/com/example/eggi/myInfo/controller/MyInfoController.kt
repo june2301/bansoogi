@@ -1,0 +1,24 @@
+package com.example.eggi.myInfo.controller
+
+import com.example.eggi.myInfo.data.local.MyInfoDataSource
+import com.example.eggi.myInfo.data.model.MyInfoModel
+import com.example.eggi.myInfo.view.MyInfoView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+
+class MyInfoController(private val view: MyInfoView) {
+    private val dataSource = MyInfoDataSource()
+    private val model = MyInfoModel()
+    private val scope = CoroutineScope(Dispatchers.Main)
+
+    fun initialize() {
+        scope.launch {
+            dataSource.initialize() // 더미데이터 값 넣어주기
+            model.getMyInfo().collectLatest { info ->
+                view.displayMyInfo(info)
+            }
+        }
+    }
+}
