@@ -2,6 +2,8 @@ package com.example.eggi.main.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,9 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,36 +35,96 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.eggi.R
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.tooling.preview.Preview
 
+@Preview
 @Composable
 fun HomeScreen() {
     var progressValue by remember { mutableStateOf(40) }
+    var showModal by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(260.dp))
+        Spacer(modifier = Modifier.height(120.dp))
 
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.8f)
+                .fillMaxWidth(0.85f)
                 .padding(horizontal = 16.dp)
                 .background(Color.White)
+                .border(
+                    width = 2.dp,
+                    color = Color.DarkGray
+                )
         ) {
-            LinearProgressIndicator(
-                progress = { progressValue / 100f },
-                modifier = Modifier.fillMaxWidth(),
-                color = Color(0xFF99CC00),
-                trackColor = Color.LightGray
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(28.dp)
+                    .background(Color(0xFFEEEEEE))
             )
-
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(progressValue / 100f)
+                    .height(24.dp)
+                    .background(Color.Green)
+            )
             Text(
                 text = "$progressValue / 100",
                 modifier = Modifier.align(Alignment.Center),
                 color = Color.Black,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontSize = 12.sp
             )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 50.dp),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val context = LocalContext.current
+                val imageLoader = remember {
+                    ImageLoader.Builder(context)
+                        .components {
+                            add(GifDecoder.Factory())
+                            add(ImageDecoderDecoder.Factory())
+                        }
+                        .build()
+                }
+
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        ImageRequest.Builder(context)
+                            .data(R.drawable.ic_today)
+                            .build(),
+                        imageLoader = imageLoader
+                    ),
+                    contentDescription = "버튼 이미지",
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp)
+                        .clickable {
+                            showModal = true
+                        },
+                    contentScale = ContentScale.Fit
+                )
+
+                Text(
+                    text = "Today",
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
 
         Box(
@@ -88,26 +151,52 @@ fun HomeScreen() {
                     imageLoader = imageLoader
                 ),
                 contentDescription = "반숙이",
-                modifier = Modifier.size(396.dp, 326.dp),
+                modifier = Modifier
+                    .width(420.dp)
+                    .height(540.dp),
                 contentScale = ContentScale.Fit
             )
         }
 
+        val buttonShape = RoundedCornerShape(30.dp)
         Button(
             onClick = {
                 if (progressValue < 100) {
                     progressValue += 5
                 }
             },
-            modifier = Modifier.padding(vertical = 10.dp)
+            modifier = Modifier
+                .padding(vertical = 10.dp)
+                .height(60.dp)
+                .fillMaxWidth(0.4f)
+                .border(
+                    width = 4.dp,
+                    color = Color.DarkGray,
+                    shape = buttonShape
+                ),
+            shape = buttonShape,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                contentColor = Color(0xFF2E616A)
+            )
         ) {
             Text(
                 text = "상호작용",
-                color = Color.White,
-                fontSize = 22.sp
+                color = Color(0xFF2E616A),
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold
             )
         }
+        Spacer(modifier = Modifier.height(120.dp))
+    }
 
-        Spacer(modifier = Modifier.height(16.dp))
+    if (showModal) {
+        TodayScreen(
+            onDismissRequest = { showModal = false },
+            onNavigateToToday = {
+                // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
+                showModal = false
+            }
+        )
     }
 }
