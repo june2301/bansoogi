@@ -266,10 +266,11 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
                     else -> Color.Black
                 },
                 modifier = Modifier
-                    .align(Alignment.TopCenter) // Box 내부에서 사용할 때는 이렇게 적용
+                    .align(Alignment.TopCenter)
             )
 
-            // 이미지는 중앙에 배치 (특정 날짜에만)
+            // 이미지는 중앙에 배치
+            // 현재는 무조건 보이지만, 나중에는 반숙이 데이터가 존재하는 경우에만 출력
             if (true) {
                 val context = LocalContext.current
                 val imageLoader = remember {
@@ -283,10 +284,10 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
 
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.9f) // 셀 너비의 90%
-                        .fillMaxHeight(0.9f) // 셀 높이의 70%
+                        .fillMaxWidth(0.9f)
+                        .fillMaxHeight(0.9f)
                         .align(Alignment.Center),
-                    contentAlignment = Alignment.Center // 박스 내부의 이미지를 중앙에 배치
+                    contentAlignment = Alignment.Center
                 ) {
                     Image(
                         painter = rememberAsyncImagePainter(
@@ -298,7 +299,7 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
                         contentDescription = "반숙이",
                         modifier = Modifier
                             .scale(1.5f),
-                        contentScale = ContentScale.Fit // 이미지를 온전히 표시
+                        contentScale = ContentScale.Fit
                     )
                 }
             }
