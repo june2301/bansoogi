@@ -36,12 +36,49 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.eggi.R
 import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.eggi.common.data.model.TodayRecord
+import com.example.eggi.main.controller.TodayRecordController
+import com.example.eggi.main.view.TodayRecordView
 
 @Preview
 @Composable
 fun HomeScreen() {
-    var progressValue by remember { mutableStateOf(40) }
+
+    var todayRecordState = remember { mutableStateOf<TodayRecord?>(null) }
+    var view = remember {
+        object : TodayRecordView {
+            override fun displayTodayRecord(todayRecord: TodayRecord) {
+                todayRecordState.value = todayRecord
+            }
+        }
+    }
+    val todayRecordController = remember { TodayRecordController(view) }
+    LaunchedEffect(Unit) {
+        todayRecordController.initialize()
+    }
+
+    todayRecordState.value?.let { todayRecord ->
+        // 메인 페이지
+        if (todayRecord.isClosed == false) {
+            HomeContent(todayRecord)
+        }
+        // 알 받기
+        else {
+            // TODO: BeforeContent(todayRecord)
+        }
+    } ?: Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text("로딩 중...", fontSize = 16.sp)
+    }
+}
+
+@Composable
+fun HomeContent(todayRecord: TodayRecord) {
+    var progressValue by remember { mutableStateOf(todayRecord.energyPoint) }
     var showModal by remember { mutableStateOf(false) }
 
     Column(
