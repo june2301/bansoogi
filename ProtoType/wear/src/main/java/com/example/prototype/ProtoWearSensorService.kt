@@ -1,7 +1,10 @@
+// File: com/example/prototype/ProtoWearSensorService.kt
 package com.example.prototype
 
-// ---------- import ----------
 import android.Manifest
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -19,7 +22,10 @@ import android.os.PowerManager
 import android.util.Log
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionClient
-import com.google.android.gms.location.ActivityRecognitionResult
+import com.google.android.gms.location.ActivityTransition
+import com.google.android.gms.location.ActivityTransitionRequest
+import com.google.android.gms.location.ActivityTransitionResult
+import com.google.android.gms.location.DetectedActivity
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Node
@@ -35,40 +41,40 @@ import kotlinx.coroutines.launch
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
 
-// ---------- end import ----------
-
+@Suppress("UnspecifiedRegisterReceiverFlag", "MissingPermission")
 class ProtoWearSensorService :
     Service(),
     SensorEventListener {
     companion object {
         private const val TAG = "ProtoWearSensorService"
 
-        // 센서 주기
-        private const val ACC_GYRO_SAMPLING_RATE = SensorManager.SENSOR_DELAY_GAME // ≈25 Hz
-        private const val BARO_SAMPLING_RATE = SensorManager.SENSOR_DELAY_UI // ≈10 Hz
-        private const val STEP_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL // ≈5 Hz
+        // 샘플링 주기
+        private const val ACC_GYRO_SAMPLING_RATE = SensorManager.SENSOR_DELAY_GAME
+        private const val BARO_SAMPLING_RATE = SensorManager.SENSOR_DELAY_UI
+        private const val STEP_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL
 
-        // 패킷 전송 주기
+        // 전송 주기
         private const val PACKET_INTERVAL_MS = 250L
 
-        // Data-Layer 경로
+        // Wear Data Layer 경로
         private const val SENSOR_DATA_PATH = "/sensor_data"
         private const val ACTIVITY_UPDATE_PATH = "/activity_update"
 
-        // ActivityRecognition 브로드캐스트 액션
+        // 브로드캐스트 액션
         private const val ACTION_ACTIVITY_RECOG = "com.example.prototype.ACTIVITY_RECOGNITION"
+
+        // Notification
+        private const val CHANNEL_ID = "sensor_service"
+        private const val NOTI_ID = 1
     }
 
-    // ---------- 시스템 서비스 ----------
     private lateinit var sensorManager: SensorManager
     private lateinit var wakeLock: PowerManager.WakeLock
 
-    // ---------- Wearable(노드·메시지) ----------
     private lateinit var nodeClient: NodeClient
     private lateinit var messageClient: MessageClient
     private var connectedNode: Node? = null
 
-    // ---------- Activity Recognition ----------
     private lateinit var activityClient: ActivityRecognitionClient
     private lateinit var pendingActivityPI: PendingIntent
 
@@ -78,24 +84,51 @@ class ProtoWearSensorService :
                 context: Context?,
                 intent: Intent?,
             ) {
-                val result = ActivityRecognitionResult.extractResult(intent ?: return) ?: return
-                val most = result.mostProbableActivity ?: return
-                Log.d(
-                    TAG,
-                    "ActivityRecognition received type=${most.type} confidence=${most.confidence}"
-                )
-                sendActivityUpdate(most.type)
+                Log.i(TAG, ">>> onReceive() ENTERED, action=${intent?.action}")
+
+                val result = ActivityTransitionResult.extractResult(intent ?: return)
+                if (result == null) {
+                    Log.w(TAG, "No ActivityTransitionResult in intent")
+                    return
+                }
+
+                for (event in result.transitionEvents) {
+                    val name =
+                        when (event.activityType) {
+                            DetectedActivity.IN_VEHICLE -> "IN_VEHICLE"
+                            DetectedActivity.ON_BICYCLE -> "ON_BICYCLE"
+                            DetectedActivity.ON_FOOT -> "ON_FOOT"
+                            DetectedActivity.STILL -> "STILL"
+                            DetectedActivity.WALKING -> "WALKING"
+                            DetectedActivity.RUNNING -> "RUNNING"
+                            else -> "OTHER(${event.activityType})"
+                        }
+                    val trans =
+                        if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER) {
+                            "ENTER"
+                        } else {
+                            "EXIT"
+                        }
+                    Log.i(
+                        TAG,
+                        "ActivityTransition: $name $trans (elapsed=${event.elapsedRealTimeNanos})",
+                    )
+
+                    if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER) {
+                        sendActivityUpdate(event.activityType)
+                    }
+                }
             }
         }
 
-    // ---------- 센서 레퍼런스 ----------
+    // 센서
     private var accelerometer: Sensor? = null
     private var gyroscope: Sensor? = null
     private var barometer: Sensor? = null
     private var stepDetector: Sensor? = null
 
-    // ---------- 센서 데이터 버퍼 ----------
-    private var timestamp: Long = 0L
+    // 센서 데이터 버퍼
+    private var timestamp = 0L
     private var ax = 0f
     private var ay = 0f
     private var az = 0f
@@ -105,74 +138,116 @@ class ProtoWearSensorService :
     private var pressure = 0f
     private var stepFlag = 0f
 
-    // ---------- 코루틴 ----------
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-
-    // ─────────────────────────────────────────────
-    // Service lifecycle
-    // ─────────────────────────────────────────────
 
     override fun onCreate() {
         super.onCreate()
 
-        // 1) Wake-lock
-        wakeLock =
-            (getSystemService(POWER_SERVICE) as PowerManager)
-                .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ProtoType:WakeLock")
-                .apply { acquire() }
+        // 즉시 포그라운드 알림
+        createNotificationChannelIfNeeded()
+        val notification =
+            Notification
+                .Builder(this, CHANNEL_ID)
+                .setContentTitle("자세 모니터링 중")
+                .setSmallIcon(android.R.drawable.ic_media_play)
+                .setOngoing(true)
+                .build()
+        startForeground(NOTI_ID, notification)
 
-        // 2) Wearable 클라이언트
-        nodeClient = Wearable.getNodeClient(this)
-        messageClient = Wearable.getMessageClient(this)
-
-        // 3) Activity Recognition 설정
-        activityClient = ActivityRecognition.getClient(this) // ★
-        val arIntent = Intent(ACTION_ACTIVITY_RECOG).setPackage(packageName) // ★ 명시적
-        pendingActivityPI =
-            PendingIntent.getBroadcast(
-                this,
-                0,
-                arIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-        val arFilter = IntentFilter(ACTION_ACTIVITY_RECOG)
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(activityReceiver, arFilter, RECEIVER_NOT_EXPORTED)
-        } else {
-            @Suppress("DEPRECATION")
-            registerReceiver(activityReceiver, arFilter)
-        }
-
-        // -------- Permission check --------
-        if (checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+        // 권한 체크
+        if (checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
             Log.w(TAG, "ACTIVITY_RECOGNITION permission not granted. Stopping service.")
             stopSelf()
             return
         }
 
-        activityClient
-            .requestActivityUpdates(3_000L, pendingActivityPI) // 3 s 
-            .addOnSuccessListener { Log.d(TAG, "requestActivityUpdates success") }
-            .addOnFailureListener { e -> Log.e(TAG, "requestActivityUpdates fail", e) }
+        // WakeLock
+        wakeLock =
+            (getSystemService(POWER_SERVICE) as PowerManager)
+                .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$TAG:WakeLock")
+                .apply { acquire() }
 
-        // 4) SensorManager & 센서 등록
+        // Wearable 클라이언트
+        nodeClient = Wearable.getNodeClient(this)
+        messageClient = Wearable.getMessageClient(this)
+
+        // ActivityTransition API 등록 (FLAG_MUTABLE 적용)
+        activityClient = ActivityRecognition.getClient(this)
+        val arIntent = Intent(ACTION_ACTIVITY_RECOG).setPackage(packageName)
+        val piFlags =
+            PendingIntent.FLAG_UPDATE_CURRENT or
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    PendingIntent.FLAG_MUTABLE
+                } else {
+                    0
+                }
+        pendingActivityPI =
+            PendingIntent.getBroadcast(
+                this,
+                0,
+                arIntent,
+                piFlags,
+            )
+        val filter = IntentFilter(ACTION_ACTIVITY_RECOG)
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(activityReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("DEPRECATION")
+            registerReceiver(activityReceiver, filter)
+        }
+
+        // ActivityTransition API 등록
+        val transitions =
+            mutableListOf<ActivityTransition>().apply {
+                val types =
+                    intArrayOf(
+                        DetectedActivity.IN_VEHICLE,
+                        DetectedActivity.ON_BICYCLE,
+                        DetectedActivity.ON_FOOT,
+                        DetectedActivity.STILL,
+                        DetectedActivity.WALKING,
+                        DetectedActivity.RUNNING,
+                    )
+                for (t in types) {
+                    add(
+                        ActivityTransition
+                            .Builder()
+                            .setActivityType(t)
+                            .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
+                            .build(),
+                    )
+                    add(
+                        ActivityTransition
+                            .Builder()
+                            .setActivityType(t)
+                            .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
+                            .build(),
+                    )
+                }
+            }
+
+        val transitionRequest = ActivityTransitionRequest(transitions)
+
+        activityClient
+            .requestActivityTransitionUpdates(transitionRequest, pendingActivityPI)
+            .addOnSuccessListener { Log.d(TAG, "requestActivityTransitionUpdates success") }
+            .addOnFailureListener { e -> Log.e(TAG, "requestActivityTransitionUpdates fail", e) }
+
+        // 센서 등록
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
         stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
 
-        // Register sensors only if permission is still granted (may have been revoked)
-        if (checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
-            accelerometer?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
-            gyroscope?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
-            barometer?.let { sensorManager.registerListener(this, it, BARO_SAMPLING_RATE) }
-            stepDetector?.let { sensorManager.registerListener(this, it, STEP_SAMPLING_RATE) }
-        } else {
-            Log.w(TAG, "Permission lost before sensor registration")
-        }
+        accelerometer?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
+        gyroscope?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
+        barometer?.let { sensorManager.registerListener(this, it, BARO_SAMPLING_RATE) }
+        stepDetector?.let { sensorManager.registerListener(this, it, STEP_SAMPLING_RATE) }
 
-        // 5) DataLayer 전송 태스크 & 노드 탐색
+        // 전송 루프 & 노드 탐색
         startPacketLoop()
         findConnectedNode()
     }
@@ -182,35 +257,35 @@ class ProtoWearSensorService :
         flags: Int,
         startId: Int,
     ): Int {
-        accelerometer?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
-        gyroscope?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
-        barometer?.let { sensorManager.registerListener(this, it, BARO_SAMPLING_RATE) }
-        stepDetector?.let { sensorManager.registerListener(this, it, STEP_SAMPLING_RATE) }
-
+        if (::sensorManager.isInitialized) {
+            accelerometer?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
+            gyroscope?.let { sensorManager.registerListener(this, it, ACC_GYRO_SAMPLING_RATE) }
+            barometer?.let { sensorManager.registerListener(this, it, BARO_SAMPLING_RATE) }
+            stepDetector?.let { sensorManager.registerListener(this, it, STEP_SAMPLING_RATE) }
+        }
         return START_STICKY
     }
 
     override fun onDestroy() {
-        sensorManager.unregisterListener(this)
-
+        if (::sensorManager.isInitialized) {
+            sensorManager.unregisterListener(this)
+        }
         try {
-            activityClient.removeActivityUpdates(pendingActivityPI)
-            unregisterReceiver(activityReceiver)
+            activityClient.removeActivityTransitionUpdates(pendingActivityPI)
         } catch (_: Exception) {
         }
-
+        try {
+            unregisterReceiver(activityReceiver)
+        } catch (_: IllegalArgumentException) {
+        }
+        if (::wakeLock.isInitialized && wakeLock.isHeld) {
+            wakeLock.release()
+        }
         scope.cancel()
-
-        if (wakeLock.isHeld) wakeLock.release()
-
         super.onDestroy()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
-
-    // ─────────────────────────────────────────────
-    // Sensor callbacks
-    // ─────────────────────────────────────────────
 
     override fun onSensorChanged(e: SensorEvent?) {
         when (e?.sensor?.type) {
@@ -226,7 +301,7 @@ class ProtoWearSensorService :
                 gz = e.values[2]
             }
             Sensor.TYPE_PRESSURE -> {
-                pressure = e.values[0] // hPa
+                pressure = e.values[0]
             }
             Sensor.TYPE_STEP_DETECTOR -> {
                 stepFlag = 1f
@@ -238,10 +313,6 @@ class ProtoWearSensorService :
         sensor: Sensor?,
         accuracy: Int,
     ) = Unit
-
-    // ─────────────────────────────────────────────
-    // Data-Layer helpers
-    // ─────────────────────────────────────────────
 
     private fun startPacketLoop() =
         scope.launch {
@@ -266,7 +337,6 @@ class ProtoWearSensorService :
 
     private fun sendSensorPacket() {
         val nodeId = connectedNode?.id ?: return
-
         val buf =
             ByteBuffer.allocate(9 * 8).apply {
                 putDouble(timestamp.toDouble())
@@ -279,13 +349,10 @@ class ProtoWearSensorService :
                 putDouble(pressure.toDouble())
                 putDouble(stepFlag.toDouble())
             }
-
         messageClient
             .sendMessage(nodeId, SENSOR_DATA_PATH, buf.array())
-            .addOnSuccessListener {
-                stepFlag = 0f // reset after sending
-                // Success
-            }.addOnFailureListener { e ->
+            .addOnSuccessListener { stepFlag = 0f }
+            .addOnFailureListener { e ->
                 Log.e(TAG, "sendSensorPacket error", e)
                 findConnectedNode()
             }
@@ -298,5 +365,20 @@ class ProtoWearSensorService :
         messageClient
             .sendMessage(nodeId, ACTIVITY_UPDATE_PATH, bytes)
             .addOnFailureListener { e -> Log.e(TAG, "sendActivityUpdate error", e) }
+    }
+
+    private fun createNotificationChannelIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val mgr = getSystemService(NotificationManager::class.java)
+            if (mgr.getNotificationChannel(CHANNEL_ID) == null) {
+                mgr.createNotificationChannel(
+                    NotificationChannel(
+                        CHANNEL_ID,
+                        "Sensor Service",
+                        NotificationManager.IMPORTANCE_LOW,
+                    ),
+                )
+            }
+        }
     }
 }
