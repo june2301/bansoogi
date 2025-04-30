@@ -8,6 +8,7 @@ import org.mongodb.kbson.ObjectId
 data class TodayRecord(
     var recordId: String,
     var energyPoint: Int,
+    var standUpCnt: Int,
     var stretchCnt: Int,
     var phoneOffCnt: Int,
     var lyingTime: Int,

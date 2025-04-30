@@ -10,6 +10,7 @@ class TodayRecord() : RealmObject{
     var recordId: ObjectId = ObjectId()
 
     var energyPoint: Int = 0
+    var standUpCnt: Int = 0
     var stretchCnt: Int = 0
     var phoneOffCnt: Int = 0
     var lyingTime: Int = 0

@@ -23,8 +23,11 @@ class TodayRecordDataSource {
         val hasTodayRecord = realm.query<TodayRecord>().find().isNotEmpty()
         if (!hasTodayRecord) {
             realm.write {
+                val todayRecord = realm.query<TodayRecord>().find()
+                delete(todayRecord)
                 copyToRealm(TodayRecord().apply {
                     energyPoint = 0
+                    standUpCnt = 0
                     stretchCnt = 0
                     phoneOffCnt = 0
                     lyingTime = 0

@@ -1,6 +1,5 @@
 package com.example.eggi.common.data.model
 
-import com.example.eggi.common.data.model.TodayRecord
 import com.example.eggi.common.data.local.TodayRecordDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -8,11 +7,13 @@ import kotlinx.coroutines.flow.map
 class TodayRecordModel {
     private val dataSource = TodayRecordDataSource()
 
-    fun getTodayRecord(): Flow<TodayRecord> {
+    suspend fun getTodayRecord(): Flow<TodayRecord> {
+        dataSource.initialize()
         return dataSource.getTodayRecord().map { entity ->
                 TodayRecord(
                     recordId = entity.recordId.toString(),
                     energyPoint = entity.energyPoint,
+                    standUpCnt = entity.standUpCnt,
                     stretchCnt = entity.stretchCnt,
                     phoneOffCnt = entity.phoneOffCnt,
                     lyingTime = entity.lyingTime,
