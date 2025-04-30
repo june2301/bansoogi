@@ -56,8 +56,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 
-// 미리 로드할 월의 수 (현재 월 기준 앞뒤로)
-private const val MONTH_COUNT = 12 // 앞뒤로 각각 6개월
+// 미리 로드할 월의 수 -> 무한 스크롤
 private const val INITIAL_PAGE = Int.MAX_VALUE / 2
 
 @Composable
@@ -68,6 +67,10 @@ fun CalendarScreen() {
     // 초기 날짜와 현재 보여지는 날짜
     val initialDate = remember { today }
     var currentViewDate by remember { mutableStateOf(initialDate) }
+
+    // 모달 표시 상태 및 선택한 날짜
+    var showModal by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf<String?>(null) }
 
     // 페이저 상태 생성
     val pagerState = rememberPagerState(
@@ -127,9 +130,24 @@ fun CalendarScreen() {
                 val pageDate = initialDate.plusMonths(monthDiff.toLong())
 
                 // 캘린더 표
-                CalendarGrid(viewDate = pageDate, today = today)
+                CalendarGrid(
+                    viewDate = pageDate,
+                    today = today,
+                    onDayClick = { day ->
+                        selectedDate = "%04d-%02d-%02d".format(pageDate.year, pageDate.monthValue, day)
+                        showModal = true
+                    }
+                )
             }
         }
+    }
+
+    // 모달 띄우기
+    if (showModal && selectedDate != null) {
+        RecoredModal(
+            onDismissRequest = { showModal = false },
+            selectedDate = selectedDate!!
+        )
     }
 }
 
@@ -179,7 +197,7 @@ fun CalendarHeader(viewDate: LocalDate, onPrevMonth: () -> Unit, onNextMonth: ()
 }
 
 @Composable
-fun CalendarGrid(viewDate: LocalDate, today: LocalDate) {
+fun CalendarGrid(viewDate: LocalDate, today: LocalDate, onDayClick: (Int) -> Unit) {
     Column (modifier = Modifier
         .fillMaxSize()
     ) {
@@ -226,6 +244,7 @@ fun CalendarGrid(viewDate: LocalDate, today: LocalDate) {
                                 day = day,
                                 isCurrentDay = day == currentDay,
                                 dayOfWeek = index, // 0=일요일, 6=토요일
+                                onCellClick = { onDayClick(day) }
                             )
                         }
                     }
@@ -271,7 +290,7 @@ fun DaysHeader() {
 }
 
 @Composable
-fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1) {
+fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1, onCellClick: () -> Unit) {
     if (day > 0) { // 실제 날짜만 표시
         // 셀 클릭 시, 회색 창 제거
         val interactionSource = remember { MutableInteractionSource() }
@@ -294,7 +313,7 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null, // 리플 효과(회색 창) 제거
-                    onClick = { })
+                    onClick = onCellClick)
                 .clip(RectangleShape),
             contentAlignment = Alignment.Center
         ) {
