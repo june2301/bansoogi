@@ -3,23 +3,28 @@ package com.example.prototype
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.asFlow
 import kotlinx.coroutines.flow.Flow
 
@@ -58,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PostureDetectionScreen(ProtoBleReceiverService.postureLiveData.asFlow())
+                    ActivityDetectionScreen(ProtoBleReceiverService.stateLiveData.asFlow())
                 }
             }
         }
@@ -86,9 +91,9 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun PostureDetectionScreen(postureFlow: Flow<Posture>) {
-    val posture by postureFlow.collectAsState(initial = Posture.SITTING)
-    
+fun ActivityDetectionScreen(stateFlow: Flow<ActivityState>) {
+    val state by stateFlow.collectAsState(initial = ActivityState.STILL)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,7 +102,7 @@ fun PostureDetectionScreen(postureFlow: Flow<Posture>) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "현재 자세",
+            text = "현재 상태",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -105,12 +110,17 @@ fun PostureDetectionScreen(postureFlow: Flow<Posture>) {
         )
         
         Text(
-            text = when(posture) {
-                Posture.SITTING -> "앉음"
-                Posture.STANDING -> "서있음"
-                Posture.LYING -> "누움"
-            },
-            fontSize = 48.sp,
+            text =
+                when (state) {
+                    ActivityState.SITTING -> "앉음"
+                    ActivityState.STILL -> "정지"
+                    ActivityState.STANDING -> "서있음"
+                    ActivityState.LYING -> "누움"
+                    ActivityState.WALKING -> "걷기"
+                    ActivityState.RUNNING -> "달리기"
+                    else -> "기타"
+                },
+                fontSize = 48.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
