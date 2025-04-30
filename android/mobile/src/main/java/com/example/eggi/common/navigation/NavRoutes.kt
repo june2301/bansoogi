@@ -5,4 +5,5 @@ object NavRoutes {
     const val COLLECTION = "collection"
     const val CALENDAR = "calender"
     const val MYINFO = "myInfo"
+    const val MYINFOUPDATE = "myInfoUpdate"
 }
