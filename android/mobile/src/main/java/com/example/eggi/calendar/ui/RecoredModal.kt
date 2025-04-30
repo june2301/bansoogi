@@ -162,6 +162,7 @@ fun Divider() {
 @Composable
 fun RecoredModal(
     onDismissRequest: () -> Unit,
+    selectedDate: String
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -186,9 +187,12 @@ fun RecoredModal(
                 horizontalAlignment = Alignment.Start
             ) {
 
+                // 날짜 문자열에서 년, 월, 일 추출
+                val (year, month, day) = selectedDate.split("-").map { it.toInt() }
+
                 Box(modifier = Modifier.weight(0.1f)) {
                     ModalHeader(
-                        title = "4월 20일 행동 기록"
+                        title = "${month}월 ${day}일 행동 기록"
                     )
                 }
 
@@ -386,6 +390,7 @@ fun RecoredModal(
 @Composable
 fun DayTimeModalPreview() {
     RecoredModal(
-        onDismissRequest = { /* 미리보기에서는 아무 작업 없음 */ },
+        onDismissRequest = { },
+        selectedDate = "2025-04-20"
     )
 }
