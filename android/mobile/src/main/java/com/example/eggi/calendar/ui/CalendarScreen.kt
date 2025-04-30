@@ -1,17 +1,13 @@
 package com.example.eggi.calendar.ui
 
 import com.example.eggi.R
-import android.os.Build
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,46 +31,60 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.ui.draw.blur
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.VerticalAlignmentLine
-import androidx.compose.ui.text.font.FontWeight
-import java.nio.file.WatchEvent
+import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.Year
 import java.time.YearMonth
-import java.time.temporal.TemporalAdjusters.firstDayOfMonth
+
+// 미리 로드할 월의 수 (현재 월 기준 앞뒤로)
+private const val MONTH_COUNT = 12 // 앞뒤로 각각 6개월
+private const val INITIAL_PAGE = Int.MAX_VALUE / 2
 
 @Composable
 fun CalendarScreen() {
     // 실제 오늘 날짜 가져오기
     val today = remember { LocalDate.now() }
 
-    // 캘린더에서 확인하는 날짜
-    var viewDate by remember { mutableStateOf(today)}
+    // 초기 날짜와 현재 보여지는 날짜
+    val initialDate = remember { today }
+    var currentViewDate by remember { mutableStateOf(initialDate) }
+
+    // 페이저 상태 생성
+    val pagerState = rememberPagerState(
+        pageCount = { Int.MAX_VALUE },
+        initialPage = INITIAL_PAGE
+    )
+
+    // 코루틴 스코프 생성
+    val coroutineScope = rememberCoroutineScope()
+
+    // 페이지 변경 시 날짜 업데이트
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            val monthDiff = page - INITIAL_PAGE
+            currentViewDate = initialDate.plusMonths(monthDiff.toLong())
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -87,18 +97,44 @@ fun CalendarScreen() {
                 .padding(8.dp)
         ) {
             // 월 표시 및 화살표
-            CalendarHeader(viewDate = viewDate)
+            CalendarHeader(
+                viewDate = currentViewDate,
+                onPrevMonth = {
+                    // 코루틴 스코프 내에서 애니메이션 실행
+                    coroutineScope.launch {
+                        if (pagerState.canScrollBackward) {
+                            pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                        }
+                    }
+                },
+                onNextMonth = {
+                    // 코루틴 스코프 내에서 애니메이션 실행
+                    coroutineScope.launch {
+                        if (pagerState.canScrollForward) {
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        }
+                    }
+                }
+            )
 
-            // 캘린더 표
-            CalendarGrid(viewDate = viewDate, today = today)
+            // HorizontalPager 사용
+            HorizontalPager(
+                state = pagerState,
+                pageSize = PageSize.Fill,
+                modifier = Modifier.fillMaxSize(),
+            ) { page ->
+                val monthDiff = page - INITIAL_PAGE
+                val pageDate = initialDate.plusMonths(monthDiff.toLong())
+
+                // 캘린더 표
+                CalendarGrid(viewDate = pageDate, today = today)
+            }
         }
     }
 }
 
 @Composable
-fun CalendarHeader(viewDate: LocalDate) {
-    val context = LocalContext.current
-
+fun CalendarHeader(viewDate: LocalDate, onPrevMonth: () -> Unit, onNextMonth: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -109,7 +145,7 @@ fun CalendarHeader(viewDate: LocalDate) {
         // 이전 달 선택 화살표
         IconButton(
             onClick = {
-                Toast.makeText(context, "왼쪽", Toast.LENGTH_SHORT).show()
+                onPrevMonth()
             }) {
             Icon(
                 modifier = Modifier.size(24.dp),
@@ -131,7 +167,7 @@ fun CalendarHeader(viewDate: LocalDate) {
 
         // 다음 달 선택 화살표
         IconButton(onClick = {
-            Toast.makeText(context, "오른쪽", Toast.LENGTH_SHORT).show()
+            onNextMonth()
         }) {
             Icon(
                 modifier = Modifier.size(24.dp),
