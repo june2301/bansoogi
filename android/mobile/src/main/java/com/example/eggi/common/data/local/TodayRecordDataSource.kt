@@ -13,12 +13,6 @@ import org.mongodb.kbson.ObjectId
 class TodayRecordDataSource {
     private val realm = RealmManager.realm
 
-    fun getTodayRecord(): Flow<TodayRecord> {
-        return realm.query<TodayRecord>()
-            .asFlow()
-            .map { it.list.firstOrNull() ?: TodayRecord() }
-    }
-
     suspend fun initialize() {
         val hasTodayRecord = realm.query<TodayRecord>().find().isNotEmpty()
         if (!hasTodayRecord) {
@@ -44,7 +38,41 @@ class TodayRecordDataSource {
                 })
             }
         }
-
     }
 
+    fun getTodayRecord(): Flow<TodayRecord> {
+        return realm.query<TodayRecord>()
+            .asFlow()
+            .map { it.list.firstOrNull() ?: TodayRecord() }
+    }
+
+    suspend fun updateInteractionCnt(recordId: ObjectId) {
+        realm.write {
+            query<TodayRecord>("id == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        interactionCnt += 1
+
+
+
+                        updatedAt = RealmInstant.now()
+                    }
+                }
+        }
+    }
+
+    suspend fun updateEnergy(recordId: ObjectId, addedEnergy: Int) {
+        realm.write {
+            query<TodayRecord>("id == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        energyPoint = minOf(energyPoint + addedEnergy, 100)
+                    }
+                }
+        }
+    }
 }

@@ -11,7 +11,7 @@ class TodayRecordModel {
         dataSource.initialize()
         return dataSource.getTodayRecord().map { entity ->
                 TodayRecord(
-                    recordId = entity.recordId.toString(),
+                    recordId = entity.recordId,
                     energyPoint = entity.energyPoint,
                     standUpCnt = entity.standUpCnt,
                     stretchCnt = entity.stretchCnt,

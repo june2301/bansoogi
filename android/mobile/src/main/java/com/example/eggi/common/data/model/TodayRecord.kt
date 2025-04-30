@@ -1,12 +1,10 @@
 package com.example.eggi.common.data.model
 
 import io.realm.kotlin.types.RealmInstant
-import org.mongodb.kbson.BsonObjectId
-import org.mongodb.kbson.BsonObjectId.Companion.invoke
 import org.mongodb.kbson.ObjectId
 
 data class TodayRecord(
-    var recordId: String,
+    var recordId: ObjectId,
     var energyPoint: Int,
     var standUpCnt: Int,
     var stretchCnt: Int,

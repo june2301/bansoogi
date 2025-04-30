@@ -62,7 +62,7 @@ fun HomeScreen() {
     todayRecordState.value?.let { todayRecord ->
         // 메인 페이지
         if (todayRecord.isClosed == false) {
-            HomeContent(todayRecord)
+            HomeContent(todayRecord, todayRecordController)
         }
         // 알 받기
         else {
@@ -77,7 +77,7 @@ fun HomeScreen() {
 }
 
 @Composable
-fun HomeContent(todayRecord: TodayRecord) {
+fun HomeContent(todayRecord: TodayRecord, todayRecordController: TodayRecordController) {
     var progressValue by remember { mutableStateOf(todayRecord.energyPoint) }
     var showModal by remember { mutableStateOf(false) }
 
@@ -200,6 +200,8 @@ fun HomeContent(todayRecord: TodayRecord) {
             onClick = {
                 if (progressValue < 100) {
                     progressValue += 5
+                    todayRecordController.updateInteractionCnt(todayRecord.recordId)
+                    todayRecordController.updateEnergy(todayRecord.recordId, 5)
                 }
             },
             modifier = Modifier
