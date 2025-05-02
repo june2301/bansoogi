@@ -17,6 +17,21 @@ class TodayRecordDataSource {
                 copyToRealm(TodayRecord())
             }
         }
+        // TODO: 삭제해야함 (test 용)
+        updateIsClosed()
+    }
+
+    suspend fun updateIsClosed() {
+        realm.write {
+            query<TodayRecord>()
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        isClosed = true
+                    }
+                }
+        }
     }
 
     suspend fun renewTodayRecord() {

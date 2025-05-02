@@ -42,11 +42,13 @@ import com.example.eggi.calendar.ui.RecordedModal
 import com.example.eggi.common.data.model.TodayRecordDto
 import com.example.eggi.main.controller.TodayRecordController
 import com.example.eggi.main.view.TodayRecordView
+import com.example.eggi.myInfo.data.model.MyInfo
 
 @Preview
 @Composable
 fun HomeScreen() {
     var todayRecordDtoState = remember { mutableStateOf<TodayRecordDto?>(null) }
+    var myInfo = remember { mutableStateOf<MyInfo?>(null) }
     var showEggManager = remember { mutableStateOf(false) }
     var isInSleepRange = remember { mutableStateOf(false) }
     var view = remember {
@@ -70,24 +72,25 @@ fun HomeScreen() {
         todayRecordController.initialize()
     }
 
-    todayRecordDtoState.value?.let { todayRecord ->
-        HomeContent(todayRecord, todayRecordController)
-    } ?: Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("로딩 중...", fontSize = 16.sp)
-    }
-
     // Egg Manager 페이지 보여주기!
     if (showEggManager.value) {
         EggManagerModal(
+            myInfo = myInfo.value,
             todayRecordController = todayRecordController,
             onDismiss = {
                 showEggManager.value = false
                 todayRecordController.renewTodayRecord() // 새로운 TodayRecord 생성
             }
         )
+    } else {
+        todayRecordDtoState.value?.let { todayRecord ->
+            HomeContent(todayRecord, todayRecordController)
+        } ?: Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("로딩 중...", fontSize = 16.sp)
+        }
     }
 }
 
