@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.prototype"
-        minSdk = 26
+        minSdk = 30
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.gms.play.services.location)
+    implementation("androidx.health:health-services-client:1.1.0-alpha04")
+    implementation("com.google.guava:guava:31.1-android")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)

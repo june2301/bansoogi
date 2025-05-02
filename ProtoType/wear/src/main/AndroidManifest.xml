@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
+    <uses-permission android:name="com.google.android.wearable.healthservices.permission.PASSIVE_DATA_BINDING" />
 
     <uses-feature
         android:name="android.hardware.type.watch"
@@ -44,10 +45,11 @@
             </intent-filter>
         </activity>
 
-        <!-- Sensor Service -->
+        <!-- Walk Detection Service using Health Services -->
         <service
-            android:name=".ProtoWearSensorService"
-            android:exported="false"
+            android:name=".WalkDetectionService"
+            android:exported="true"
+            android:permission="com.google.android.wearable.healthservices.permission.PASSIVE_DATA_BINDING"
             android:foregroundServiceType="health" />
     </application>
 

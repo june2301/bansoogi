@@ -61,9 +61,9 @@ class MainActivity : AppCompatActivity() {
             MaterialTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
-                    ActivityDetectionScreen(ProtoBleReceiverService.stateLiveData.asFlow())
+                    ActivityScreen(ProtoBleReceiverService.activityLiveData.asFlow())
                 }
             }
         }
@@ -91,42 +91,44 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun ActivityDetectionScreen(stateFlow: Flow<ActivityState>) {
-    val state by stateFlow.collectAsState(initial = ActivityState.STILL)
+fun ActivityScreen(stateFlow: Flow<Int>) {
+    val state by stateFlow.collectAsState(initial = 0)
+
+    val text =
+        when (state) {
+            0 -> "정지"
+            1 -> "걷는 중"
+            2 -> "뛰는 중"
+            3 -> "오르는 중"
+            else -> "알 수 없음"
+        }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "현재 상태",
+            text = "활동 상태",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
-        
+
         Text(
-            text =
-                when (state) {
-                    ActivityState.SITTING -> "앉음"
-                    ActivityState.STILL -> "정지"
-                    ActivityState.STANDING -> "서있음"
-                    ActivityState.LYING -> "누움"
-                    ActivityState.WALKING -> "걷기"
-                    ActivityState.RUNNING -> "달리기"
-                    else -> "기타"
-                },
-                fontSize = 48.sp,
+            text = text,
+            fontSize = 48.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp),
         )
     }
 }
