@@ -1,5 +1,6 @@
 package com.example.eggi.main.ui
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,6 +39,7 @@ import com.example.eggi.R
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.eggi.calendar.ui.RecordedModal
 import com.example.eggi.common.data.model.TodayRecord
 import com.example.eggi.main.controller.TodayRecordController
 import com.example.eggi.main.view.TodayRecordView
@@ -65,7 +67,7 @@ fun HomeScreen() {
 
     todayRecordState.value?.let { todayRecord ->
         // 메인 페이지
-        if (todayRecord.isClosed == false) {
+        if (true) {
             HomeContent(todayRecord, todayRecordController)
         }
         // 알 받기
@@ -246,6 +248,10 @@ fun HomeContent(todayRecord: TodayRecord, todayRecordController: TodayRecordCont
         }
         else {
             // TODO: 결산 모달
+            RecordedModal(
+                onDismissRequest = { showModal = false },
+                selectedDate = "2025-04-20"
+            )
         }
     }
 }

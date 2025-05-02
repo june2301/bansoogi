@@ -1,5 +1,7 @@
 package com.example.eggi.common.data.local
 
+import com.example.eggi.calendar.data.entity.RecordedReport
+import com.example.eggi.calendar.data.local.Bansoogi
 import com.example.eggi.common.data.entity.TodayRecord
 import com.example.eggi.person.data.entity.Person
 import com.example.eggi.myInfo.data.entity.User
@@ -11,6 +13,8 @@ object RealmManager {
         schema = setOf(
             Person::class,
             User::class,
+            Bansoogi::class,
+            RecordedReport::class,
             TodayRecord::class,
         )
     )

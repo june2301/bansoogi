@@ -1,6 +1,5 @@
 package com.example.eggi.calendar.ui
 
-import com.example.eggi.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -52,6 +51,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import com.example.eggi.calendar.controller.CalendarController
+import com.example.eggi.calendar.data.local.Bansoogi
+import com.example.eggi.calendar.data.model.HistoryItem
+import com.example.eggi.calendar.view.CalendarView
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
@@ -61,6 +64,33 @@ private const val INITIAL_PAGE = Int.MAX_VALUE / 2
 
 @Composable
 fun CalendarScreen() {
+    // 캘린더 데이터 가져오기 -> 임시로 데이터 초기화, 없다면 생성함
+    val historyState = remember { mutableStateOf<List<HistoryItem>?>(null) }
+    val view = remember {
+        object : CalendarView {
+            override fun displayCalendar(history: List<HistoryItem>) {
+                historyState.value = history
+            }
+        }
+    }
+
+    val controller = remember { CalendarController(view) }
+    LaunchedEffect(Unit) {
+        controller.initialize()
+    }
+
+    historyState.value?.let { history ->
+        CalendarContent(history = history)
+    } ?: Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text("로딩 중...", fontSize = 16.sp)
+    }
+}
+
+@Composable
+fun CalendarContent(history: List<HistoryItem>) {
     // 실제 오늘 날짜 가져오기
     val today = remember { LocalDate.now() }
 
@@ -133,6 +163,7 @@ fun CalendarScreen() {
                 CalendarGrid(
                     viewDate = pageDate,
                     today = today,
+                    history = history,
                     onDayClick = { day ->
                         selectedDate = "%04d-%02d-%02d".format(pageDate.year, pageDate.monthValue, day)
                         showModal = true
@@ -144,7 +175,7 @@ fun CalendarScreen() {
 
     // 모달 띄우기
     if (showModal && selectedDate != null) {
-        RecoredModal(
+        RecordedModal(
             onDismissRequest = { showModal = false },
             selectedDate = selectedDate!!
         )
@@ -197,7 +228,7 @@ fun CalendarHeader(viewDate: LocalDate, onPrevMonth: () -> Unit, onNextMonth: ()
 }
 
 @Composable
-fun CalendarGrid(viewDate: LocalDate, today: LocalDate, onDayClick: (Int) -> Unit) {
+fun CalendarGrid(viewDate: LocalDate, today: LocalDate, history: List<HistoryItem>, onDayClick: (Int) -> Unit) {
     Column (modifier = Modifier
         .fillMaxSize()
     ) {
@@ -240,12 +271,19 @@ fun CalendarGrid(viewDate: LocalDate, today: LocalDate, onDayClick: (Int) -> Uni
                                 .fillMaxHeight(), // 높이를 최대로 채움
                             contentAlignment = Alignment.Center
                         ) {
-                            CalendarDayCell(
-                                day = day,
-                                isCurrentDay = day == currentDay,
-                                dayOfWeek = index, // 0=일요일, 6=토요일
-                                onCellClick = { onDayClick(day) }
-                            )
+                            // day가 0보다 클 때만
+                            if (day > 0) {
+                                val cellDate = LocalDate.of(viewDate.year, viewDate.monthValue, day)
+                                val matchedHistory = history.find { it.date == cellDate }
+
+                                CalendarDayCell(
+                                    day = day,
+                                    isCurrentDay = day == currentDay,
+                                    dayOfWeek = index, // 0=일요일, 6=토요일
+                                    bansoogiResource = matchedHistory?.bansoogiAnimationId,
+                                    onCellClick = { onDayClick(day) }
+                                )
+                            }
                         }
                     }
 
@@ -290,8 +328,7 @@ fun DaysHeader() {
 }
 
 @Composable
-fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1, onCellClick: () -> Unit) {
-    if (day > 0) { // 실제 날짜만 표시
+fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1, bansoogiResource: Int?, onCellClick: () -> Unit) {
         // 셀 클릭 시, 회색 창 제거
         val interactionSource = remember { MutableInteractionSource() }
 
@@ -341,8 +378,8 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
             )
 
             // 이미지는 중앙에 배치
-            // 현재는 무조건 보이지만, 나중에는 반숙이 데이터가 존재하는 경우에만 출력
-            if (true) {
+            // 현재는 무조건 보이지만, 나중에는 반숙이 데이터가 존재하는 경우에만 출력s
+            if (bansoogiResource != null) {
                 val context = LocalContext.current
                 val imageLoader = remember {
                     ImageLoader.Builder(context)
@@ -363,7 +400,7 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
                     Image(
                         painter = rememberAsyncImagePainter(
                             ImageRequest.Builder(context)
-                                .data(R.drawable.bansoogi_walk)
+                                .data(bansoogiResource)
                                 .build(),
                             imageLoader = imageLoader
                         ),
@@ -375,7 +412,6 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
                 }
             }
         }
-    }
 }
 
 @Preview(showBackground = true)

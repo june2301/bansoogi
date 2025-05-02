@@ -4,10 +4,7 @@ import com.example.eggi.common.data.entity.TodayRecord
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import io.realm.kotlin.ext.query
-import com.example.eggi.R
 import io.realm.kotlin.types.RealmInstant
-import org.mongodb.kbson.BsonObjectId
-import org.mongodb.kbson.BsonObjectId.Companion.invoke
 import org.mongodb.kbson.ObjectId
 
 class TodayRecordDataSource {
@@ -17,8 +14,6 @@ class TodayRecordDataSource {
         val hasTodayRecord = realm.query<TodayRecord>().find().isNotEmpty()
         if (!hasTodayRecord) {
             realm.write {
-                val todayRecord = realm.query<TodayRecord>().find()
-                delete(todayRecord)
                 copyToRealm(TodayRecord().apply {
                     energyPoint = 0
                     standUpCnt = 0
