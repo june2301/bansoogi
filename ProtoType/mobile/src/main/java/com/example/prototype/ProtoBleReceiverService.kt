@@ -26,9 +26,9 @@ class ProtoBleReceiverService :
         private const val ACTIVITY_UPDATE_PATH = "/activity_update"
         private const val WALK_STATE_PATH = "/walk_state"
 
-        // LiveData for walking state
-        private val _walkingLiveData = MutableLiveData<Boolean>()
-        val walkingLiveData: LiveData<Boolean> = _walkingLiveData
+        // LiveData for activity state (0:idle,1:walk,2:run,3:ascend)
+        private val _activityLiveData = MutableLiveData<Int>()
+        val activityLiveData: LiveData<Int> = _activityLiveData
     }
 
     private lateinit var messageClient: MessageClient
@@ -82,13 +82,13 @@ class ProtoBleReceiverService :
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
         if (messageEvent.path == ACTIVITY_UPDATE_PATH || messageEvent.path == WALK_STATE_PATH) {
-            processWalkState(messageEvent.data)
+            processActivityState(messageEvent.data)
         }
     }
 
-    private fun processWalkState(data: ByteArray) {
+    private fun processActivityState(data: ByteArray) {
         if (data.isEmpty()) return
-        val walking = data[0].toInt() == 1
-        _walkingLiveData.postValue(walking)
+        val state = data[0].toInt()
+        _activityLiveData.postValue(state)
     }
 }

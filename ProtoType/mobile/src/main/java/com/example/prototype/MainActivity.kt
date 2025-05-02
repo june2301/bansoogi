@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    WalkingScreen(ProtoBleReceiverService.walkingLiveData.asFlow())
+                    ActivityScreen(ProtoBleReceiverService.activityLiveData.asFlow())
                 }
             }
         }
@@ -91,8 +91,17 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun WalkingScreen(walkFlow: Flow<Boolean>) {
-    val walking by walkFlow.collectAsState(initial = false)
+fun ActivityScreen(stateFlow: Flow<Int>) {
+    val state by stateFlow.collectAsState(initial = 0)
+
+    val text =
+        when (state) {
+            0 -> "정지"
+            1 -> "걷는 중"
+            2 -> "뛰는 중"
+            3 -> "오르는 중"
+            else -> "알 수 없음"
+        }
 
     Column(
         modifier =
@@ -103,7 +112,7 @@ fun WalkingScreen(walkFlow: Flow<Boolean>) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "걷기 상태",
+            text = "활동 상태",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -111,7 +120,7 @@ fun WalkingScreen(walkFlow: Flow<Boolean>) {
         )
 
         Text(
-            text = if (walking) "걷는 중" else "정지",
+            text = text,
             fontSize = 48.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,

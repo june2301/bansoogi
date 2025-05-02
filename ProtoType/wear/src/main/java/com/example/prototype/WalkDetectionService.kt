@@ -47,6 +47,9 @@ class WalkDetectionService :
     private var lastStepTimestamp: Long = 0L
     private var activityState: Int = 0
     private val stepTimestamps = ArrayDeque<Long>()
+    private val altitudeWindow = ArrayDeque<Pair<Long, Float>>()
+    private var stairCandidate = false // altitude threshold met
+    private var altitudeLPF = 0f
     private var idleJob: Job? = null
     private lateinit var nodeClient: NodeClient
     private lateinit var messageClient: MessageClient
@@ -54,6 +57,12 @@ class WalkDetectionService :
     private var started = false
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+    // --- tuning constants ---
+    private val ALT_TH_METERS = 0.5f // 0.5 m ascent threshold
+    private val STAIR_WINDOW_MS = 6000L // 6-second window
+    private val MIN_STEPS_BASE = 3 // minimum steps even for slow ascent
+    private val LPF_ALPHA = 0.25f // low-pass filter factor for altitude
 
     override fun onCreate() {
         super.onCreate()
@@ -75,12 +84,16 @@ class WalkDetectionService :
 
             sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
             val stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+            val pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
             if (stepSensor == null) {
                 Log.e(TAG, "STEP_DETECTOR sensor not available")
                 stopSelf()
                 return START_NOT_STICKY
             }
             sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
+            pressureSensor?.let {
+                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+            }
 
             // launch idle checker
             idleJob =
@@ -91,14 +104,22 @@ class WalkDetectionService :
                         while (stepTimestamps.isNotEmpty() && now - stepTimestamps.first() > 5000L) {
                             stepTimestamps.removeFirst()
                         }
-                        val cadenceSpm = if (stepTimestamps.isNotEmpty()) stepTimestamps.size * 12 else 0
-                        val newState =
+                        val stepsWin = stepTimestamps.count { now - it <= STAIR_WINDOW_MS }
+                        val cadenceSpm = if (stepsWin > 0) stepsWin * 60000 / STAIR_WINDOW_MS.toInt() else 0
+
+                        // 가변 최소 스텝: 윈도우 내 스텝의 40% 또는 MIN_STEPS_BASE 중 큰 값
+                        val minSteps = maxOf(MIN_STEPS_BASE, (stepsWin * 0.4f).toInt())
+
+                        val ascending = stairCandidate && stepsWin >= minSteps
+                        val baseState =
                             when {
                                 stepTimestamps.isEmpty() || now - lastStepTimestamp > 5000L -> 0
                                 cadenceSpm >= 150 -> 2
                                 else -> 1
                             }
-                        Log.d(TAG, "SPM=$cadenceSpm, newState=$newState")
+
+                        val newState = if (ascending) 3 else baseState
+                        Log.d(TAG, "SPM=$cadenceSpm, ascending=$ascending, newState=$newState")
                         updateActivityState(newState)
                     }
                 }
@@ -128,13 +149,37 @@ class WalkDetectionService :
 
     // Sensor callbacks
     override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type != Sensor.TYPE_STEP_DETECTOR) return
-        lastStepTimestamp = System.currentTimeMillis()
-        stepTimestamps.addLast(lastStepTimestamp)
-        while (stepTimestamps.isNotEmpty() && lastStepTimestamp - stepTimestamps.first() > 5000L) {
-            stepTimestamps.removeFirst()
+        val now = System.currentTimeMillis()
+        when (event.sensor.type) {
+            Sensor.TYPE_STEP_DETECTOR -> {
+                lastStepTimestamp = now
+                stepTimestamps.addLast(now)
+                while (stepTimestamps.isNotEmpty() && now - stepTimestamps.first() > 5000L) {
+                    stepTimestamps.removeFirst()
+                }
+                // immediate provisional update to walking if idle
+                if (activityState == 0) updateActivityState(1)
+            }
+            Sensor.TYPE_PRESSURE -> {
+                val pressure = event.values[0]
+                val altitude =
+                    android.hardware.SensorManager.getAltitude(
+                        android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
+                        pressure,
+                    )
+                if (altitudeLPF == 0f) altitudeLPF = altitude // init
+                altitudeLPF += LPF_ALPHA * (altitude - altitudeLPF)
+
+                altitudeWindow.addLast(now to altitudeLPF)
+                while (altitudeWindow.isNotEmpty() && now - altitudeWindow.first().first > STAIR_WINDOW_MS) {
+                    altitudeWindow.removeFirst()
+                }
+                if (altitudeWindow.size >= 2) {
+                    val deltaH = altitudeLPF - altitudeWindow.first().second
+                    stairCandidate = deltaH > ALT_TH_METERS
+                }
+            }
         }
-        updateActivityState(1)
     }
 
     override fun onAccuracyChanged(
