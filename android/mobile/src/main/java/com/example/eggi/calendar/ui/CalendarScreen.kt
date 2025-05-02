@@ -53,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import com.example.eggi.calendar.controller.CalendarController
 import com.example.eggi.calendar.data.local.Bansoogi
+import com.example.eggi.calendar.data.model.DetailReport
 import com.example.eggi.calendar.data.model.HistoryItem
 import com.example.eggi.calendar.view.CalendarView
 import kotlinx.coroutines.launch

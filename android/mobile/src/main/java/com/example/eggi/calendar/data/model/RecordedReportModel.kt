@@ -25,4 +25,38 @@ class RecordedReportModel {
                 )
             }
         }
+
+    suspend fun getDetailReport(date: String): DetailReport? {
+        val report = dataSource.getRecordedReportByDate(date) ?: return null
+
+        // 반숙이 데이터 호출도 나중에 변경 예정
+        val bansoogi = dataSource.getBansoogiById(report.bansoogiId)
+
+        return DetailReport(
+            date = report.reportedDate,
+
+            finalEnergyPoint = report.finalEnergyPoint,
+
+            bansoogiTitle = bansoogi?.title ?: "",
+            bansoogiResource = bansoogi?.gifUrl ?: 0,
+
+            standupCount = report.standupCount,
+            stretchCount = report.stretchCount,
+            phoneOffCount = report.phoneOffCount,
+
+            lyingTime = report.lyingTime,
+            sittingTime = report.sittingTime,
+            phoneTime = report.phoneTime,
+            sleepTime = report.sleepTime,
+
+            walkCount = report.walkCount,
+            runTime = report.runTime,
+            exerciseTime =  report.exerciseTime,
+            stairsClimbed = report.stairsClimbed,
+
+            breakfast = report.breakfast,
+            lunch = report.lunch,
+            dinner = report.dinner
+        )
+    }
 }

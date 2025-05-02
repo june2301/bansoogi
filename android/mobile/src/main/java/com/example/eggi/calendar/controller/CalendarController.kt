@@ -1,5 +1,6 @@
 package com.example.eggi.calendar.controller
 
+import com.example.eggi.calendar.data.model.DetailReport
 import com.example.eggi.calendar.data.model.HistoryItem
 import com.example.eggi.calendar.data.model.RecordedReportModel
 import com.example.eggi.calendar.view.CalendarView
