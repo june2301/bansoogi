@@ -2,18 +2,22 @@ package com.ddc.bansoogi.collection.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.eggi.collection.data.model.CollectionDto
@@ -64,11 +68,32 @@ fun CollectionScreen() {
     ) {
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text(
-            text = "🐣 내 컬렉션",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(vertical = 12.dp)
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp)
+                .background(Color.White, shape = RoundedCornerShape(16.dp))
+                .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
+                .padding(vertical = 12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.bansoogi_default_profile), // 아이콘 변경 가능
+                    contentDescription = "내 컬렉션 아이콘",
+                    modifier = Modifier.size(32.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "내 컬렉션",
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                )
+            }
+        }
+
 
         SectionHeader("일반", R.drawable.egg_white)
 
@@ -132,7 +157,14 @@ suspend fun insertDummyCharacters() {
 fun SectionHeader(title: String, iconRes: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier
+            .wrapContentWidth()
+            .padding(vertical = 12.dp)
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Image(
             painter = painterResource(id = iconRes),
@@ -142,7 +174,7 @@ fun SectionHeader(title: String, iconRes: Int) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
     }
 }
@@ -160,6 +192,8 @@ fun CollectionGridItem(character: CollectionDto, onClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .aspectRatio(1f)
+                .clip(RoundedCornerShape(12.dp))
+                .border(2.dp, Color.Gray, shape = RoundedCornerShape(12.dp))
                 .background(Color.LightGray)
         ) {
             Text("이미지 없음", modifier = Modifier.align(Alignment.Center))
@@ -170,6 +204,8 @@ fun CollectionGridItem(character: CollectionDto, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .aspectRatio(1f)
+            .clip(RoundedCornerShape(12.dp))
+            .border(2.dp, Color.Gray, shape = RoundedCornerShape(12.dp))
             .clickable(enabled = character.isUnlocked, onClick = onClick)
     ) {
         Image(
