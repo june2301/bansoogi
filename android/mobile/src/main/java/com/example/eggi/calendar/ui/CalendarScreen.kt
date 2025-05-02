@@ -52,9 +52,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import com.example.eggi.calendar.controller.CalendarController
-import com.example.eggi.calendar.data.local.Bansoogi
-import com.example.eggi.calendar.data.model.DetailReport
-import com.example.eggi.calendar.data.model.HistoryItem
+import com.example.eggi.calendar.data.model.HistoryItemDto
 import com.example.eggi.calendar.view.CalendarView
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -66,10 +64,10 @@ private const val INITIAL_PAGE = Int.MAX_VALUE / 2
 @Composable
 fun CalendarScreen() {
     // 캘린더 데이터 가져오기 -> 임시로 데이터 초기화, 없다면 생성함
-    val historyState = remember { mutableStateOf<List<HistoryItem>?>(null) }
+    val historyState = remember { mutableStateOf<List<HistoryItemDto>?>(null) }
     val view = remember {
         object : CalendarView {
-            override fun displayCalendar(history: List<HistoryItem>) {
+            override fun displayCalendar(history: List<HistoryItemDto>) {
                 historyState.value = history
             }
         }
@@ -91,7 +89,7 @@ fun CalendarScreen() {
 }
 
 @Composable
-fun CalendarContent(history: List<HistoryItem>) {
+fun CalendarContent(history: List<HistoryItemDto>) {
     // 실제 오늘 날짜 가져오기
     val today = remember { LocalDate.now() }
 
@@ -229,7 +227,7 @@ fun CalendarHeader(viewDate: LocalDate, onPrevMonth: () -> Unit, onNextMonth: ()
 }
 
 @Composable
-fun CalendarGrid(viewDate: LocalDate, today: LocalDate, history: List<HistoryItem>, onDayClick: (Int) -> Unit) {
+fun CalendarGrid(viewDate: LocalDate, today: LocalDate, history: List<HistoryItemDto>, onDayClick: (Int) -> Unit) {
     Column (modifier = Modifier
         .fillMaxSize()
     ) {

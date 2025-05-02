@@ -52,7 +52,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.eggi.R
 import com.example.eggi.calendar.controller.RecordedController
-import com.example.eggi.calendar.data.model.DetailReport
+import com.example.eggi.calendar.data.model.DetailReportDto
 
 @Composable
 fun ModalHeader(
@@ -168,7 +168,7 @@ fun Divider() {
 @Composable
 fun RecordContent(
     onDismissRequest: () -> Unit,
-    report: DetailReport
+    report: DetailReportDto
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -400,7 +400,7 @@ fun RecordedModal(
     selectedDate: String
 ) {
     val controller = remember { RecordedController() }
-    var report by remember { mutableStateOf<DetailReport?>(null) }
+    var report by remember { mutableStateOf<DetailReportDto?>(null) }
 
     LaunchedEffect(selectedDate) {
         report = controller.getDetailReport(selectedDate)

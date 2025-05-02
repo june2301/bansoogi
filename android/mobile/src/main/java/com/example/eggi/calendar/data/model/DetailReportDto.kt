@@ -1,12 +1,6 @@
 package com.example.eggi.calendar.data.model
 
-import com.example.eggi.calendar.data.local.Bansoogi
-import io.realm.kotlin.types.annotations.PrimaryKey
-import org.mongodb.kbson.BsonObjectId
-import org.mongodb.kbson.BsonObjectId.Companion.invoke
-import org.mongodb.kbson.ObjectId
-
-data class DetailReport (
+data class DetailReportDto (
     val date: String,
 
     val finalEnergyPoint: Int,

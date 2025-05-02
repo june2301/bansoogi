@@ -1,8 +1,7 @@
 package com.example.eggi.calendar.view
 
-import com.example.eggi.calendar.data.model.DetailReport
-import com.example.eggi.calendar.data.model.HistoryItem
+import com.example.eggi.calendar.data.model.HistoryItemDto
 
 interface CalendarView {
-    fun displayCalendar(history: List<HistoryItem>)
+    fun displayCalendar(history: List<HistoryItemDto>)
 }
