@@ -38,9 +38,27 @@ class MyInfoDataSource {
         }
     }
 
+    /** 토글 업데이트 */
+    suspend fun toggleAlarmEnabled() {
+        realm.write {
+            query<User>().first().find()?.let { it.alarmEnabled = !it.alarmEnabled }
+        }
+    }
+    suspend fun toggleBgSoundEnabled() {
+        realm.write {
+            query<User>().first().find()?.let { it.bgSoundEnabled = !it.bgSoundEnabled }
+        }
+    }
+    suspend fun toggleEffectSoundEnabled() {
+        realm.write {
+            query<User>().first().find()?.let { it.effectSoundEnabled = !it.effectSoundEnabled }
+        }
+    }
+
+    /** 전체 업데이트 */
     suspend fun updateUser(updated: User) {
         realm.write {
-            copyToRealm(updated)
+            copyToRealm(updated, updatePolicy = io.realm.kotlin.UpdatePolicy.ALL)
         }
     }
 

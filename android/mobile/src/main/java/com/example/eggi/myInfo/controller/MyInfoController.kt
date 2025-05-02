@@ -21,4 +21,23 @@ class MyInfoController(private val view: MyInfoView) {
             }
         }
     }
+
+    fun toggleAlarm() {
+        scope.launch {
+            val updated = model.toggleAlarm()
+            view.displayMyInfo(updated)
+        }
+    }
+    fun toggleBgSound() {
+        scope.launch {
+            val updated = model.toggleBgSound()
+            view.displayMyInfo(updated)
+        }
+    }
+    fun toggleEffect() {
+        scope.launch {
+            val updated = model.toggleEffect()
+            view.displayMyInfo(updated)
+        }
+    }
 }
