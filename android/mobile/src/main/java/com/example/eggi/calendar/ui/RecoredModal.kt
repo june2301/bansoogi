@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,6 +54,33 @@ import coil.request.ImageRequest
 import com.example.eggi.R
 import com.example.eggi.calendar.controller.RecordedController
 import com.example.eggi.calendar.data.model.DetailReportDto
+import com.example.eggi.common.ui.component.BansoogiAnimation
+import kotlin.String
+
+@Composable
+fun RecordedModal(
+    onDismissRequest: () -> Unit,
+    selectedDate: String
+) {
+    val controller = remember { RecordedController() }
+    var report by remember { mutableStateOf<DetailReportDto?>(null) }
+
+    LaunchedEffect(selectedDate) {
+        report = controller.getDetailReport(selectedDate)
+
+        if (report == null) {
+            onDismissRequest()
+            return@LaunchedEffect
+        }
+    }
+
+    report?.let { report ->
+        RecordContent(
+            onDismissRequest = onDismissRequest,
+            report = report
+        )
+    }
+}
 
 @Composable
 fun ModalHeader(
@@ -71,7 +99,7 @@ fun ModalHeader(
             modifier = Modifier.size(32.dp)
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        VerticalSpacer()
 
         Text(
             text = title,
@@ -166,6 +194,13 @@ fun Divider() {
 }
 
 @Composable
+fun VerticalSpacer(
+    height: Dp = 8.dp
+) {
+    Spacer(modifier = Modifier.height(height))
+}
+
+@Composable
 fun RecordContent(
     onDismissRequest: () -> Unit,
     report: DetailReportDto
@@ -227,33 +262,17 @@ fun RecordContent(
                                     .fillMaxHeight(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                val context = LocalContext.current
-                                val imageLoader = remember {
-                                    ImageLoader.Builder(context)
-                                        .components {
-                                            add(GifDecoder.Factory())
-                                            add(ImageDecoderDecoder.Factory())
-                                        }
-                                        .build()
-                                }
-
                                 Box(modifier = Modifier
                                     .size(120.dp)
                                     .clip(RoundedCornerShape(12.dp))
                                     .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, RoundedCornerShape(12.dp))
                                 ) {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(
-                                            ImageRequest.Builder(context)
-                                                .data(report.bansoogiResource)
-                                                .build(),
-                                            imageLoader = imageLoader
-                                        ),
-                                        contentDescription = "반숙이",
+                                    BansoogiAnimation(
+                                        resource = report.bansoogiResource,
+                                        description = "행동 기록 모달에 출력하는 반숙이 리소스",
                                         modifier = Modifier
-                                            .offset(x = 20.dp, y = (-8).dp)
-                                            .scale(1.5f)
                                             .size(100.dp)
+                                            .offset(x = 20.dp, y = (-8).dp) // 중앙이 안 맞아서 조절
                                     )
                                 }
                             }
@@ -286,7 +305,7 @@ fun RecordContent(
                                         fontWeight = FontWeight.Bold
                                     )
 
-                                    Spacer(modifier = Modifier.height(20.dp))
+                                    VerticalSpacer(height = 20.dp)
 
                                     Text(
                                         text = report.bansoogiTitle,
@@ -305,14 +324,14 @@ fun RecordContent(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         // 행동 기록 섹션
                         SectionHeader(
                             title = "행동 기록"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "누워있던 시간 :",
@@ -320,7 +339,7 @@ fun RecordContent(
                             unit = "분"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "앉아있던 시간 :",
@@ -328,7 +347,7 @@ fun RecordContent(
                             unit = "분"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "휴대폰 사용 시간 :",
@@ -343,7 +362,7 @@ fun RecordContent(
                             title = "이벤트 행동 변화"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "기상 이벤트 :",
@@ -351,7 +370,7 @@ fun RecordContent(
                             unit = "회"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                       VerticalSpacer()
 
                         InfoRow(
                             label = "스트레칭 이벤트 :",
@@ -380,7 +399,7 @@ fun RecordContent(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "휴대폰 미사용 이벤트 :",
@@ -394,36 +413,35 @@ fun RecordContent(
     }
 }
 
-@Composable
-fun RecordedModal(
-    onDismissRequest: () -> Unit,
-    selectedDate: String
-) {
-    val controller = remember { RecordedController() }
-    var report by remember { mutableStateOf<DetailReportDto?>(null) }
-
-    LaunchedEffect(selectedDate) {
-        report = controller.getDetailReport(selectedDate)
-
-        if (report == null) {
-            onDismissRequest()
-            return@LaunchedEffect
-        }
-    }
-
-    report?.let { report ->
-        RecordContent(
-            onDismissRequest = onDismissRequest,
-            report = report
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun RecordedModalPreview() {
-//    RecordedModal(
-//        onDismissRequest = { },
-//        selectedDate = { }
-//    )
+    RecordContent(
+        onDismissRequest = { },
+        report = DetailReportDto (
+            date = "2025-05-01",
+            finalEnergyPoint =90,
+
+            bansoogiTitle = "임시 반숙이",
+            bansoogiResource = 1,
+
+            standupCount = 1,
+            stretchCount = 2,
+            phoneOffCount = 3,
+
+            lyingTime = 10,
+            sittingTime = 20,
+            phoneTime = 30,
+            sleepTime = 40,
+
+            walkCount = 100,
+            runTime = 200,
+            exerciseTime = 300,
+            stairsClimbed = 400,
+
+            breakfast = false,
+            lunch = false,
+            dinner = false
+        )
+    )
 }

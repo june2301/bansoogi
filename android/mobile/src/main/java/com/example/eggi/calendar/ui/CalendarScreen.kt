@@ -54,6 +54,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import com.example.eggi.calendar.controller.CalendarController
 import com.example.eggi.calendar.data.model.HistoryItemDto
 import com.example.eggi.calendar.view.CalendarView
+import com.example.eggi.common.ui.component.BansoogiAnimation
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
@@ -379,16 +380,6 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
             // 이미지는 중앙에 배치
             // 현재는 무조건 보이지만, 나중에는 반숙이 데이터가 존재하는 경우에만 출력s
             if (bansoogiResource != null) {
-                val context = LocalContext.current
-                val imageLoader = remember {
-                    ImageLoader.Builder(context)
-                        .components {
-                            add(GifDecoder.Factory())
-                            add(ImageDecoderDecoder.Factory())
-                        }
-                        .build()
-                }
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
@@ -396,17 +387,10 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
                         .align(Alignment.Center),
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            ImageRequest.Builder(context)
-                                .data(bansoogiResource)
-                                .build(),
-                            imageLoader = imageLoader
-                        ),
-                        contentDescription = "반숙이",
+                    BansoogiAnimation(
+                        resource = bansoogiResource,
+                        description = "달력에 표시하는 반숙이 리소스",
                         modifier = Modifier
-                            .scale(1.5f),
-                        contentScale = ContentScale.Fit
                     )
                 }
             }
