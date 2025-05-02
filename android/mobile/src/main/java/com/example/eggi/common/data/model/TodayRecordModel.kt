@@ -3,12 +3,23 @@ package com.example.eggi.common.data.model
 import com.example.eggi.common.data.local.TodayRecordDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.mongodb.kbson.ObjectId
 
 class TodayRecordModel {
     private val dataSource = TodayRecordDataSource()
 
-    suspend fun getTodayRecord(): Flow<TodayRecord> {
+    suspend fun initialize() {
         dataSource.initialize()
+    }
+    suspend fun updateInteractionCnt(recordId: ObjectId) {
+        dataSource.updateInteractionCnt(recordId)
+    }
+
+    suspend fun updateEnergy(recordId: ObjectId, addedEnergy: Int) {
+        dataSource.updateEnergy(recordId, addedEnergy)
+    }
+
+    fun getTodayRecord(): Flow<TodayRecord> {
         return dataSource.getTodayRecord().map { entity ->
                 TodayRecord(
                     recordId = entity.recordId,

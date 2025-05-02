@@ -10,34 +10,33 @@ import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 
 class TodayRecordController(private val view: TodayRecordView) {
-    private val dataSource = TodayRecordDataSource()
     private val model = TodayRecordModel()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
+    private suspend fun refreshTodayRecord() {
+        model.getTodayRecord().collectLatest { todayRecord ->
+            view.displayTodayRecord(todayRecord)
+        }
+    }
+
     fun initialize() {
         coroutineScope.launch {
-            dataSource.initialize()
-            model.getTodayRecord().collectLatest { todayRecord ->
-                view.displayTodayRecord(todayRecord)
-            }
+            model.initialize()
+            refreshTodayRecord()
         }
     }
 
     fun updateInteractionCnt(recordId: ObjectId) {
         coroutineScope.launch {
-            dataSource.updateInteractionCnt(recordId)
-            model.getTodayRecord().collectLatest { todayRecord ->
-                view.displayTodayRecord(todayRecord)
-            }
+            model.updateInteractionCnt(recordId)
+            refreshTodayRecord()
         }
     }
 
     fun updateEnergy(recordId: ObjectId, addedEnergy: Int) {
         coroutineScope.launch {
-            dataSource.updateEnergy(recordId, addedEnergy)
-            model.getTodayRecord().collectLatest { todayRecord ->
-                view.displayTodayRecord(todayRecord)
-            }
+            model.updateEnergy(recordId, addedEnergy)
+            refreshTodayRecord()
         }
     }
 }
