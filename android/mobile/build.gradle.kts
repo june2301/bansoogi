@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.eggi"
+    namespace = "com.ddc.bansoogi"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.eggi"
+        applicationId = "com.ddc.bansoogi"
         minSdk = 29
         targetSdk = 35
         versionCode = 1

@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Eggi"
+rootProject.name = "Bansoogi"
 include(":mobile")
 include(":wear")
  
