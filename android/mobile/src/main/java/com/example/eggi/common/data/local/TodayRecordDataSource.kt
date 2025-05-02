@@ -48,14 +48,12 @@ class TodayRecordDataSource {
 
     suspend fun updateInteractionCnt(recordId: ObjectId) {
         realm.write {
-            query<TodayRecord>("id == $0", recordId)
+            query<TodayRecord>("recordId == $0", recordId)
                 .first()
                 .find()
                 ?.let { record ->
                     findLatest(record)?.apply {
                         interactionCnt += 1
-
-
 
                         updatedAt = RealmInstant.now()
                     }
@@ -65,7 +63,7 @@ class TodayRecordDataSource {
 
     suspend fun updateEnergy(recordId: ObjectId, addedEnergy: Int) {
         realm.write {
-            query<TodayRecord>("id == $0", recordId)
+            query<TodayRecord>("recordId == $0", recordId)
                 .first()
                 .find()
                 ?.let { record ->
