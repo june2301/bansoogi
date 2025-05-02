@@ -5,4 +5,5 @@ import com.example.eggi.myInfo.data.model.MyInfo
 
 interface TodayRecordView {
     fun displayTodayRecord(todayRecord: TodayRecord)
+    fun showEmptyState()
 }

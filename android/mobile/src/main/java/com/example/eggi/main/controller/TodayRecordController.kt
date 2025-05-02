@@ -1,6 +1,5 @@
 package com.example.eggi.main.controller
 
-import com.example.eggi.common.data.local.TodayRecordDataSource
 import com.example.eggi.common.data.model.TodayRecordModel
 import com.example.eggi.main.view.TodayRecordView
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +14,11 @@ class TodayRecordController(private val view: TodayRecordView) {
 
     private suspend fun refreshTodayRecord() {
         model.getTodayRecord().collectLatest { todayRecord ->
-            view.displayTodayRecord(todayRecord)
+            todayRecord?.let {
+                view.displayTodayRecord(todayRecord)
+            } ?: run {
+                view.showEmptyState()
+            }
         }
     }
 

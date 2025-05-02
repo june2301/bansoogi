@@ -52,6 +52,10 @@ fun HomeScreen() {
             override fun displayTodayRecord(todayRecord: TodayRecord) {
                 todayRecordState.value = todayRecord
             }
+
+            override fun showEmptyState() {
+                todayRecordState.value = null
+            }
         }
     }
     val todayRecordController = remember { TodayRecordController(view) }

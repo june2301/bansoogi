@@ -40,10 +40,10 @@ class TodayRecordDataSource {
         }
     }
 
-    fun getTodayRecord(): Flow<TodayRecord> {
+    fun getTodayRecord(): Flow<TodayRecord?> {
         return realm.query<TodayRecord>()
             .asFlow()
-            .map { it.list.firstOrNull() ?: TodayRecord() }
+            .map { it.list.firstOrNull() }
     }
 
     suspend fun updateInteractionCnt(recordId: ObjectId) {

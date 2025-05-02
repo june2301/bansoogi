@@ -19,8 +19,9 @@ class TodayRecordModel {
         dataSource.updateEnergy(recordId, addedEnergy)
     }
 
-    fun getTodayRecord(): Flow<TodayRecord> {
+    fun getTodayRecord(): Flow<TodayRecord?> {
         return dataSource.getTodayRecord().map { entity ->
+            entity?.let {
                 TodayRecord(
                     recordId = entity.recordId,
                     energyPoint = entity.energyPoint,
@@ -39,6 +40,7 @@ class TodayRecordModel {
                     createdAt = entity.createdAt,
                     updatedAt = entity.updatedAt
                 )
+            }
         }
     }
 }
