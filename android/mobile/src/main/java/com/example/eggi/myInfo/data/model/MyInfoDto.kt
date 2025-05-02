@@ -1,6 +1,6 @@
 package com.example.eggi.myInfo.data.model
 
-data class MyInfo(
+data class MyInfoDto(
     val userId: String,
     val nickname: String,
     val birthDate: String,

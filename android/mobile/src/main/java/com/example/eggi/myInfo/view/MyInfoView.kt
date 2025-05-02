@@ -1,7 +1,7 @@
 package com.example.eggi.myInfo.view
 
-import com.example.eggi.myInfo.data.model.MyInfo
+import com.example.eggi.myInfo.data.model.MyInfoDto
 
 interface MyInfoView {
-    fun displayMyInfo(myInfo: MyInfo)
+    fun displayMyInfo(myInfoDto: MyInfoDto)
 }

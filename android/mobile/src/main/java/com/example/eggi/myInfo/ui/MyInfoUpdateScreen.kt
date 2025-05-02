@@ -35,19 +35,19 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.eggi.myInfo.controller.MyInfoController
 import com.example.eggi.myInfo.controller.MyInfoUpdateController
-import com.example.eggi.myInfo.data.model.MyInfo
+import com.example.eggi.myInfo.data.model.MyInfoDto
 import com.example.eggi.myInfo.view.MyInfoView
 import java.util.*
 
 @Composable
 fun MyInfoUpdateScreen(navController: NavController) {
 
-    val infoState = remember { mutableStateOf<MyInfo?>(null) }
+    val infoState = remember { mutableStateOf<MyInfoDto?>(null) }
 
     val fetchController = remember {
         MyInfoController(object : MyInfoView {
-            override fun displayMyInfo(myInfo: MyInfo) {
-                infoState.value = myInfo
+            override fun displayMyInfo(myInfoDto: MyInfoDto) {
+                infoState.value = myInfoDto
             }
         })
     }
@@ -486,7 +486,7 @@ fun MyInfoUpdateScreen(navController: NavController) {
                         val dinner    = timesMap["저녁"]?.value?.text.orEmpty()
 
                         updateController.save(
-                            MyInfo(
+                            MyInfoDto(
                                 userId               = initial.userId,
                                 nickname             = nickname,
                                 birthDate            = birthDate.text,

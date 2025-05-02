@@ -22,9 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.eggi.myInfo.controller.MyInfoController
-import com.example.eggi.myInfo.data.model.MyInfo
+import com.example.eggi.myInfo.data.model.MyInfoDto
 import com.example.eggi.myInfo.view.MyInfoView
-import com.example.eggi.R
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.platform.LocalContext
 import coil.ImageLoader
@@ -36,11 +35,11 @@ private val GreenChecked = Color(0xFF99CC00)
 
 @Composable
 fun MyInfoScreen(navController: NavController) {
-    val infoState = remember { mutableStateOf<MyInfo?>(null) }
+    val infoState = remember { mutableStateOf<MyInfoDto?>(null) }
     val controller = remember {
         MyInfoController(object : MyInfoView {
-            override fun displayMyInfo(myInfo: MyInfo) {
-                infoState.value = myInfo
+            override fun displayMyInfo(myInfoDto: MyInfoDto) {
+                infoState.value = myInfoDto
             }
         })
     }
@@ -51,7 +50,7 @@ fun MyInfoScreen(navController: NavController) {
 
     infoState.value?.let { myInfo ->
         MyInfoContent(
-            myInfo = myInfo,
+            myInfoDto = myInfo,
             onEdit = {
                 navController.navigate(NavRoutes.MYINFOUPDATE)
             },
@@ -69,7 +68,7 @@ fun MyInfoScreen(navController: NavController) {
 
 @Composable
 fun MyInfoContent(
-    myInfo: MyInfo,
+    myInfoDto: MyInfoDto,
     onEdit: () -> Unit,
     onToggleAlarm: () -> Unit,
     onToggleBgSound: () -> Unit,
@@ -95,7 +94,7 @@ fun MyInfoContent(
         Spacer(modifier = Modifier.height(12.dp))
         Image(
             painter = rememberAsyncImagePainter(
-                model = myInfo.profileBansoogiId,
+                model = myInfoDto.profileBansoogiId,
                 imageLoader = imageLoader
             ),
             contentDescription = "프로필 이미지",
@@ -105,10 +104,10 @@ fun MyInfoContent(
                 .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, RoundedCornerShape(12.dp))
         )
         Spacer(modifier = Modifier.height(12.dp))
-        Text(myInfo.nickname, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        Text(myInfoDto.nickname, fontSize = 28.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            myInfo.birthDate,
+            myInfoDto.birthDate,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -133,9 +132,9 @@ fun MyInfoContent(
         Divider(thickness = 2.dp, color = Color(0xFF888888))
 
         Spacer(modifier = Modifier.height(16.dp))
-        SettingRow("기상 희망 시간", myInfo.wakeUpTime)
+        SettingRow("기상 희망 시간", myInfoDto.wakeUpTime)
         Spacer(modifier = Modifier.height(4.dp))
-        SettingRow("취침 희망 시간", myInfo.sleepTime)
+        SettingRow("취침 희망 시간", myInfoDto.sleepTime)
         Spacer(modifier = Modifier.height(16.dp))
 
         Divider(thickness = 2.dp, color = Color(0xFF888888))
@@ -150,30 +149,30 @@ fun MyInfoContent(
                 .padding(start = 8.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        if (myInfo.breakfastTime.isNotBlank()) {
+        if (myInfoDto.breakfastTime.isNotBlank()) {
             SettingRow(
                 label             = "아침",
-                value             = myInfo.breakfastTime,
+                value             = myInfoDto.breakfastTime,
                 labelFontSize     = 20,
                 labelColor        = Color(0xFF888888),
                 labelStartPadding = 16.dp
             )
             Spacer(modifier = Modifier.height(4.dp))
         }
-        if (myInfo.lunchTime.isNotBlank()) {
+        if (myInfoDto.lunchTime.isNotBlank()) {
             SettingRow(
                 label             = "점심",
-                value             = myInfo.lunchTime,
+                value             = myInfoDto.lunchTime,
                 labelFontSize     = 20,
                 labelColor        = Color(0xFF888888),
                 labelStartPadding = 16.dp
             )
             Spacer(modifier = Modifier.height(4.dp))
         }
-        if (myInfo.dinnerTime.isNotBlank()) {
+        if (myInfoDto.dinnerTime.isNotBlank()) {
             SettingRow(
                 label             = "저녁",
-                value             = myInfo.dinnerTime,
+                value             = myInfoDto.dinnerTime,
                 labelFontSize     = 20,
                 labelColor        = Color(0xFF888888),
                 labelStartPadding = 16.dp
@@ -202,7 +201,7 @@ fun MyInfoContent(
                 modifier = Modifier.padding(end = 8.dp)
             ) {
                 Text(
-                    text = "${myInfo.notificationDuration}",
+                    text = "${myInfoDto.notificationDuration}",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -221,17 +220,17 @@ fun MyInfoContent(
 
         ToggleRow(
             label = "알림 설정",
-            checked = myInfo.alarmEnabled,
+            checked = myInfoDto.alarmEnabled,
             onToggle = onToggleAlarm
         )
         ToggleRow(
             label = "배경음 설정",
-            checked = myInfo.bgSoundEnabled,
+            checked = myInfoDto.bgSoundEnabled,
             onToggle = onToggleBgSound
         )
         ToggleRow(
             label = "효과음 설정",
-            checked = myInfo.effectSoundEnabled,
+            checked = myInfoDto.effectSoundEnabled,
             onToggle = onToggleEffect
         )
     }

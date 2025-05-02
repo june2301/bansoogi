@@ -10,10 +10,10 @@ import org.mongodb.kbson.ObjectId
 class MyInfoModel {
     private val dataSource = MyInfoDataSource()
 
-    fun getMyInfo(): Flow<MyInfo> =
+    fun getMyInfo(): Flow<MyInfoDto> =
         dataSource.getMyInfo().map { entity -> entity.toDomain() }
 
-    suspend fun updateMyInfo(input: MyInfo): MyInfo {
+    suspend fun updateMyInfo(input: MyInfoDto): MyInfoDto {
         val entity = User().apply {
             userId             = ObjectId(input.userId)
             nickname           = input.nickname
@@ -34,24 +34,24 @@ class MyInfoModel {
     }
 
     /** 토글: DB 반영 후 최신값(domain) 리턴 */
-    suspend fun toggleAlarm(): MyInfo {
+    suspend fun toggleAlarm(): MyInfoDto {
         dataSource.toggleAlarmEnabled()
         val updatedEntity = dataSource.getMyInfo().first()
         return updatedEntity.toDomain()
     }
-    suspend fun toggleBgSound(): MyInfo {
+    suspend fun toggleBgSound(): MyInfoDto {
         dataSource.toggleBgSoundEnabled()
         val updatedEntity = dataSource.getMyInfo().first()
         return updatedEntity.toDomain()
     }
-    suspend fun toggleEffect(): MyInfo {
+    suspend fun toggleEffect(): MyInfoDto {
         dataSource.toggleEffectSoundEnabled()
         val updatedEntity = dataSource.getMyInfo().first()
         return updatedEntity.toDomain()
     }
 
     /** Entity → Domain 매핑 */
-    private fun User.toDomain(): MyInfo = MyInfo(
+    private fun User.toDomain(): MyInfoDto = MyInfoDto(
         userId               = this.userId.toHexString(),
         nickname             = this.nickname,
         birthDate            = this.birthDate,
