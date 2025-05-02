@@ -160,7 +160,7 @@ fun Divider() {
 }
 
 @Composable
-fun RecoredModal(
+fun RecordedModal(
     onDismissRequest: () -> Unit,
     selectedDate: String
 ) {
@@ -388,8 +388,8 @@ fun RecoredModal(
 
 @Preview(showBackground = true)
 @Composable
-fun DayTimeModalPreview() {
-    RecoredModal(
+fun RecordedModalPreview() {
+    RecordedModal(
         onDismissRequest = { },
         selectedDate = "2025-04-20"
     )

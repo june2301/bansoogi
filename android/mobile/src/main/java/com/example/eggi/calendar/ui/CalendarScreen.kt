@@ -1,7 +1,5 @@
 package com.example.eggi.calendar.ui
 
-import android.util.Log
-import com.example.eggi.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -177,7 +175,7 @@ fun CalendarContent(history: List<HistoryItem>) {
 
     // 모달 띄우기
     if (showModal && selectedDate != null) {
-        RecoredModal(
+        RecordedModal(
             onDismissRequest = { showModal = false },
             selectedDate = selectedDate!!
         )
