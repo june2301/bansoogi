@@ -22,7 +22,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +52,35 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.eggi.R
+import com.example.eggi.calendar.controller.RecordedController
+import com.example.eggi.calendar.data.model.DetailReportDto
+import com.example.eggi.common.ui.component.BansoogiAnimation
+import kotlin.String
+
+@Composable
+fun RecordedModal(
+    onDismissRequest: () -> Unit,
+    selectedDate: String
+) {
+    val controller = remember { RecordedController() }
+    var report by remember { mutableStateOf<DetailReportDto?>(null) }
+
+    LaunchedEffect(selectedDate) {
+        report = controller.getDetailReport(selectedDate)
+
+        if (report == null) {
+            onDismissRequest()
+            return@LaunchedEffect
+        }
+    }
+
+    report?.let { report ->
+        RecordContent(
+            onDismissRequest = onDismissRequest,
+            report = report
+        )
+    }
+}
 
 @Composable
 fun ModalHeader(
@@ -65,7 +99,7 @@ fun ModalHeader(
             modifier = Modifier.size(32.dp)
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        VerticalSpacer()
 
         Text(
             text = title,
@@ -160,9 +194,16 @@ fun Divider() {
 }
 
 @Composable
-fun RecordedModal(
+fun VerticalSpacer(
+    height: Dp = 8.dp
+) {
+    Spacer(modifier = Modifier.height(height))
+}
+
+@Composable
+fun RecordContent(
     onDismissRequest: () -> Unit,
-    selectedDate: String
+    report: DetailReportDto
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -188,7 +229,7 @@ fun RecordedModal(
             ) {
 
                 // 날짜 문자열에서 년, 월, 일 추출
-                val (year, month, day) = selectedDate.split("-").map { it.toInt() }
+                val (year, month, day) = report.date.split("-").map { it.toInt() }
 
                 Box(modifier = Modifier.weight(0.1f)) {
                     ModalHeader(
@@ -221,33 +262,17 @@ fun RecordedModal(
                                     .fillMaxHeight(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                val context = LocalContext.current
-                                val imageLoader = remember {
-                                    ImageLoader.Builder(context)
-                                        .components {
-                                            add(GifDecoder.Factory())
-                                            add(ImageDecoderDecoder.Factory())
-                                        }
-                                        .build()
-                                }
-
                                 Box(modifier = Modifier
                                     .size(120.dp)
                                     .clip(RoundedCornerShape(12.dp))
                                     .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, RoundedCornerShape(12.dp))
                                 ) {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(
-                                            ImageRequest.Builder(context)
-                                                .data(R.drawable.bansoogi_walk)
-                                                .build(),
-                                            imageLoader = imageLoader
-                                        ),
-                                        contentDescription = "반숙이",
+                                    BansoogiAnimation(
+                                        resource = report.bansoogiResource,
+                                        description = "행동 기록 모달에 출력하는 반숙이 리소스",
                                         modifier = Modifier
-                                            .offset(x = 20.dp, y = (-8).dp)
-                                            .scale(1.5f)
                                             .size(100.dp)
+                                            .offset(x = 20.dp, y = (-8).dp) // 중앙이 안 맞아서 조절
                                     )
                                 }
                             }
@@ -272,24 +297,25 @@ fun RecordedModal(
                                                     color = Color(0xFF2E616A),  // 색상 변경
                                                 )
                                             ) {
-                                                append("80")
+                                                append("${report.finalEnergyPoint}")
                                             }
                                             append(" / 100")
                                         },
                                         fontSize = 20.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 1.sp
+                                        fontWeight = FontWeight.Bold
                                     )
 
-                                    Spacer(modifier = Modifier.height(20.dp))
+                                    VerticalSpacer(height = 20.dp)
 
-                                    Text("게으른 반숙이",
+                                    Text(
+                                        text = report.bansoogiTitle,
                                         fontSize = 20.sp,
                                         textAlign = TextAlign.Center,
                                         fontWeight = FontWeight.Bold
                                     )
 
-                                    Text("획득!",
+                                    Text(
+                                        text = "획득!",
                                         fontSize = 16.sp,
                                         textAlign = TextAlign.Center,
                                         color = Color.Gray
@@ -298,34 +324,34 @@ fun RecordedModal(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         // 행동 기록 섹션
                         SectionHeader(
                             title = "행동 기록"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "누워있던 시간 :",
-                            value = 2,
+                            value = report.lyingTime,
                             unit = "분"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "앉아있던 시간 :",
-                            value = 43,
+                            value = report.sittingTime,
                             unit = "분"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "휴대폰 사용 시간 :",
-                            value = 38,
+                            value = report.phoneTime,
                             unit = "분"
                         )
 
@@ -336,23 +362,24 @@ fun RecordedModal(
                             title = "이벤트 행동 변화"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "기상 이벤트 :",
-                            value = 0,
+                            value = report.standupCount,
                             unit = "회"
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                       VerticalSpacer()
 
                         InfoRow(
                             label = "스트레칭 이벤트 :",
-                            value = 1,
+                            value = report.stretchCount,
                             unit = "회"
                         )
 
                         // 이벤트 내역
+                        // 로그 불러와서 적용해야 함
                         Row(modifier = Modifier
                             .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -372,11 +399,11 @@ fun RecordedModal(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "휴대폰 미사용 이벤트 :",
-                            value = 0,
+                            value = report.phoneOffCount,
                             unit = "회"
                         )
                     }
@@ -389,8 +416,32 @@ fun RecordedModal(
 @Preview(showBackground = true)
 @Composable
 fun RecordedModalPreview() {
-    RecordedModal(
+    RecordContent(
         onDismissRequest = { },
-        selectedDate = "2025-04-20"
+        report = DetailReportDto (
+            date = "2025-05-01",
+            finalEnergyPoint =90,
+
+            bansoogiTitle = "임시 반숙이",
+            bansoogiResource = 1,
+
+            standupCount = 1,
+            stretchCount = 2,
+            phoneOffCount = 3,
+
+            lyingTime = 10,
+            sittingTime = 20,
+            phoneTime = 30,
+            sleepTime = 40,
+
+            walkCount = 100,
+            runTime = 200,
+            exerciseTime = 300,
+            stairsClimbed = 400,
+
+            breakfast = false,
+            lunch = false,
+            dinner = false
+        )
     )
 }

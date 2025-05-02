@@ -6,6 +6,7 @@ import com.example.eggi.calendar.data.entity.RecordedReport
 import com.example.eggi.common.data.local.RealmManager
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class RecordedReportDataSource {
@@ -15,6 +16,13 @@ class RecordedReportDataSource {
         realm.query<RecordedReport>()
             .asFlow()
             .map { it.list }
+
+    suspend fun getRecordedReportByDate(date: String): RecordedReport? {
+        return realm.query<RecordedReport>("reportedDate == $0", date)
+            .asFlow()
+            .map { it.list.firstOrNull() }
+            .firstOrNull()
+    }
 
     // bansoogi에 대한 data 호출 부분이 생성된다면 삭제 예정임
     fun getBansoogiById(id: Int): Bansoogi? {
