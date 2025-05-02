@@ -14,24 +14,23 @@ class TodayRecordDataSource {
         val hasTodayRecord = realm.query<TodayRecord>().find().isNotEmpty()
         if (!hasTodayRecord) {
             realm.write {
-                copyToRealm(TodayRecord().apply {
-                    energyPoint = 0
-                    standUpCnt = 0
-                    stretchCnt = 0
-                    phoneOffCnt = 0
-                    lyingTime = 0
-                    sittingTime = 0
-                    phoneTime = 0
-                    sleepTime = 0
-                    breakfast = false
-                    lunch = false
-                    dinner = false
-                    interactionCnt = 0
-                    isClosed = false
-                    createdAt = RealmInstant.now()
-                    updatedAt = RealmInstant.now()
-                })
+                copyToRealm(TodayRecord())
             }
+        }
+    }
+
+    suspend fun renewTodayRecord() {
+        val hasTodayRecord = realm.query<TodayRecord>().find().isNotEmpty()
+        if (hasTodayRecord) {
+            realm.write {
+                var todayRecord = query<TodayRecord>().first().find()
+                todayRecord?.let {
+                    delete(it)
+                }
+            }
+        }
+        realm.write {
+            copyToRealm(TodayRecord())
         }
     }
 

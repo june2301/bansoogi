@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.ddc.bansoogi.R
-import com.ddc.bansoogi.common.data.model.TodayRecord
+import com.ddc.bansoogi.common.data.model.TodayRecordDto
 
 @Composable
 fun ModalHeader(
@@ -148,7 +148,7 @@ fun Divider() {
 
 @Composable
 fun DayTimeModal(
-    todayRecord: TodayRecord,
+    todayRecordDto: TodayRecordDto,
     onDismissRequest: () -> Unit,
     onNavigateToToday: () -> Unit
 ) {
@@ -202,7 +202,7 @@ fun DayTimeModal(
 
                         InfoRow(
                             label = "누워있던 시간 :",
-                            value = todayRecord.lyingTime,
+                            value = todayRecordDto.lyingTime,
                             unit = "분"
                         )
 
@@ -210,7 +210,7 @@ fun DayTimeModal(
 
                         InfoRow(
                             label = "앉아있던 시간 :",
-                            value = todayRecord.sittingTime,
+                            value = todayRecordDto.sittingTime,
                             unit = "분"
                         )
 
@@ -218,7 +218,7 @@ fun DayTimeModal(
 
                         InfoRow(
                             label = "휴대폰 사용 시간 :",
-                            value = todayRecord.phoneTime,
+                            value = todayRecordDto.phoneTime,
                             unit = "분"
                         )
 
@@ -233,7 +233,7 @@ fun DayTimeModal(
 
                         InfoRow(
                             label = "기상 이벤트 :",
-                            value = todayRecord.standUpCnt,
+                            value = todayRecordDto.standUpCnt,
                             unit = "회"
                         )
 
