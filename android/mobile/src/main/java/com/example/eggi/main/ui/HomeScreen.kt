@@ -36,12 +36,53 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.eggi.R
 import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.eggi.common.data.model.TodayRecord
+import com.example.eggi.main.controller.TodayRecordController
+import com.example.eggi.main.view.TodayRecordView
 
 @Preview
 @Composable
 fun HomeScreen() {
-    var progressValue by remember { mutableStateOf(40) }
+
+    var todayRecordState = remember { mutableStateOf<TodayRecord?>(null) }
+    var view = remember {
+        object : TodayRecordView {
+            override fun displayTodayRecord(todayRecord: TodayRecord) {
+                todayRecordState.value = todayRecord
+            }
+
+            override fun showEmptyState() {
+                todayRecordState.value = null
+            }
+        }
+    }
+    val todayRecordController = remember { TodayRecordController(view) }
+    LaunchedEffect(Unit) {
+        todayRecordController.initialize()
+    }
+
+    todayRecordState.value?.let { todayRecord ->
+        // 메인 페이지
+        if (todayRecord.isClosed == false) {
+            HomeContent(todayRecord, todayRecordController)
+        }
+        // 알 받기
+        else {
+            // TODO: BeforeContent(todayRecord)
+        }
+    } ?: Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text("로딩 중...", fontSize = 16.sp)
+    }
+}
+
+@Composable
+fun HomeContent(todayRecord: TodayRecord, todayRecordController: TodayRecordController) {
+    var progressValue by remember { mutableStateOf(todayRecord.energyPoint) }
     var showModal by remember { mutableStateOf(false) }
 
     Column(
@@ -163,6 +204,8 @@ fun HomeScreen() {
             onClick = {
                 if (progressValue < 100) {
                     progressValue += 5
+                    todayRecordController.updateInteractionCnt(todayRecord.recordId)
+                    todayRecordController.updateEnergy(todayRecord.recordId, 5)
                 }
             },
             modifier = Modifier
@@ -191,12 +234,18 @@ fun HomeScreen() {
     }
 
     if (showModal) {
-        DayTimeModal(
-            onDismissRequest = { showModal = false },
-            onNavigateToToday = {
-                // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
-                showModal = false
-            }
-        )
+        if (!todayRecord.isClosed) {
+            DayTimeModal(
+                todayRecord = todayRecord,
+                onDismissRequest = { showModal = false },
+                onNavigateToToday = {
+                    // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
+                    showModal = false
+                }
+            )
+        }
+        else {
+            // TODO: 결산 모달
+        }
     }
 }
