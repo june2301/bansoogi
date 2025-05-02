@@ -230,13 +230,18 @@ fun HomeContent(todayRecord: TodayRecord, todayRecordController: TodayRecordCont
     }
 
     if (showModal) {
-        DayTimeModal(
-            todayRecord = todayRecord,
-            onDismissRequest = { showModal = false },
-            onNavigateToToday = {
-                // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
-                showModal = false
-            }
-        )
+        if (!todayRecord.isClosed) {
+            DayTimeModal(
+                todayRecord = todayRecord,
+                onDismissRequest = { showModal = false },
+                onNavigateToToday = {
+                    // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
+                    showModal = false
+                }
+            )
+        }
+        else {
+            // TODO: 결산 모달
+        }
     }
 }
