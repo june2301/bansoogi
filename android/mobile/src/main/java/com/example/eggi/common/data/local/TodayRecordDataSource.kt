@@ -18,7 +18,7 @@ class TodayRecordDataSource {
             }
         }
         // TODO: 삭제해야함 (test 용)
-        updateIsClosed()
+//        updateIsClosed()
     }
 
     suspend fun updateIsClosed() {
