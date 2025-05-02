@@ -22,7 +22,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +51,8 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.eggi.R
+import com.example.eggi.calendar.controller.RecordedController
+import com.example.eggi.calendar.data.model.DetailReportDto
 
 @Composable
 fun ModalHeader(
@@ -160,9 +166,9 @@ fun Divider() {
 }
 
 @Composable
-fun RecordedModal(
+fun RecordContent(
     onDismissRequest: () -> Unit,
-    selectedDate: String
+    report: DetailReportDto
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -188,7 +194,7 @@ fun RecordedModal(
             ) {
 
                 // 날짜 문자열에서 년, 월, 일 추출
-                val (year, month, day) = selectedDate.split("-").map { it.toInt() }
+                val (year, month, day) = report.date.split("-").map { it.toInt() }
 
                 Box(modifier = Modifier.weight(0.1f)) {
                     ModalHeader(
@@ -239,7 +245,7 @@ fun RecordedModal(
                                     Image(
                                         painter = rememberAsyncImagePainter(
                                             ImageRequest.Builder(context)
-                                                .data(R.drawable.bansoogi_walk)
+                                                .data(report.bansoogiResource)
                                                 .build(),
                                             imageLoader = imageLoader
                                         ),
@@ -272,24 +278,25 @@ fun RecordedModal(
                                                     color = Color(0xFF2E616A),  // 색상 변경
                                                 )
                                             ) {
-                                                append("80")
+                                                append("${report.finalEnergyPoint}")
                                             }
                                             append(" / 100")
                                         },
                                         fontSize = 20.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 1.sp
+                                        fontWeight = FontWeight.Bold
                                     )
 
                                     Spacer(modifier = Modifier.height(20.dp))
 
-                                    Text("게으른 반숙이",
+                                    Text(
+                                        text = report.bansoogiTitle,
                                         fontSize = 20.sp,
                                         textAlign = TextAlign.Center,
                                         fontWeight = FontWeight.Bold
                                     )
 
-                                    Text("획득!",
+                                    Text(
+                                        text = "획득!",
                                         fontSize = 16.sp,
                                         textAlign = TextAlign.Center,
                                         color = Color.Gray
@@ -309,7 +316,7 @@ fun RecordedModal(
 
                         InfoRow(
                             label = "누워있던 시간 :",
-                            value = 2,
+                            value = report.lyingTime,
                             unit = "분"
                         )
 
@@ -317,7 +324,7 @@ fun RecordedModal(
 
                         InfoRow(
                             label = "앉아있던 시간 :",
-                            value = 43,
+                            value = report.sittingTime,
                             unit = "분"
                         )
 
@@ -325,7 +332,7 @@ fun RecordedModal(
 
                         InfoRow(
                             label = "휴대폰 사용 시간 :",
-                            value = 38,
+                            value = report.phoneTime,
                             unit = "분"
                         )
 
@@ -340,7 +347,7 @@ fun RecordedModal(
 
                         InfoRow(
                             label = "기상 이벤트 :",
-                            value = 0,
+                            value = report.standupCount,
                             unit = "회"
                         )
 
@@ -348,11 +355,12 @@ fun RecordedModal(
 
                         InfoRow(
                             label = "스트레칭 이벤트 :",
-                            value = 1,
+                            value = report.stretchCount,
                             unit = "회"
                         )
 
                         // 이벤트 내역
+                        // 로그 불러와서 적용해야 함
                         Row(modifier = Modifier
                             .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -376,7 +384,7 @@ fun RecordedModal(
 
                         InfoRow(
                             label = "휴대폰 미사용 이벤트 :",
-                            value = 0,
+                            value = report.phoneOffCount,
                             unit = "회"
                         )
                     }
@@ -386,11 +394,36 @@ fun RecordedModal(
     }
 }
 
+@Composable
+fun RecordedModal(
+    onDismissRequest: () -> Unit,
+    selectedDate: String
+) {
+    val controller = remember { RecordedController() }
+    var report by remember { mutableStateOf<DetailReportDto?>(null) }
+
+    LaunchedEffect(selectedDate) {
+        report = controller.getDetailReport(selectedDate)
+
+        if (report == null) {
+            onDismissRequest()
+            return@LaunchedEffect
+        }
+    }
+
+    report?.let { report ->
+        RecordContent(
+            onDismissRequest = onDismissRequest,
+            report = report
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun RecordedModalPreview() {
-    RecordedModal(
-        onDismissRequest = { },
-        selectedDate = "2025-04-20"
-    )
+//    RecordedModal(
+//        onDismissRequest = { },
+//        selectedDate = { }
+//    )
 }
