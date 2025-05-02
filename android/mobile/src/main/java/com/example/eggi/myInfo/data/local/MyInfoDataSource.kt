@@ -38,4 +38,10 @@ class MyInfoDataSource {
         }
     }
 
+    suspend fun updateUser(updated: User) {
+        realm.write {
+            copyToRealm(updated)
+        }
+    }
+
 }

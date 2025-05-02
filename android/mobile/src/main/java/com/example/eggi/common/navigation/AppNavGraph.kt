@@ -9,6 +9,7 @@ import com.example.eggi.calendar.ui.CalendarScreen
 import com.example.eggi.collection.ui.CollectionScreen
 import com.example.eggi.main.ui.HomeScreen
 import com.example.eggi.myInfo.ui.MyInfoScreen
+import com.example.eggi.myInfo.ui.MyInfoUpdateScreen
 
 @Composable
 fun AppNavGraph(
@@ -33,7 +34,11 @@ fun AppNavGraph(
         }
 
         composable(NavRoutes.MYINFO) {
-            MyInfoScreen()
+            MyInfoScreen(navController)
+        }
+
+        composable(NavRoutes.MYINFOUPDATE) {
+            MyInfoUpdateScreen(navController)
         }
     }
 }

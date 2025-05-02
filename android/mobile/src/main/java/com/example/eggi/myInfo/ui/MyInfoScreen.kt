@@ -17,11 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import com.example.eggi.myInfo.controller.MyInfoController
 import com.example.eggi.myInfo.data.model.MyInfo
 import com.example.eggi.myInfo.view.MyInfoView
@@ -31,11 +30,12 @@ import androidx.compose.ui.platform.LocalContext
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import com.example.eggi.common.navigation.NavRoutes
 
 private val GreenChecked = Color(0xFF99CC00)
 
 @Composable
-fun MyInfoScreen() {
+fun MyInfoScreen(navController: NavController) {
     val infoState = remember { mutableStateOf<MyInfo?>(null) }
     val view = remember {
         object : MyInfoView {
@@ -50,7 +50,12 @@ fun MyInfoScreen() {
     }
 
     infoState.value?.let { myInfo ->
-        MyInfoContent(myInfo)
+        MyInfoContent(
+            myInfo = myInfo,
+            onEdit = {
+                navController.navigate(NavRoutes.MYINFOUPDATE)
+            }
+        )
     } ?: Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -60,7 +65,10 @@ fun MyInfoScreen() {
 }
 
 @Composable
-fun MyInfoContent(myInfo: MyInfo) {
+fun MyInfoContent(
+    myInfo: MyInfo,
+    onEdit: () -> Unit
+) {
     val context = LocalContext.current
     val imageLoader = remember {
         ImageLoader.Builder(context)
@@ -101,7 +109,7 @@ fun MyInfoContent(myInfo: MyInfo) {
         )
         Spacer(modifier = Modifier.height(12.dp))
         OutlinedButton(
-            onClick = { /* 추가 예정 */ },
+            onClick = onEdit,
             shape = RoundedCornerShape(4.dp),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp)
@@ -245,35 +253,6 @@ private fun ToggleRow(
             modifier = Modifier.padding(end = 8.dp),
             colors = SwitchDefaults.colors(
                 checkedTrackColor = GreenChecked
-            )
-        )
-    }
-}
-
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFF,
-    widthDp = 360,
-    heightDp = 640
-)
-@Composable
-fun MyInfoContentPreview() {
-    MaterialTheme {
-        MyInfoContent(
-            myInfo = MyInfo(
-                userId               = "0123456789abcdef",
-                nickname                 = "엄계란",
-                birthDate            = "2000.02.16",
-                profileBansoogiId    = R.drawable.bansoogi_default_profile,
-                wakeUpTime           = "07:00",
-                sleepTime            = "23:00",
-                breakfastTime        = "07:30",
-                lunchTime            = "12:00",
-                dinnerTime           = "18:30",
-                notificationDuration = 30,
-                alarmEnabled         = true,
-                bgSoundEnabled       = false,
-                effectSoundEnabled   = false
             )
         )
     }
