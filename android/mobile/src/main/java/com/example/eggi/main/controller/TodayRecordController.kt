@@ -24,6 +24,7 @@ class TodayRecordController(private val view: TodayRecordView) {
 
     fun initialize() {
         coroutineScope.launch {
+            // TODO: 알 깨기, 결산에 따라 객체가 생성되므로 추후 수정이 필요함.
             model.initialize()
             refreshTodayRecord()
         }
