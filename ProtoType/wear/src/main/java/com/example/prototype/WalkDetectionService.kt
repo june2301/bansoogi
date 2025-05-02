@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 /**
- * Foreground service that uses SensorManager Step Detector to track WALKING state
+ * Foreground service that uses SensorManager Step Detector to track activity state
  * and synchronise it to the paired phone via the Data Layer.
  */
 class WalkDetectionService :
@@ -45,7 +45,8 @@ class WalkDetectionService :
 
     private lateinit var sensorManager: SensorManager
     private var lastStepTimestamp: Long = 0L
-    private var walking = false
+    private var activityState: Int = 0
+    private val stepTimestamps = ArrayDeque<Long>()
     private var idleJob: Job? = null
     private lateinit var nodeClient: NodeClient
     private lateinit var messageClient: MessageClient
@@ -86,9 +87,19 @@ class WalkDetectionService :
                 scope.launch {
                     while (isActive) {
                         delay(1000)
-                        if (walking && System.currentTimeMillis() - lastStepTimestamp > 5000L) {
-                            updateWalkState(false)
+                        val now = System.currentTimeMillis()
+                        while (stepTimestamps.isNotEmpty() && now - stepTimestamps.first() > 5000L) {
+                            stepTimestamps.removeFirst()
                         }
+                        val cadenceSpm = if (stepTimestamps.isNotEmpty()) stepTimestamps.size * 12 else 0
+                        val newState =
+                            when {
+                                stepTimestamps.isEmpty() || now - lastStepTimestamp > 5000L -> 0
+                                cadenceSpm >= 150 -> 2
+                                else -> 1
+                            }
+                        Log.d(TAG, "SPM=$cadenceSpm, newState=$newState")
+                        updateActivityState(newState)
                     }
                 }
         }
@@ -99,7 +110,7 @@ class WalkDetectionService :
     private fun createNotification(): Notification =
         NotificationCompat
             .Builder(this, CHANNEL_ID)
-            .setContentTitle("걷기 감지 중")
+            .setContentTitle("활동 감지 중")
             .setSmallIcon(android.R.drawable.ic_media_play)
             .setOngoing(true)
             .build()
@@ -119,9 +130,11 @@ class WalkDetectionService :
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type != Sensor.TYPE_STEP_DETECTOR) return
         lastStepTimestamp = System.currentTimeMillis()
-        if (!walking) {
-            updateWalkState(true)
+        stepTimestamps.addLast(lastStepTimestamp)
+        while (stepTimestamps.isNotEmpty() && lastStepTimestamp - stepTimestamps.first() > 5000L) {
+            stepTimestamps.removeFirst()
         }
+        updateActivityState(1)
     }
 
     override fun onAccuracyChanged(
@@ -129,19 +142,19 @@ class WalkDetectionService :
         accuracy: Int,
     ) {}
 
-    private fun updateWalkState(isWalking: Boolean) {
-        if (walking == isWalking) return
-        walking = isWalking
-        sendWalkState(isWalking)
+    private fun updateActivityState(state: Int) {
+        if (activityState == state) return
+        activityState = state
+        sendActivityState(state)
     }
 
-    private fun sendWalkState(isWalking: Boolean) {
+    private fun sendActivityState(state: Int) {
         val nodeId = connectedNode?.id ?: return
-        val payload = byteArrayOf(if (isWalking) 1 else 0)
+        val payload = byteArrayOf(state.toByte())
         messageClient
             .sendMessage(nodeId, WALK_STATE_PATH, payload)
             .addOnFailureListener { e ->
-                Log.e(TAG, "sendWalkState failed", e)
+                Log.e(TAG, "sendActivityState failed", e)
                 findNode()
             }
     }
