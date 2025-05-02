@@ -22,7 +22,7 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import androidx.wear.tooling.preview.devices.WearDevices
-import com.example.prototype.ProtoWearSensorService
+import com.example.prototype.WalkDetectionService
 import com.example.prototype.presentation.theme.protoTypeTheme
 import kotlinx.coroutines.delay
 import androidx.wear.compose.material.MaterialTheme as WearMaterialTheme
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startSensorService() {
-        val serviceIntent = Intent(this, ProtoWearSensorService::class.java)
+        val serviceIntent = Intent(this, WalkDetectionService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)
         } else {

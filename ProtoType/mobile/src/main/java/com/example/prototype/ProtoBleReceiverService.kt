@@ -24,10 +24,11 @@ class ProtoBleReceiverService :
 
         // DataLayer path for activity updates
         private const val ACTIVITY_UPDATE_PATH = "/activity_update"
+        private const val WALK_STATE_PATH = "/walk_state"
 
-        // LiveData for activity state
-        private val _stateLiveData = MutableLiveData<ActivityState>()
-        val stateLiveData: LiveData<ActivityState> = _stateLiveData
+        // LiveData for walking state
+        private val _walkingLiveData = MutableLiveData<Boolean>()
+        val walkingLiveData: LiveData<Boolean> = _walkingLiveData
     }
 
     private lateinit var messageClient: MessageClient
@@ -80,24 +81,14 @@ class ProtoBleReceiverService :
             .build()
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
-        if (messageEvent.path == ACTIVITY_UPDATE_PATH) {
-            processActivityUpdate(messageEvent.data)
+        if (messageEvent.path == ACTIVITY_UPDATE_PATH || messageEvent.path == WALK_STATE_PATH) {
+            processWalkState(messageEvent.data)
         }
     }
 
-    private fun processActivityUpdate(data: ByteArray) {
-        if (data.size < 4) return
-        val type =
-            java.nio.ByteBuffer
-                .wrap(data)
-                .int
-        val mapped =
-            when (type) {
-                com.google.android.gms.location.DetectedActivity.WALKING -> ActivityState.WALKING
-                com.google.android.gms.location.DetectedActivity.RUNNING -> ActivityState.RUNNING
-                com.google.android.gms.location.DetectedActivity.STILL -> ActivityState.STILL
-                else -> ActivityState.STANDING // treat other ON_FOOT etc as standing
-            }
-        _stateLiveData.postValue(mapped)
+    private fun processWalkState(data: ByteArray) {
+        if (data.isEmpty()) return
+        val walking = data[0].toInt() == 1
+        _walkingLiveData.postValue(walking)
     }
 }

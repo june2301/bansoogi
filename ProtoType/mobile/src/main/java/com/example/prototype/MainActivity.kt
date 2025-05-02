@@ -61,9 +61,9 @@ class MainActivity : AppCompatActivity() {
             MaterialTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
-                    ActivityDetectionScreen(ProtoBleReceiverService.stateLiveData.asFlow())
+                    WalkingScreen(ProtoBleReceiverService.walkingLiveData.asFlow())
                 }
             }
         }
@@ -91,42 +91,35 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun ActivityDetectionScreen(stateFlow: Flow<ActivityState>) {
-    val state by stateFlow.collectAsState(initial = ActivityState.STILL)
+fun WalkingScreen(walkFlow: Flow<Boolean>) {
+    val walking by walkFlow.collectAsState(initial = false)
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "현재 상태",
+            text = "걷기 상태",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
-        
+
         Text(
-            text =
-                when (state) {
-                    ActivityState.SITTING -> "앉음"
-                    ActivityState.STILL -> "정지"
-                    ActivityState.STANDING -> "서있음"
-                    ActivityState.LYING -> "누움"
-                    ActivityState.WALKING -> "걷기"
-                    ActivityState.RUNNING -> "달리기"
-                    else -> "기타"
-                },
-                fontSize = 48.sp,
+            text = if (walking) "걷는 중" else "정지",
+            fontSize = 48.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp),
         )
     }
 }
