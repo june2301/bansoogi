@@ -11,6 +11,11 @@ class TodayRecordModel {
     suspend fun initialize() {
         dataSource.initialize()
     }
+
+    suspend fun renewTodayRecord() {
+        dataSource.renewTodayRecord()
+    }
+
     suspend fun updateInteractionCnt(recordId: ObjectId) {
         dataSource.updateInteractionCnt(recordId)
     }
@@ -19,10 +24,10 @@ class TodayRecordModel {
         dataSource.updateEnergy(recordId, addedEnergy)
     }
 
-    fun getTodayRecord(): Flow<TodayRecord?> {
+    fun getTodayRecord(): Flow<TodayRecordDto?> {
         return dataSource.getTodayRecord().map { entity ->
             entity?.let {
-                TodayRecord(
+                TodayRecordDto(
                     recordId = entity.recordId,
                     energyPoint = entity.energyPoint,
                     standUpCnt = entity.standUpCnt,

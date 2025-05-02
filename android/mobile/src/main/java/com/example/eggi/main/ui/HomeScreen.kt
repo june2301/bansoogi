@@ -1,6 +1,5 @@
 package com.example.eggi.main.ui
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,23 +39,29 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.eggi.calendar.ui.RecordedModal
-import com.example.eggi.common.data.model.TodayRecord
+import com.example.eggi.common.data.model.TodayRecordDto
 import com.example.eggi.main.controller.TodayRecordController
 import com.example.eggi.main.view.TodayRecordView
 
 @Preview
 @Composable
 fun HomeScreen() {
-
-    var todayRecordState = remember { mutableStateOf<TodayRecord?>(null) }
+    var todayRecordDtoState = remember { mutableStateOf<TodayRecordDto?>(null) }
+    var showEggManager = remember { mutableStateOf(false) }
+    var isInSleepRange = remember { mutableStateOf(false) }
     var view = remember {
         object : TodayRecordView {
-            override fun displayTodayRecord(todayRecord: TodayRecord) {
-                todayRecordState.value = todayRecord
+            override fun displayTodayRecord(todayRecordDto: TodayRecordDto) {
+                todayRecordDtoState.value = todayRecordDto
+
+                // 이미 결산이 완료되었고, 취침 시간이 아니라면!
+                if (todayRecordDto.isClosed && !isInSleepRange.value) {
+                    showEggManager.value = true
+                }
             }
 
             override fun showEmptyState() {
-                todayRecordState.value = null
+                todayRecordDtoState.value = null
             }
         }
     }
@@ -65,26 +70,30 @@ fun HomeScreen() {
         todayRecordController.initialize()
     }
 
-    todayRecordState.value?.let { todayRecord ->
-        // 메인 페이지
-        if (true) {
-            HomeContent(todayRecord, todayRecordController)
-        }
-        // 알 받기
-        else {
-            // TODO: BeforeContent(todayRecord)
-        }
+    todayRecordDtoState.value?.let { todayRecord ->
+        HomeContent(todayRecord, todayRecordController)
     } ?: Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text("로딩 중...", fontSize = 16.sp)
     }
+
+    // Egg Manager 페이지 보여주기!
+    if (showEggManager.value) {
+        EggManagerModal(
+            todayRecordController = todayRecordController,
+            onDismiss = {
+                showEggManager.value = false
+                todayRecordController.renewTodayRecord() // 새로운 TodayRecord 생성
+            }
+        )
+    }
 }
 
 @Composable
-fun HomeContent(todayRecord: TodayRecord, todayRecordController: TodayRecordController) {
-    var progressValue by remember { mutableStateOf(todayRecord.energyPoint) }
+fun HomeContent(todayRecordDto: TodayRecordDto, todayRecordController: TodayRecordController) {
+    var progressValue by remember { mutableStateOf(todayRecordDto.energyPoint) }
     var showModal by remember { mutableStateOf(false) }
 
     Column(
@@ -206,8 +215,8 @@ fun HomeContent(todayRecord: TodayRecord, todayRecordController: TodayRecordCont
             onClick = {
                 if (progressValue < 100) {
                     progressValue += 5
-                    todayRecordController.updateInteractionCnt(todayRecord.recordId)
-                    todayRecordController.updateEnergy(todayRecord.recordId, 5)
+                    todayRecordController.updateInteractionCnt(todayRecordDto.recordId)
+                    todayRecordController.updateEnergy(todayRecordDto.recordId, 5)
                 }
             },
             modifier = Modifier
@@ -236,9 +245,9 @@ fun HomeContent(todayRecord: TodayRecord, todayRecordController: TodayRecordCont
     }
 
     if (showModal) {
-        if (!todayRecord.isClosed) {
+        if (!todayRecordDto.isClosed) {
             DayTimeModal(
-                todayRecord = todayRecord,
+                todayRecordDto = todayRecordDto,
                 onDismissRequest = { showModal = false },
                 onNavigateToToday = {
                     // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행

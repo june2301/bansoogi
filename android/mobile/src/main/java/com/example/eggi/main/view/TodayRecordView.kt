@@ -1,9 +1,8 @@
 package com.example.eggi.main.view
 
-import com.example.eggi.common.data.model.TodayRecord
-import com.example.eggi.myInfo.data.model.MyInfo
+import com.example.eggi.common.data.model.TodayRecordDto
 
 interface TodayRecordView {
-    fun displayTodayRecord(todayRecord: TodayRecord)
+    fun displayTodayRecord(todayRecordDto: TodayRecordDto)
     fun showEmptyState()
 }
