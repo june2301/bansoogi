@@ -19,7 +19,7 @@
 ## 🔍개요 (관련 이슈)
 <!--     Closes S12P21A302-206, time 작업 시간 -->
 <!-- ex) Closes 지라이슈번호    , time 1h    -->
-- Closes S12P21A302- , time 
+- Closes S12P31A302- , time 
 
 
 ## 📝 완료한 기능 명세
