@@ -56,6 +56,13 @@ fun CollectionScreen() {
     LaunchedEffect(Unit) {
         insertDummyCharacters()
         controller.initialize()
+
+        val realm = RealmManager.realm
+        val allCharacters = realm.query<Character>().find()
+        println("🧪 Realm에 있는 캐릭터 수: ${allCharacters.size}")
+        allCharacters.forEach {
+            println("🧪 ID: ${it.bansoogiId}, Title: ${it.title}")
+        }
     }
 
     val regularList = collectionDtoState.filter { it.id < 50 }
@@ -214,23 +221,4 @@ fun CollectionGridItem(character: CollectionDto, onClick: () -> Unit) {
             modifier = Modifier.fillMaxSize()
         )
     }
-}
-
-@Composable
-fun CollectionDetailDialog(character: CollectionDto, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = onDismiss) { Text("닫기") }
-        },
-        title = { Text(text = character.title) },
-        text = { Text(text = character.description) },
-        icon = {
-            AsyncImage(
-                model = character.imageUrl,
-                contentDescription = character.title,
-                modifier = Modifier.size(96.dp)
-            )
-        }
-    )
 }
