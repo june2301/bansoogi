@@ -13,13 +13,13 @@ class RecordedReportModel {
         dataSource.initialize()
     }
 
-    fun getReportHistoryItems(): Flow<List<HistoryItemDto>> =
+    fun getCalendarMarkers(): Flow<List<CalendarMarkerDto>> =
         dataSource.getRecordedReportList().map { reportList ->
             reportList.map { report ->
                 // 나중에 반숙이 클래스에 대한 data 함수들이 만들어진다면 그 함수들로 변경할 예정
                 val bansoogi = dataSource.getBansoogiById(report.bansoogiId)
 
-                HistoryItemDto(
+                CalendarMarkerDto(
                     date = LocalDate.parse(report.reportedDate),
                     bansoogiAnimationId =  bansoogi?.gifUrl
                 )
