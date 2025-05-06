@@ -20,7 +20,9 @@ class CollectionModel {
                     silhouetteImageUrl = entity.silhouetteImageUrl,
                     gifUrl = entity.gifUrl,
                     description = entity.description,
-                    isUnlocked = unlockedList.any { it.bansoogiId == entity.bansoogiId }
+                    isUnlocked = unlockedList.any { it.bansoogiId == entity.bansoogiId },
+                    acquisitionCount = unlockedList.find { it.bansoogiId == entity.bansoogiId }?.acquisitionCount,
+                    createdAt = unlockedList.find { it.bansoogiId == entity.bansoogiId }?.createdAt
                 )
             }
         }
