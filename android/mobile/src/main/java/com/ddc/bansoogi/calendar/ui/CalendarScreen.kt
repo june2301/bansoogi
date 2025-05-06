@@ -43,7 +43,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import com.ddc.bansoogi.calendar.controller.CalendarController
-import com.ddc.bansoogi.calendar.data.model.HistoryItemDto
+import com.ddc.bansoogi.calendar.data.model.CalendarMarkerDto
+import com.ddc.bansoogi.calendar.ui.state.CalendarContentUiState
+import com.ddc.bansoogi.calendar.ui.state.CalendarUiState
 import com.ddc.bansoogi.calendar.view.CalendarView
 import com.ddc.bansoogi.common.ui.component.BansoogiAnimation
 import kotlinx.coroutines.launch
@@ -54,44 +56,54 @@ import java.time.YearMonth
 private const val INITIAL_PAGE = Int.MAX_VALUE / 2
 
 @Composable
-fun CalendarScreen() {
-    // 캘린더 데이터 가져오기 -> 임시로 데이터 초기화, 없다면 생성함
-    val historyState = remember { mutableStateOf<List<HistoryItemDto>?>(null) }
-    val view = remember {
-        object : CalendarView {
-            override fun displayCalendar(history: List<HistoryItemDto>) {
-                historyState.value = history
-            }
+fun loadCalendarData(): CalendarUiState {
+    // 초기 데이터 상태 기억
+    val state = remember { mutableStateOf(CalendarUiState()) }
+
+    // 컨트롤러 + 뷰 연결
+    val view = object : CalendarView {
+        override fun displayCalendar(markers: List<CalendarMarkerDto>) {
+            // 데이터를 받으면 상태를 갱신
+            state.value = state.value.copy(
+                isLoading = false,
+                calendarMarkers = markers
+            )
         }
     }
-
     val controller = remember { CalendarController(view) }
+
+    // 화면 시작 시, 데이터 호출
     LaunchedEffect(Unit) {
         controller.initialize()
     }
 
-    historyState.value?.let { history ->
-        CalendarContent(history = history)
-    } ?: Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("로딩 중...", fontSize = 16.sp)
+    // 현재 상태를 화면으로 보여줌
+    return state.value
+}
+
+@Composable
+fun CalendarScreen() {
+    val calendarState = loadCalendarData()
+
+    if (calendarState.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("로딩 중...", fontSize = 16.sp)
+        }
+    } else {
+        CalendarContent(
+            today = calendarState.today,
+            calendarMarkers = calendarState.calendarMarkers
+        )
     }
 }
 
 @Composable
-fun CalendarContent(history: List<HistoryItemDto>) {
-    // 실제 오늘 날짜 가져오기
-    val today = remember { LocalDate.now() }
-
-    // 초기 날짜와 현재 보여지는 날짜
+fun CalendarContent(today: LocalDate, calendarMarkers: List<CalendarMarkerDto>) {
     val initialDate = remember { today }
-    var currentViewDate by remember { mutableStateOf(initialDate) }
-
-    // 모달 표시 상태 및 선택한 날짜
-    var showModal by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf<String?>(null) }
+    var uiState by remember { mutableStateOf(CalendarContentUiState(currentViewDate = initialDate)) }
 
     // 페이저 상태 생성
     val pagerState = rememberPagerState(
@@ -106,7 +118,9 @@ fun CalendarContent(history: List<HistoryItemDto>) {
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             val monthDiff = page - INITIAL_PAGE
-            currentViewDate = initialDate.plusMonths(monthDiff.toLong())
+            uiState = uiState.copy(
+                currentViewDate = initialDate.plusMonths(monthDiff.toLong())
+            )
         }
     }
 
@@ -122,7 +136,7 @@ fun CalendarContent(history: List<HistoryItemDto>) {
         ) {
             // 월 표시 및 화살표
             CalendarHeader(
-                viewDate = currentViewDate,
+                viewDate = uiState.currentViewDate,
                 onPrevMonth = {
                     // 코루틴 스코프 내에서 애니메이션 실행
                     coroutineScope.launch {
@@ -154,10 +168,13 @@ fun CalendarContent(history: List<HistoryItemDto>) {
                 CalendarGrid(
                     viewDate = pageDate,
                     today = today,
-                    history = history,
+                    calendarMarkers = calendarMarkers,
                     onDayClick = { day ->
-                        selectedDate = "%04d-%02d-%02d".format(pageDate.year, pageDate.monthValue, day)
-                        showModal = true
+                        val formatted = "%04d-%02d-%02d".format(pageDate.year, pageDate.monthValue, day)
+                        uiState = uiState.copy(
+                            selectedDate = formatted,
+                            showModal = true
+                        )
                     }
                 )
             }
@@ -165,10 +182,12 @@ fun CalendarContent(history: List<HistoryItemDto>) {
     }
 
     // 모달 띄우기
-    if (showModal && selectedDate != null) {
+    if (uiState.showModal && uiState.selectedDate != null) {
         RecordedModal(
-            onDismissRequest = { showModal = false },
-            selectedDate = selectedDate!!
+            onDismissRequest = {
+                uiState = uiState.copy(showModal = false)
+            },
+            selectedDate = uiState.selectedDate!!
         )
     }
 }
@@ -219,7 +238,7 @@ fun CalendarHeader(viewDate: LocalDate, onPrevMonth: () -> Unit, onNextMonth: ()
 }
 
 @Composable
-fun CalendarGrid(viewDate: LocalDate, today: LocalDate, history: List<HistoryItemDto>, onDayClick: (Int) -> Unit) {
+fun CalendarGrid(viewDate: LocalDate, today: LocalDate, calendarMarkers: List<CalendarMarkerDto>, onDayClick: (Int) -> Unit) {
     Column (modifier = Modifier
         .fillMaxSize()
     ) {
@@ -265,7 +284,7 @@ fun CalendarGrid(viewDate: LocalDate, today: LocalDate, history: List<HistoryIte
                             // day가 0보다 클 때만
                             if (day > 0) {
                                 val cellDate = LocalDate.of(viewDate.year, viewDate.monthValue, day)
-                                val matchedHistory = history.find { it.date == cellDate }
+                                val matchedHistory = calendarMarkers.find { it.date == cellDate }
 
                                 CalendarDayCell(
                                     day = day,

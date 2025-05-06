@@ -16,8 +16,8 @@ class CalendarController(private val view: CalendarView) {
             model.initialize() // 더미데이터 설정
 
             // 데이터를 화면에 표시
-            model.getReportHistoryItems().collectLatest { history ->
-                view.displayCalendar(history)
+            model.getCalendarMarkers().collectLatest { markers ->
+                view.displayCalendar(markers)
             }
         }
     }

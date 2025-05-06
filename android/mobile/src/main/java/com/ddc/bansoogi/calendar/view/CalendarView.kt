@@ -1,7 +1,7 @@
 package com.ddc.bansoogi.calendar.view
 
-import com.ddc.bansoogi.calendar.data.model.HistoryItemDto
+import com.ddc.bansoogi.calendar.data.model.CalendarMarkerDto
 
 interface CalendarView {
-    fun displayCalendar(history: List<HistoryItemDto>)
+    fun displayCalendar(calendarMarkers: List<CalendarMarkerDto>)
 }
