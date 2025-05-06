@@ -1,4 +1,4 @@
-package com.example.eggi.main.ui.manage
+package com.ddc.bansoogi.main.ui.manage
 
 import android.os.Handler
 import android.os.Looper
@@ -25,12 +25,12 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.eggi.R
-import com.example.eggi.myInfo.data.model.MyInfo
+import com.ddc.bansoogi.R
+import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 
 @Composable
 fun EggManagerModal(
-    myInfo: MyInfo?,
+    myInfo: MyInfoDto?,
     onDismiss: () -> Unit
 ) {
     val nickname = myInfo?.nickname ?: "Guest"

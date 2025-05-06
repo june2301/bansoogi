@@ -1,4 +1,4 @@
-package com.example.eggi.main.ui.manage
+package com.ddc.bansoogi.main.ui.manage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.eggi.R
+import com.ddc.bansoogi.R
 
 @Composable
 fun EggBeforeBroken(nickname: String, eggState: MutableState<Int>) {

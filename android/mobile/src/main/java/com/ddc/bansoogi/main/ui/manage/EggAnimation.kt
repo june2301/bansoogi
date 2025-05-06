@@ -1,4 +1,4 @@
-package com.example.eggi.main.ui.manage
+package com.ddc.bansoogi.main.ui.manage
 
 import android.os.Handler
 import android.os.Looper
@@ -31,7 +31,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.eggi.R
+import com.ddc.bansoogi.R
 
 @Composable
 fun EggBreakingAnimation(eggState: MutableState<Int>) {
