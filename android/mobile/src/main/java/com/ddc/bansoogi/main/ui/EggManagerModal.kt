@@ -1,4 +1,4 @@
-package com.example.eggi.main.ui
+package com.ddc.bansoogi.main.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -25,13 +25,13 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.eggi.R
-import com.example.eggi.main.controller.TodayRecordController
-import com.example.eggi.myInfo.data.model.MyInfo
+import com.ddc.bansoogi.R
+import com.ddc.bansoogi.main.controller.TodayRecordController
+import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 
 @Composable
 fun EggManagerModal(
-    myInfo: MyInfo?,
+    myInfo: MyInfoDto?,
     todayRecordController: TodayRecordController,
     onDismiss: () -> Unit
 ) {

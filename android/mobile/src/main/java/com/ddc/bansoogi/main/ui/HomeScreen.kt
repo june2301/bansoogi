@@ -1,4 +1,4 @@
-package com.example.eggi.main.ui
+package com.ddc.bansoogi.main.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,21 +34,21 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.eggi.R
+import com.ddc.bansoogi.R
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.eggi.calendar.ui.RecordedModal
-import com.example.eggi.common.data.model.TodayRecordDto
-import com.example.eggi.main.controller.TodayRecordController
-import com.example.eggi.main.view.TodayRecordView
-import com.example.eggi.myInfo.data.model.MyInfo
+import com.ddc.bansoogi.calendar.ui.RecordedModal
+import com.ddc.bansoogi.common.data.model.TodayRecordDto
+import com.ddc.bansoogi.main.controller.TodayRecordController
+import com.ddc.bansoogi.main.view.TodayRecordView
+import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 
 @Preview
 @Composable
 fun HomeScreen() {
     var todayRecordDtoState = remember { mutableStateOf<TodayRecordDto?>(null) }
-    var myInfo = remember { mutableStateOf<MyInfo?>(null) }
+    var myInfo = remember { mutableStateOf<MyInfoDto?>(null) }
     var showEggManager = remember { mutableStateOf(false) }
     var isInSleepRange = remember { mutableStateOf(false) }
     var view = remember {
