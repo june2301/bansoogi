@@ -26,6 +26,7 @@ import com.example.eggi.collection.view.CollectionView
 import com.example.eggi.R
 import coil.compose.AsyncImage
 import com.example.eggi.collection.data.entity.Character
+import com.example.eggi.collection.data.local.CollectionDataSource
 import com.example.eggi.common.data.local.RealmManager
 import io.realm.kotlin.ext.query
 
@@ -37,7 +38,6 @@ fun CollectionScreen() {
 
     val view =  object : CollectionView {
         override fun displayCollectionList(collectionDtoList: List<CollectionDto>) {
-            println("🔥 불러온 캐릭터 개수: ${collectionDtoList.size}")
             collectionDtoState.clear()
             collectionDtoState.addAll(collectionDtoList)
         }
@@ -54,7 +54,7 @@ fun CollectionScreen() {
     val controller = remember { CollectionController(view) }
 
     LaunchedEffect(Unit) {
-        insertDummyCharacters()
+        CollectionDataSource().insertDummyCharactersWithUnlock()
         controller.initialize()
 
         val realm = RealmManager.realm
@@ -111,7 +111,7 @@ fun CollectionScreen() {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(regularList) { character ->
-                CollectionGridItem(character, onClick = { controller.onCharacterClick(character) })
+                CollectionGridItem(character, onClick = { if (character.isUnlocked) controller.onCharacterClick(character) })
             }
         }
 
@@ -126,7 +126,7 @@ fun CollectionScreen() {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(hiddenList) { character ->
-                CollectionGridItem(character, onClick = { controller.onCharacterClick(character) })
+                CollectionGridItem(character, onClick = { if (character.isUnlocked) controller.onCharacterClick(character) })
             }
         }
 
@@ -135,28 +135,6 @@ fun CollectionScreen() {
                 controller.dismissCharacterDetail()
             }
         }
-    }
-}
-
-suspend fun insertDummyCharacters() {
-    val realm = RealmManager.realm
-
-    val alreadyExists = realm.query<Character>().find().isNotEmpty()
-    if (alreadyExists) return
-
-    val dummyList = listOf(
-        Character().apply {
-            bansoogiId = 1
-            title = "기본 반숙"
-            imageUrl = "bansoogi_default_profile"
-            silhouetteImageUrl = "unknown"
-            gifUrl = "bansoogi_basic"
-            description = "가장 처음 등장하는 반숙이입니다."
-        }
-    )
-
-    realm.write {
-        dummyList.forEach { copyToRealm(it) }
     }
 }
 
