@@ -1,8 +1,8 @@
-package com.example.eggi.collection.data.local
+package com.ddc.bansoogi.collection.data.local
 
-import com.example.eggi.collection.data.entity.Character
-import com.example.eggi.collection.data.entity.UnlockedCharacter
-import com.example.eggi.common.data.local.RealmManager
+import com.ddc.bansoogi.collection.data.entity.Character
+import com.ddc.bansoogi.collection.data.entity.UnlockedCharacter
+import com.ddc.bansoogi.common.data.local.RealmManager
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow

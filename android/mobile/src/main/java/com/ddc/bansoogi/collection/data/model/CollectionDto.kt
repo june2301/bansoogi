@@ -1,4 +1,4 @@
-package com.example.eggi.collection.data.model
+package com.ddc.bansoogi.collection.data.model
 
 data class CollectionDto(
     val id: Int,

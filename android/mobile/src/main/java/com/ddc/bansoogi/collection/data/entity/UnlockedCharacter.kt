@@ -1,4 +1,4 @@
-package com.example.eggi.collection.data.entity
+package com.ddc.bansoogi.collection.data.entity
 
 import io.realm.kotlin.types.RealmInstant
 import io.realm.kotlin.types.RealmObject

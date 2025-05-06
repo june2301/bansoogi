@@ -1,6 +1,6 @@
-package com.example.eggi.collection.view
+package com.ddc.bansoogi.collection.view
 
-import com.example.eggi.collection.data.model.CollectionDto
+import com.ddc.bansoogi.collection.data.model.CollectionDto
 
 interface CollectionView {
     fun displayCollectionList(collectionDtoList: List<CollectionDto>)

@@ -1,4 +1,4 @@
-package com.example.eggi.collection.ui
+package com.ddc.bansoogi.collection.ui
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.eggi.collection.data.model.CollectionDto
+import com.ddc.bansoogi.collection.data.model.CollectionDto
 
 @Composable
 fun CollectionDetailDialog(character: CollectionDto, onDismiss: () -> Unit) {

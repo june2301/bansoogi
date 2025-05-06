@@ -1,6 +1,6 @@
-package com.example.eggi.collection.data.model
+package com.ddc.bansoogi.collection.data.model
 
-import com.example.eggi.collection.data.local.CollectionDataSource
+import com.ddc.bansoogi.collection.data.local.CollectionDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 

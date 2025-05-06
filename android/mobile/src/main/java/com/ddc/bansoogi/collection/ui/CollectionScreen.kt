@@ -20,14 +20,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.eggi.collection.data.model.CollectionDto
-import com.example.eggi.collection.controller.CollectionController
-import com.example.eggi.collection.view.CollectionView
-import com.example.eggi.R
-import coil.compose.AsyncImage
-import com.example.eggi.collection.data.entity.Character
-import com.example.eggi.collection.data.local.CollectionDataSource
-import com.example.eggi.common.data.local.RealmManager
+import com.ddc.bansoogi.collection.data.model.CollectionDto
+import com.ddc.bansoogi.collection.controller.CollectionController
+import com.ddc.bansoogi.collection.view.CollectionView
+import com.ddc.bansoogi.R
+import com.ddc.bansoogi.collection.data.entity.Character
+import com.ddc.bansoogi.collection.data.local.CollectionDataSource
+import com.ddc.bansoogi.common.data.local.RealmManager
 import io.realm.kotlin.ext.query
 
 @Preview
@@ -131,7 +130,7 @@ fun CollectionScreen() {
         }
 
         selected?.let {
-            CollectionDetailDialog(character = it) {
+            CollectionDetailDialog (character = it) {
                 controller.dismissCharacterDetail()
             }
         }

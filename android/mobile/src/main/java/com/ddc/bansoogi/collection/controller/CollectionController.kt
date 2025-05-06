@@ -1,8 +1,8 @@
-package com.example.eggi.collection.controller
+package com.ddc.bansoogi.collection.controller
 
-import com.example.eggi.collection.data.model.CollectionDto
-import com.example.eggi.collection.data.model.CollectionModel
-import com.example.eggi.collection.view.CollectionView
+import com.ddc.bansoogi.collection.data.model.CollectionDto
+import com.ddc.bansoogi.collection.data.model.CollectionModel
+import com.ddc.bansoogi.collection.view.CollectionView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
