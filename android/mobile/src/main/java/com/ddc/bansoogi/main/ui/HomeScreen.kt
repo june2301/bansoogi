@@ -76,15 +76,15 @@ fun HomeScreen() {
     if (showEggManager.value) {
         EggManagerModal(
             myInfo = myInfo.value,
-            todayRecordController = todayRecordController,
             onDismiss = {
                 showEggManager.value = false
-                todayRecordController.renewTodayRecord() // 새로운 TodayRecord 생성
+                // 새로운 TodayRecord 생성
+                todayRecordController.renewTodayRecord()
             }
         )
     } else {
         todayRecordDtoState.value?.let { todayRecord ->
-            HomeContent(todayRecord, todayRecordController)
+            HomeContent(todayRecord, todayRecordController, isInSleepRange.value)
         } ?: Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -95,7 +95,11 @@ fun HomeScreen() {
 }
 
 @Composable
-fun HomeContent(todayRecordDto: TodayRecordDto, todayRecordController: TodayRecordController) {
+fun HomeContent(
+    todayRecordDto: TodayRecordDto,
+    todayRecordController: TodayRecordController,
+    isInSleepRange: Boolean
+) {
     var progressValue by remember { mutableStateOf(todayRecordDto.energyPoint) }
     var showModal by remember { mutableStateOf(false) }
 
@@ -216,12 +220,13 @@ fun HomeContent(todayRecordDto: TodayRecordDto, todayRecordController: TodayReco
         val buttonShape = RoundedCornerShape(30.dp)
         Button(
             onClick = {
-                if (progressValue < 100) {
+                if (!isInSleepRange && progressValue < 100) {
                     progressValue += 5
                     todayRecordController.updateInteractionCnt(todayRecordDto.recordId)
                     todayRecordController.updateEnergy(todayRecordDto.recordId, 5)
                 }
             },
+            enabled = !isInSleepRange,
             modifier = Modifier
                 .padding(vertical = 10.dp)
                 .height(60.dp)
@@ -248,7 +253,7 @@ fun HomeContent(todayRecordDto: TodayRecordDto, todayRecordController: TodayReco
     }
 
     if (showModal) {
-        if (!todayRecordDto.isClosed) {
+        if (!isInSleepRange) {
             DayTimeModal(
                 todayRecordDto = todayRecordDto,
                 onDismissRequest = { showModal = false },
@@ -259,7 +264,6 @@ fun HomeContent(todayRecordDto: TodayRecordDto, todayRecordController: TodayReco
             )
         }
         else {
-            // TODO: 결산 모달
             RecordedModal(
                 onDismissRequest = { showModal = false },
                 selectedDate = "2025-04-20"
