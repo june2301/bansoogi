@@ -19,8 +19,10 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun InfoRow(
     label: String,
-    value: String,
-    modifier: Modifier = Modifier
+    value: Any,
+    modifier: Modifier = Modifier,
+    unit: String = "",
+    valueFormatter: (Any) -> String = { it.toString() }
 ) {
     Row(
         modifier = modifier
@@ -34,6 +36,25 @@ fun InfoRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = label, color = Color.DarkGray, fontSize = 14.sp)
-        Text(text = value, color = Color.Black, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = valueFormatter(value),
+                color = Color.Black,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            if (unit.isNotEmpty()) {
+                Text(
+                    text = unit,
+                    color = Color.Gray,
+                    fontSize = 14.sp
+                )
+            }
+        }
     }
 }

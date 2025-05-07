@@ -1,4 +1,4 @@
-package com.ddc.bansoogi.today
+package com.ddc.bansoogi.today.data
 
 data class ReportDto (
     val energyPoint: Int,
