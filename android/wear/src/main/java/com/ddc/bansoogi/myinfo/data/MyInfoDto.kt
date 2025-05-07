@@ -1,4 +1,4 @@
-package com.ddc.bansoogi.myinfo
+package com.ddc.bansoogi.myinfo.data
 
 data class MyInfoDto (
     val wakeUpTime: String,

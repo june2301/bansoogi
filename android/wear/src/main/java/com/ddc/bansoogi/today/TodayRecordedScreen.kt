@@ -81,7 +81,7 @@ fun TodayRecordedScreen(report: ReportDto) {
 
 @Composable
 fun VerticalSpacer() {
-    Spacer(modifier = Modifier.height(4.dp))
+    Spacer(modifier = Modifier.height(8.dp))
 }
 
 @Composable
