@@ -20,11 +20,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ddc.bansoogi.landing.controller.LandingController
 import com.ddc.bansoogi.landing.ui.component.CheckboxRow
+import com.ddc.bansoogi.landing.ui.component.NextButton
+import com.ddc.bansoogi.landing.ui.component.RoundedBoxContainer
 
 @Composable
 fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
@@ -34,15 +35,7 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
     var healthChecked by remember { mutableStateOf(controller.termsModel.healthChecked) }
 
     Column {
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .clip(RoundedCornerShape(24.dp))
-                .border(4.dp, Color.Black, RoundedCornerShape(24.dp))
-                .background(Color.White)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
+        RoundedBoxContainer {
             Column(
                 modifier = Modifier
 
@@ -84,24 +77,18 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
             }
         }
 
-        Button(
-            onClick = {
+        NextButton(
+            text = "start!",
+            enabled = serviceChecked && privacyChecked && healthChecked,
+             onClick = {
                 if (serviceChecked && privacyChecked && healthChecked) {
                     onNext()
                 }
             },
-            colors = ButtonDefaults.buttonColors(
-                disabledContainerColor = Color.Transparent,
-                disabledContentColor = Color.LightGray,
-                containerColor = Color.Transparent,
-                contentColor = Color(0xFF4CABFD)
-            ),
-            enabled = serviceChecked && privacyChecked && healthChecked,
+            contentButtonColor = Color(0xFF4CABFD),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-        ) {
-            Text("start!", style = MaterialTheme.typography.headlineMedium)
-        }
+        )
     }
 }
 

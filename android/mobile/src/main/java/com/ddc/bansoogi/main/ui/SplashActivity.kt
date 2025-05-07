@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import coil.ImageLoader
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.ddc.bansoogi.LandingActivity
+import com.ddc.bansoogi.landing.view.LandingActivity
 import com.ddc.bansoogi.R
 
 @SuppressLint("CustomSplashScreen")
