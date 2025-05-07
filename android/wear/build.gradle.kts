@@ -70,4 +70,7 @@ dependencies {
     // coil
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+
+    // navigation
+    implementation(libs.androidx.navigation.compose)
 }
