@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.ddc.bansoogi.landing.controller.LandingController
 import com.ddc.bansoogi.landing.ui.component.CheckboxRow
 import com.ddc.bansoogi.landing.ui.component.NextButton
-import com.ddc.bansoogi.landing.ui.component.RoundedBoxContainer
+import com.ddc.bansoogi.landing.ui.component.RoundedContainerBox
 
 @Composable
 fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
@@ -35,7 +35,7 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
     var healthChecked by remember { mutableStateOf(controller.termsModel.healthChecked) }
 
     Column {
-        RoundedBoxContainer {
+        RoundedContainerBox {
             Column(
                 modifier = Modifier
 
