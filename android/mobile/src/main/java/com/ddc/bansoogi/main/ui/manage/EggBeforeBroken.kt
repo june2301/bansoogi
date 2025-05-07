@@ -2,6 +2,7 @@ package com.ddc.bansoogi.main.ui.manage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -55,15 +57,21 @@ fun EggBeforeBroken(nickname: String, eggState: MutableState<Int>) {
             painter = painterResource(id = R.drawable.egg_before_broken),
             contentDescription = "깨지기 전 달걀",
             modifier = Modifier
-                .width(350.dp)
-                .height(350.dp)
-                .clickable { eggState.value = 1 },
+                .width(320.dp)
+                .height(320.dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { eggState.value = 1 },
             contentScale = ContentScale.Fit
         )
         Text(
             text = "달걀 깨뜨리기",
             modifier = Modifier
-                .clickable { eggState.value = 1 },
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { eggState.value = 1 },
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             style = TextStyle(

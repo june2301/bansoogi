@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,15 +59,16 @@ fun EggBreakingAnimation(eggState: MutableState<Int>) {
             ),
             contentDescription = "달걀 깨지는 중",
             modifier = Modifier
-                .width(800.dp)
-                .height(800.dp),
+                .width(1000.dp)
+                .height(1000.dp)
+                .padding(bottom = 240.dp),
             contentScale = ContentScale.Fit
         )
 
         LaunchedEffect(Unit) {
             Handler(Looper.getMainLooper()).postDelayed({
                 eggState.value = 2
-            }, 1840)
+            }, 1920)
         }
     }
 }
