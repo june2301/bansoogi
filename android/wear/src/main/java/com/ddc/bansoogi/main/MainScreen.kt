@@ -32,6 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import androidx.wear.tooling.preview.devices.WearDevices
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
@@ -39,11 +41,12 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.BackgroundImage
 import com.ddc.bansoogi.common.ui.VerticalSpacer
 
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavHostController) {
     var progressValue by remember { mutableIntStateOf(80) }
 
     Box(
@@ -52,7 +55,9 @@ fun MainScreen() {
     ) {
         BackgroundImage()
 
-        SideButtons()
+        SideButtons(
+            navController = navController
+        )
 
         BansoogiContent(
             progressValue = progressValue
@@ -61,7 +66,7 @@ fun MainScreen() {
 }
 
 @Composable
-fun SideButtons() {
+fun SideButtons(navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,7 +83,7 @@ fun SideButtons() {
             iconResource = R.drawable.dehaze,
             description = "메뉴 버튼"
         ) {
-            // TODO: 오른쪽 버튼 클릭 이벤트
+            navController.navigate(NavRoutes.MENU)
         }
     }
 }
@@ -186,9 +191,8 @@ fun EnergyBar(progressValue: Int) {
     }
 }
 
-
 @Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    MainScreen()
+    MainScreen(rememberNavController())
 }

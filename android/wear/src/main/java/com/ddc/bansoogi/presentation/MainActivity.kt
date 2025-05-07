@@ -9,26 +9,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.wear.tooling.preview.devices.WearDevices
-import com.ddc.bansoogi.R
+import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.main.MainScreen
-import com.ddc.bansoogi.presentation.theme.EggiTheme
+import com.ddc.bansoogi.main.MenuScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,43 +28,30 @@ class MainActivity : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
 
         setContent {
-            WathMainScreen()
+            BansoogiApp()
         }
     }
 }
 
 @Composable
-fun WathMainScreen() {
-    MainScreen()
-}
+fun BansoogiApp() {
+    val navController = rememberNavController()
 
-@Composable
-fun WearApp(greetingName: String) {
-    EggiTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            contentAlignment = Alignment.Center
-        ) {
-            TimeText()
-            Greeting(greetingName = greetingName)
+    NavHost(
+        navController = navController,
+        startDestination = NavRoutes.MAIN
+    ) {
+        composable(NavRoutes.MAIN) {
+            MainScreen(navController = navController)
+        }
+        composable( NavRoutes.MENU) {
+            MenuScreen(navController = navController)
         }
     }
-}
-
-@Composable
-fun Greeting(greetingName: String) {
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center,
-        color = MaterialTheme.colors.primary,
-        text = stringResource(R.string.hello_world, greetingName)
-    )
 }
 
 @Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    WathMainScreen()
+    BansoogiApp()
 }
