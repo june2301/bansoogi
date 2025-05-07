@@ -1,7 +1,5 @@
 package com.ddc.bansoogi.main.ui.manage
 
-import android.os.Handler
-import android.os.Looper
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -33,6 +31,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.R
+import kotlinx.coroutines.delay
 
 @Composable
 fun EggBreakingAnimation(eggState: MutableState<Int>) {
@@ -66,9 +65,8 @@ fun EggBreakingAnimation(eggState: MutableState<Int>) {
         )
 
         LaunchedEffect(Unit) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                eggState.value = 2
-            }, 1920)
+            delay(1920)
+            eggState.value = 2
         }
     }
 }
