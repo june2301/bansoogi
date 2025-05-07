@@ -70,7 +70,8 @@ fun CollectionScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 12.dp)
+            .background(Color(0x90EEEEEE))
+            .padding(horizontal = 12.dp),
     ) {
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -99,7 +100,6 @@ fun CollectionScreen() {
                 )
             }
         }
-
 
         SectionHeader("일반", R.drawable.egg_white)
 
