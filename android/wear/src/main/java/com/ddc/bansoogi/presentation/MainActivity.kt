@@ -46,19 +46,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WathMainScreen() {
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color.Black),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Text(
-//            text = "Main",
-//            color = Color.White,
-//            fontSize = 20.sp,
-//            fontWeight = FontWeight.Bold
-//        )
-//    }
     MainScreen()
 }
 
