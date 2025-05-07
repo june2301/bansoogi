@@ -52,8 +52,9 @@ def _exs_label_dict(uuid: str) -> dict[int, int | None]:
     if path is None:
         raise FileNotFoundError(f"{uuid}.features_labels.csv(.gz) not found")
     df = pd.read_csv(path, compression="gzip" if path.suffix == ".gz" else None)
-    keep = df[["timestamp", "label:LYING_DOWN", "label:SITTING"]]
+    keep = df[["timestamp","label:OR_standing","label:LYING_DOWN","label:SITTING"]]
     return {int(r.timestamp):
+                2 if r['label:OR_standing']==1  else
                 1 if r["label:LYING_DOWN"]==1 else
                 0 if r["label:SITTING"]   ==1 else None
             for _, r in keep.iterrows()}
@@ -128,6 +129,7 @@ def _posture_from_text(t: str) -> int|None:
     t = t.lower()
     if 'lying' in t or 'sleep' in t: return 1
     if 'sit'   in t               : return 0
+    if 'stand'  in t: return 2
     return None
 
 # ───────────────────────────────────────── PREPARE NPZ
@@ -215,7 +217,7 @@ def build_model(input_shape=(WIN_SIZE,3)):
         tf.keras.layers.Conv1D(32,5,activation='relu'),
         tf.keras.layers.Conv1D(64,5,activation='relu'),
         tf.keras.layers.GlobalAveragePooling1D(),
-        tf.keras.layers.Dense(2,activation='softmax')
+        tf.keras.layers.Dense(3,activation='softmax')
     ])
     m.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',

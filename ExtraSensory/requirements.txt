@@ -5,8 +5,7 @@ scipy==1.11.4
 tqdm==4.66.4
 
 # 머신러닝
-tensorflow==2.14.0        # GPU 서버(NVIDIA CUDA)용
-# 만약 AMD ROCm 환경: tensorflow-rocm==2.14.0
+tensorflow==2.14.0
 
 scikit-learn==1.4.2
 
