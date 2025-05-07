@@ -33,27 +33,24 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import com.ddc.bansoogi.common.notification.AlarmScheduler
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.controller.MyInfoUpdateController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
-import com.ddc.bansoogi.myInfo.view.MyInfoView
 import java.util.*
 
 @Composable
 fun MyInfoUpdateScreen(navController: NavController) {
 
-    val infoState = remember { mutableStateOf<MyInfoDto?>(null) }
+    val controller = remember { MyInfoController() }
 
-    val fetchController = remember {
-        MyInfoController(object : MyInfoView {
-            override fun displayMyInfo(myInfoDto: MyInfoDto) {
-                infoState.value = myInfoDto
-            }
-        })
-    }
-    LaunchedEffect(Unit) { fetchController.initialize() }
+    val myInfo by controller.myInfoFlow()
+        .collectAsState(initial = null)
 
-    infoState.value?.let { initial ->
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { controller.initialize(context) }
+
+    myInfo?.let { initial ->
 
         val updateController = remember {
             MyInfoUpdateController { _ ->
@@ -320,64 +317,64 @@ fun MyInfoUpdateScreen(navController: NavController) {
 
             mealOrder.forEach { label ->
                 val state = timesMap[label] ?: return@forEach
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp, horizontal = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(label, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF888888))
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            OutlinedTextField(
-                                value = state.value,
-                                onValueChange = { input ->
-                                    val digits = input.text.filter { it.isDigit() }.take(4)
-                                    val formatted = when (digits.length) {
-                                        0 -> ""
-                                        in 1..2 -> digits
-                                        in 3..4 -> "${digits.substring(0, 2)}:${digits.substring(2)}"
-                                        else -> input.text
-                                    }
-                                    state.value = TextFieldValue(
-                                        text = formatted,
-                                        selection = TextRange(formatted.length)
-                                    )
-                                },
-                                placeholder = {
-                                    Text("00:00", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF888888))
-                                },
-                                singleLine = true,
-                                modifier = Modifier
-                                    .width(100.dp)
-                                    .padding(end = 4.dp),
-                                textStyle = LocalTextStyle.current.copy(
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold
-                                ),
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                            )
-
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .background(Color(0xFFFF8370), CircleShape)
-                                    .clickable { removeMeal(label) },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    Icons.Filled.Remove,
-                                    contentDescription = "제거",
-                                    tint = Color.Black,
-                                    modifier = Modifier.size(24.dp)
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp, horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(label, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF888888))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        OutlinedTextField(
+                            value = state.value,
+                            onValueChange = { input ->
+                                val digits = input.text.filter { it.isDigit() }.take(4)
+                                val formatted = when (digits.length) {
+                                    0 -> ""
+                                    in 1..2 -> digits
+                                    in 3..4 -> "${digits.substring(0, 2)}:${digits.substring(2)}"
+                                    else -> input.text
+                                }
+                                state.value = TextFieldValue(
+                                    text = formatted,
+                                    selection = TextRange(formatted.length)
                                 )
-                            }
-                            Spacer(modifier = Modifier.width(2.dp))
+                            },
+                            placeholder = {
+                                Text("00:00", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF888888))
+                            },
+                            singleLine = true,
+                            modifier = Modifier
+                                .width(100.dp)
+                                .padding(end = 4.dp),
+                            textStyle = LocalTextStyle.current.copy(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(Color(0xFFFF8370), CircleShape)
+                                .clickable { removeMeal(label) },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Filled.Remove,
+                                contentDescription = "제거",
+                                tint = Color.Black,
+                                modifier = Modifier.size(24.dp)
+                            )
                         }
+                        Spacer(modifier = Modifier.width(2.dp))
                     }
                 }
+            }
 
             Spacer(Modifier.height(12.dp))
             Divider(thickness = 2.dp, color = Color.Gray)
@@ -481,27 +478,26 @@ fun MyInfoUpdateScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        val breakfast = timesMap["아침"]?.value?.text.orEmpty()
-                        val lunch     = timesMap["점심"]?.value?.text.orEmpty()
-                        val dinner    = timesMap["저녁"]?.value?.text.orEmpty()
 
-                        updateController.save(
-                            MyInfoDto(
-                                userId               = initial.userId,
-                                nickname             = nickname,
-                                birthDate            = birthDate.text,
-                                profileBansoogiId    = initial.profileBansoogiId,
-                                wakeUpTime           = wakeUpTime.text,
-                                sleepTime            = sleepTime.text,
-                                breakfastTime        = breakfast,
-                                lunchTime            = lunch,
-                                dinnerTime           = dinner,
-                                notificationDuration = notificationDuration,
-                                alarmEnabled         = initial.alarmEnabled,
-                                bgSoundEnabled       = initial.bgSoundEnabled,
-                                effectSoundEnabled   = initial.effectSoundEnabled
-                            )
+                        val newInfo = MyInfoDto(
+                            userId               = initial.userId,
+                            nickname             = nickname,
+                            birthDate            = birthDate.text,
+                            profileBansoogiId    = initial.profileBansoogiId,
+                            wakeUpTime           = wakeUpTime.text,
+                            sleepTime            = sleepTime.text,
+                            breakfastTime        = timesMap["아침"]?.value?.text.orEmpty(),
+                            lunchTime            = timesMap["점심"]?.value?.text.orEmpty(),
+                            dinnerTime           = timesMap["저녁"]?.value?.text.orEmpty(),
+                            notificationDuration = notificationDuration,
+                            notificationEnabled  = initial.notificationEnabled,
+                            bgSoundEnabled       = initial.bgSoundEnabled,
+                            effectSoundEnabled   = initial.effectSoundEnabled
                         )
+                        updateController.save(newInfo)
+
+                        AlarmScheduler.scheduleAllDailyAlarms(context, newInfo)
+
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(

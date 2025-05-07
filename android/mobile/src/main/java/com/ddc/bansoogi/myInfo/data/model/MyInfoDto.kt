@@ -11,7 +11,7 @@ data class MyInfoDto(
     val lunchTime: String,
     val dinnerTime: String,
     val notificationDuration: Int,
-    val alarmEnabled: Boolean,
+    val notificationEnabled: Boolean,
     val bgSoundEnabled: Boolean,
     val effectSoundEnabled: Boolean
 )

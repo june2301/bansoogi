@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.main.controller.TodayRecordController
@@ -25,17 +26,23 @@ import java.time.LocalTime
 @Composable
 fun HomeScreen() {
     var todayRecordDtoState = remember { mutableStateOf<TodayRecordDto?>(null) }
-    var myInfoState = remember { mutableStateOf<MyInfoDto?>(null) }
     var showEggManager = remember { mutableStateOf(false) }
     var isInSleepRange = remember { mutableStateOf(false) }
 
-    val myInfoController = remember {
-        MyInfoController(object : MyInfoView {
-            override fun displayMyInfo(myInfoDto: MyInfoDto) {
-                myInfoState.value = myInfoDto
-            }
-        })
+    val myInfoState = remember { mutableStateOf<MyInfoDto?>(null) }   // 기존 변수 그대로 사용
+    val myInfoController = remember { MyInfoController() }
+
+    // 데이터 없을 경우 flow 추적 오류
+    // TODO: 초기 MyInfo 데이터 입력받는 로직 구현되면 지울 예정
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { myInfoController.initialize(context) }
+
+    LaunchedEffect(Unit) {
+        myInfoController.myInfoFlow().collect { dto ->
+            myInfoState.value = dto
+        }
     }
+
     var todayRecordController = remember {
         TodayRecordController(object : TodayRecordView {
             override fun displayTodayRecord(todayRecordDto: TodayRecordDto) {
