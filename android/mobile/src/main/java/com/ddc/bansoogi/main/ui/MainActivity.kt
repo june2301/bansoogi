@@ -1,6 +1,7 @@
 package com.ddc.bansoogi.main.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -14,18 +15,54 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ddc.bansoogi.common.navigation.AppNavGraph
 import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.CommonNavigationBar
+import com.ddc.bansoogi.main.util.health.Permissions
+import com.ddc.bansoogi.main.util.health.readLastStepGoal
+import com.ddc.bansoogi.main.util.health.readStepData
+import com.samsung.android.sdk.health.data.HealthDataService
+import com.samsung.android.sdk.health.data.HealthDataStore
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    val activityContext = this
+    private lateinit var healthDataStore: HealthDataStore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        healthDataStore = HealthDataService.getStore(activityContext)
+
         setContent {
             MainScreen()
+        }
+
+        setupHealthData(lifecycleScope, healthDataStore)
+    }
+    fun setupHealthData(lifecycleScope: LifecycleCoroutineScope, healthDataStore: HealthDataStore) {
+        lifecycleScope.launch {
+            try {
+                val grantedPermissions = healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS)
+
+                if (grantedPermissions.size != Permissions.PERMISSIONS.size) {
+                    val result = healthDataStore.requestPermissions(Permissions.PERMISSIONS, this@MainActivity)
+                }
+
+                // 권한이 허용된 후에만 데이터 읽기 시도
+                if (healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS).size == Permissions.PERMISSIONS.size) {
+                    val stepGoal = readLastStepGoal(healthDataStore)
+                    val todaySteps = readStepData(healthDataStore)
+                    Log.d("STEPS", "Step Goal: $stepGoal")
+                    Log.d("TODAY STEP", "Today Step: $todaySteps")
+                }
+            } catch (e: Exception) {
+                Log.e("STEPS", "Error with Samsung Health: ${e.message}", e)
+            }
         }
     }
 }
