@@ -1,7 +1,5 @@
 package com.ddc.bansoogi.main.ui.manage
 
-import android.os.Handler
-import android.os.Looper
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -9,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +31,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.R
+import kotlinx.coroutines.delay
 
 @Composable
 fun EggBreakingAnimation(eggState: MutableState<Int>) {
@@ -58,15 +58,15 @@ fun EggBreakingAnimation(eggState: MutableState<Int>) {
             ),
             contentDescription = "달걀 깨지는 중",
             modifier = Modifier
-                .width(800.dp)
-                .height(800.dp),
+                .width(1000.dp)
+                .height(1000.dp)
+                .padding(bottom = 240.dp),
             contentScale = ContentScale.Fit
         )
 
         LaunchedEffect(Unit) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                eggState.value = 2
-            }, 1840)
+            delay(1920)
+            eggState.value = 2
         }
     }
 }
