@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -36,13 +35,19 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.collection.data.model.CollectionDto
+import com.ddc.bansoogi.common.data.local.RealmManager
+import com.ddc.bansoogi.myInfo.data.entity.User
+import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun CollectionDetailDialog(character: CollectionDto, onDismiss: () -> Unit) {
+fun CollectionDetailDialog(
+    character: CollectionDto,
+    fullList: List<CollectionDto>,
+    onDismiss: () -> Unit) {
     val context = LocalContext.current
     val gifResId = context.resources.getIdentifier(character.gifUrl, "drawable", context.packageName)
 
@@ -123,7 +128,16 @@ fun CollectionDetailDialog(character: CollectionDto, onDismiss: () -> Unit) {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 OutlinedButton(
-                    onClick = { /* 프로필 등록 로직 */ },
+                    onClick = {
+                        val target = fullList.find { it.id == character.id }
+                        val imageUrl = target?.imageUrl ?: return@OutlinedButton
+
+                        val realm = RealmManager.realm
+                        realm.writeBlocking {
+                            val user = this.query<User>().first().find()
+                            user?.profileBansoogiId = character.id
+                        }
+                    },
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurfaceVariant),
                     contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp)

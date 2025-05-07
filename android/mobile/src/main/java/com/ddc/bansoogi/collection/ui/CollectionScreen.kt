@@ -89,7 +89,7 @@ fun CollectionScreen() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.bansoogi_default_profile), // 아이콘 변경 가능
+                    painter = painterResource(id = R.drawable.bansoogi_default_profile),
                     contentDescription = "내 컬렉션 아이콘",
                     modifier = Modifier.size(32.dp)
                 )
@@ -130,9 +130,11 @@ fun CollectionScreen() {
         }
 
         selected?.let {
-            CollectionDetailDialog (character = it) {
-                controller.dismissCharacterDetail()
-            }
+            CollectionDetailDialog(
+                character = it,
+                fullList = collectionDtoState,
+                onDismiss = { controller.dismissCharacterDetail() }
+            )
         }
     }
 }
