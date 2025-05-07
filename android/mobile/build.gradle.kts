@@ -77,6 +77,9 @@ dependencies {
     // 화면 스크롤 페이저
     implementation(libs.androidx.foundation)
 
+    // 생명주기 감지
+    implementation(libs.lifecycle.process)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

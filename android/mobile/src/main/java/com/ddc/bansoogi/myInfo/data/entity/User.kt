@@ -22,7 +22,7 @@ class User : RealmObject {
 
     var notificationDuration: Int = 30
 
-    var alarmEnabled: Boolean = false
+    var notificationEnabled: Boolean = false
     var bgSoundEnabled: Boolean = false
     var effectSoundEnabled: Boolean = false
 }

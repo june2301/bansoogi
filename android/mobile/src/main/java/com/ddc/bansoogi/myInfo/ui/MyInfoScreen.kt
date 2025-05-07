@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
-import com.ddc.bansoogi.myInfo.view.MyInfoView
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.platform.LocalContext
 import coil.ImageLoader
@@ -31,32 +30,38 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.ddc.bansoogi.common.navigation.NavRoutes
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import com.ddc.bansoogi.common.util.openAppNotificationSettings
+
+
 private val GreenChecked = Color(0xFF99CC00)
 
 @Composable
 fun MyInfoScreen(navController: NavController) {
-    val infoState = remember { mutableStateOf<MyInfoDto?>(null) }
-    val controller = remember {
-        MyInfoController(object : MyInfoView {
-            override fun displayMyInfo(myInfoDto: MyInfoDto) {
-                infoState.value = myInfoDto
-            }
-        })
-    }
 
-    LaunchedEffect(Unit) {
-        controller.initialize()
-    }
+    val controller = remember { MyInfoController() }
 
-    infoState.value?.let { myInfo ->
+    val myInfo by controller.myInfoFlow()
+        .collectAsState(initial = null)
+
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { controller.initialize(context) }
+
+    myInfo?.let { info ->
         MyInfoContent(
-            myInfoDto = myInfo,
-            onEdit = {
-                navController.navigate(NavRoutes.MYINFOUPDATE)
-            },
-            onToggleAlarm  = { controller.toggleAlarm() },
-            onToggleBgSound= { controller.toggleBgSound() },
-            onToggleEffect = { controller.toggleEffect() }
+            myInfoDto       = info,
+            onEdit          = { navController.navigate(NavRoutes.MYINFOUPDATE) },
+            onToggleNotification   = { controller.toggleNotification() },
+            onToggleBgSound = { controller.toggleBgSound() },
+            onToggleEffect  = { controller.toggleEffect() }
         )
     } ?: Box(
         modifier = Modifier.fillMaxSize(),
@@ -70,7 +75,7 @@ fun MyInfoScreen(navController: NavController) {
 fun MyInfoContent(
     myInfoDto: MyInfoDto,
     onEdit: () -> Unit,
-    onToggleAlarm: () -> Unit,
+    onToggleNotification: () -> Unit,
     onToggleBgSound: () -> Unit,
     onToggleEffect: () -> Unit
 ) {
@@ -218,10 +223,9 @@ fun MyInfoContent(
         Spacer(modifier = Modifier.height(16.dp))
         Divider(thickness = 2.dp, color = Color(0xFF888888))
 
-        ToggleRow(
-            label = "알림 설정",
-            checked = myInfoDto.alarmEnabled,
-            onToggle = onToggleAlarm
+        NotificationToggleRow(
+            checked = myInfoDto.notificationEnabled,
+            onToggle = onToggleNotification
         )
         ToggleRow(
             label = "배경음 설정",
@@ -299,3 +303,86 @@ private fun ToggleRow(
         )
     }
 }
+
+@Composable
+private fun NotificationToggleRow(
+    checked: Boolean,
+    onToggle: () -> Unit
+) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        ToggleRow(label = "알림 설정", checked = checked, onToggle = onToggle)
+        return
+    }
+
+    val context = LocalContext.current
+    val activity = remember { context.findActivity() }   // 확장 함수 아래 참고
+    var showSettingsDialog by remember { mutableStateOf(false) }
+
+    /* 권한 런처 */
+    val permissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                onToggle()                    // 허용 → DB true
+            } else {
+                // 다이얼로그가 안 뜬 경우(= 영구 거부) -> settings 안내
+                val rationale = ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity, Manifest.permission.POST_NOTIFICATIONS
+                )
+                if (!rationale) showSettingsDialog = true   // 영구 거부
+                else Toast.makeText(context, "알림 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    /* UI Row */
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "알림 설정",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+        Switch(
+            checked = checked,
+            onCheckedChange = { wantOn ->
+                if (!wantOn) { onToggle(); return@Switch }
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            },
+            modifier = Modifier.padding(end = 8.dp),
+            colors = SwitchDefaults.colors(checkedTrackColor = GreenChecked)
+        )
+    }
+
+    /* 영구 거부 안내 다이얼로그 */
+    if (showSettingsDialog) {
+        AlertDialog(
+            onDismissRequest = { showSettingsDialog = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showSettingsDialog = false
+                    context.openAppNotificationSettings()   // 설정 화면
+                }) { Text("설정으로 이동") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSettingsDialog = false }) { Text("취소") }
+            },
+            title = { Text("알림 설정") },
+            text  = { Text("알림 기능을 사용하려면 시스템 설정에서 권한을 켜 주세요.") },
+            containerColor = Color(0xFFFFFFFF)
+
+        )
+    }
+}
+
+/* Context → Activity 변환 */
+private tailrec fun Context.findActivity(): Activity =
+    when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.findActivity()
+        else -> error("Permission context must be an Activity")
+    }
