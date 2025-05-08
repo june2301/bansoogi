@@ -7,12 +7,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
-fun DefaultTitleText(title: String) {
+fun DefaultBodyText(title: String) {
     Text(
         text = title,
-        style = MaterialTheme.typography.headlineLarge.copy(
-            fontWeight = FontWeight.SemiBold,
-            color = Color.Black
+        style = MaterialTheme.typography.bodyLarge.copy(
+            fontWeight = FontWeight.ExtraBold,
+            color = Color.Gray
         )
     )
 }

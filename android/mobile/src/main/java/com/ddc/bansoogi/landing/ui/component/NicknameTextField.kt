@@ -37,7 +37,7 @@ fun NicknameTextField(
                 nicknameState.value = noSpace
             }
         },
-        placeholder = { Text("닉네임") },
+        placeholder = { Text("3~8자, 한글, 숫자, 영어") },
         singleLine = true,
 
         //MAKR: borderColor 같은것이 미리 입력받아진다면, 예외처리해서 해야할 것

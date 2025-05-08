@@ -23,7 +23,7 @@ class LandingController(private val view: LandingView) {
 
     fun proceedFromTerms() {
         if (termsModel.isAllAgreed()) {
-            view.showProfileScreen()
+            view.showNicknameInputScreen()
         } else {
             view.showValidationError("필수 약관에 모두 동의해야 합니다.")
         }

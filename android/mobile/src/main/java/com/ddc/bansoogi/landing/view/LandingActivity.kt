@@ -19,8 +19,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.landing.controller.LandingController
+import com.ddc.bansoogi.landing.ui.screen.BirthInputScreen
 import com.ddc.bansoogi.landing.ui.screen.LandingStartScreen
-import com.ddc.bansoogi.landing.ui.screen.ProfileInputScreen
+import com.ddc.bansoogi.landing.ui.screen.NicknameInputScreen
 import com.ddc.bansoogi.landing.ui.screen.TermsScreen
 import com.ddc.bansoogi.landing.ui.screen.TimeSettingScreen
 import com.ddc.bansoogi.main.ui.MainActivity
@@ -64,17 +65,28 @@ class LandingActivity : ComponentActivity(), LandingView {
                         contentAlignment = Alignment.Center
                     ) {
                         TermsScreen(controller) {
-                            showProfileScreen()
+                            showNicknameInputScreen()
                         }
                     }
                 }
 
-                composable("profile") {
+                composable("nickname") {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        ProfileInputScreen(controller) {
+                        NicknameInputScreen(controller) {
+                            showBirthInputScreen()
+                        }
+                    }
+                }
+
+                composable("birth") {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        BirthInputScreen (controller) {
                             showTimeScreen()
                         }
                     }
@@ -103,8 +115,12 @@ class LandingActivity : ComponentActivity(), LandingView {
         navController.navigate("terms")
     }
 
-    override fun showProfileScreen() {
-        navController.navigate("profile")
+    override fun showNicknameInputScreen() {
+        navController.navigate("nickname")
+    }
+
+    override fun showBirthInputScreen() {
+        navController.navigate("birth")
     }
 
     override fun showTimeScreen() {

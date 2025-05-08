@@ -8,14 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun NextButton(
-    text: String = "다음",
+    text: String = "next >",
     enabled: Boolean = true,
     onClick: () -> Unit,
     textStyle: TextStyle = MaterialTheme.typography.headlineMedium,
-    contentButtonColor: Color = Color(0xFF4CABFD),
+//    contentButtonColor: Color = Color(0xFF4CABFD),
+    contentButtonColor: Color = Color.White,
     modifier: Modifier = Modifier
 ) {
     Button(
@@ -27,8 +29,8 @@ fun NextButton(
             disabledContainerColor = Color.Transparent,
             disabledContentColor = Color.LightGray
         ),
-        modifier = modifier
+        modifier = modifier,
     ) {
-        Text(text, style = textStyle)
+        Text(text, style = textStyle, fontWeight = FontWeight.Bold)
     }
 }
