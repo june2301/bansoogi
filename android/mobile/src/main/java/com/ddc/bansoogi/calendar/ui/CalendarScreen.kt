@@ -1,6 +1,5 @@
 package com.ddc.bansoogi.calendar.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,19 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.request.ImageRequest
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.width
@@ -53,16 +44,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import com.ddc.bansoogi.calendar.controller.CalendarController
 import com.ddc.bansoogi.calendar.data.model.CalendarMarkerDto
+import com.ddc.bansoogi.calendar.ui.component.YearMonthPickerDialog
 import com.ddc.bansoogi.calendar.ui.state.CalendarContentUiState
 import com.ddc.bansoogi.calendar.ui.state.CalendarUiState
+import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
 import com.ddc.bansoogi.calendar.view.CalendarView
 import com.ddc.bansoogi.common.ui.component.BansoogiAnimation
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
-
-// 미리 로드할 월의 수 -> 무한 스크롤
-private const val INITIAL_PAGE = Int.MAX_VALUE / 2
 
 @Composable
 fun loadCalendarData(): CalendarUiState {
@@ -110,14 +100,17 @@ fun CalendarScreen() {
 }
 
 @Composable
-fun CalendarContent(today: LocalDate, calendarMarkers: List<CalendarMarkerDto>) {
+fun CalendarContent(
+    today: LocalDate,
+    calendarMarkers: List<CalendarMarkerDto>
+) {
     val initialDate = remember { today }
     var uiState by remember { mutableStateOf(CalendarContentUiState(currentViewDate = initialDate)) }
 
     // 페이저 상태 생성
     val pagerState = rememberPagerState(
-        pageCount = { Int.MAX_VALUE },
-        initialPage = INITIAL_PAGE
+        pageCount = { CalendarUtils.getInitialMonthCount() },
+        initialPage = CalendarUtils.getInitialPage()
     )
 
     // 코루틴 스코프 생성
@@ -126,10 +119,20 @@ fun CalendarContent(today: LocalDate, calendarMarkers: List<CalendarMarkerDto>) 
     // 페이지 변경 시 날짜 업데이트
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            val monthDiff = page - INITIAL_PAGE
+            val monthDiff = page - CalendarUtils.getInitialPage()
             uiState = uiState.copy(
                 currentViewDate = initialDate.plusMonths(monthDiff.toLong())
             )
+        }
+    }
+
+    // 특정 날짜로 페이저 이동 함수
+    fun navigateToDate(targetDate: LocalDate) {
+        val newPage = CalendarUtils.calculatePagerPage(initialDate, targetDate)
+
+        // 페이저 이동
+        coroutineScope.launch {
+            pagerState.animateScrollToPage(newPage)
         }
     }
 
@@ -161,6 +164,10 @@ fun CalendarContent(today: LocalDate, calendarMarkers: List<CalendarMarkerDto>) 
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         }
                     }
+                },
+                // 연월 피커 다이얼로그에서 날짜 선택 시 처리
+                onDateSelect = { newDate ->
+                    navigateToDate(newDate)
                 }
             )
 
@@ -170,7 +177,7 @@ fun CalendarContent(today: LocalDate, calendarMarkers: List<CalendarMarkerDto>) 
                 pageSize = PageSize.Fill,
                 modifier = Modifier.fillMaxSize(),
             ) { page ->
-                val monthDiff = page - INITIAL_PAGE
+                val monthDiff = page - CalendarUtils.getInitialPage()
                 val pageDate = initialDate.plusMonths(monthDiff.toLong())
 
                 // 캘린더 표
@@ -179,9 +186,8 @@ fun CalendarContent(today: LocalDate, calendarMarkers: List<CalendarMarkerDto>) 
                     today = today,
                     calendarMarkers = calendarMarkers,
                     onDayClick = { day ->
-                        val formatted = "%04d-%02d-%02d".format(pageDate.year, pageDate.monthValue, day)
                         uiState = uiState.copy(
-                            selectedDate = formatted,
+                            selectedDate = CalendarUtils.toFormattedDateString(pageDate, day),
                             showModal = true
                         )
                     }
@@ -202,7 +208,14 @@ fun CalendarContent(today: LocalDate, calendarMarkers: List<CalendarMarkerDto>) 
 }
 
 @Composable
-fun CalendarHeader(viewDate: LocalDate, onPrevMonth: () -> Unit, onNextMonth: () -> Unit) {
+fun CalendarHeader(
+    viewDate: LocalDate,
+    onPrevMonth: () -> Unit,
+    onNextMonth: () -> Unit,
+    onDateSelect: (LocalDate) -> Unit = {}
+) {
+    var showDialog by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -228,7 +241,11 @@ fun CalendarHeader(viewDate: LocalDate, onPrevMonth: () -> Unit, onNextMonth: ()
         Text(
             text = "${viewDate.year}년 ${viewDate.monthValue}월",
             fontSize = 24.sp,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier.clickable {
+                // 클릭 시 다이얼로그 표시
+                showDialog = true
+            }
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -244,6 +261,22 @@ fun CalendarHeader(viewDate: LocalDate, onPrevMonth: () -> Unit, onNextMonth: ()
             )
         }
     }
+
+    // 다이얼로그 표시
+    if (showDialog) {
+        YearMonthPickerDialog(
+            currentDate = viewDate,
+            onDateSelected = { year, month ->
+                // 사용자가 선택한 연월로 날짜 업데이트
+                val newDate = viewDate.withYear(year).withMonth(month)
+                onDateSelect(newDate)
+            },
+            onDismiss = {
+                // 다이얼로그 닫기
+                showDialog = false
+            }
+        )
+    }
 }
 
 @Composable
@@ -255,24 +288,11 @@ fun CalendarGrid(viewDate: LocalDate, today: LocalDate, calendarMarkers: List<Ca
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 현재 보고 있는 월의 정보를 계산
-        val yearMonth = YearMonth.of(viewDate.year, viewDate.monthValue)
-        val firstDayOfMonth = yearMonth.atDay(1)
-        val lastDayOfMonth = yearMonth.atEndOfMonth().dayOfMonth
-
-        // 1일의 요일
-        val firstDayDayOfWeek = firstDayOfMonth.dayOfWeek.value
-
-        // 일요일을 0으로 변환
-        val emptyDaysAtStart = if (firstDayDayOfWeek == 7) 0 else firstDayDayOfWeek
-
         // 오늘 날짜인가?
-        val currentDay = if (viewDate.year == today.year && viewDate.monthValue == today.monthValue)
-            today.dayOfMonth else -1
+        val currentDay = CalendarUtils.isCurrentDay(viewDate, today)
 
         // 빈 셀과 날짜를 포함한 리스트 생성
-        val calendarDays = List(emptyDaysAtStart) { 0 } + (1..lastDayOfMonth).toList()
-        val chunks = calendarDays.chunked(7)
+        val chunks = CalendarUtils.getWeekChunks(YearMonth.of(viewDate.year, viewDate.monthValue))
 
         // 날짜 표 출력
         Column(modifier = Modifier.weight(1f)) {
@@ -292,7 +312,7 @@ fun CalendarGrid(viewDate: LocalDate, today: LocalDate, calendarMarkers: List<Ca
                         ) {
                             // day가 0보다 클 때만
                             if (day > 0) {
-                                val cellDate = LocalDate.of(viewDate.year, viewDate.monthValue, day)
+                                val cellDate = CalendarUtils.withDayOfMonth(viewDate, day);
                                 val matchedHistory = calendarMarkers.find { it.date == cellDate }
 
                                 CalendarDayCell(
