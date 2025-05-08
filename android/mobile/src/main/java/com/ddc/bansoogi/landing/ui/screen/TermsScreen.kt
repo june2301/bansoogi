@@ -1,16 +1,11 @@
 package com.ddc.bansoogi.landing.ui.screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ddc.bansoogi.landing.controller.LandingController
 import com.ddc.bansoogi.landing.ui.component.CheckboxRow
+import com.ddc.bansoogi.landing.ui.component.DefaultTitleText
 import com.ddc.bansoogi.landing.ui.component.NextButton
 import com.ddc.bansoogi.landing.ui.component.RoundedContainerBox
 
@@ -45,7 +41,7 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(), // 부모가 크기를 알아야 정렬 가능
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("서비스 이용 약관", style = MaterialTheme.typography.headlineLarge)
+                    DefaultTitleText("서비스 이용 약관")
                 }
 
                 CheckboxRow(
