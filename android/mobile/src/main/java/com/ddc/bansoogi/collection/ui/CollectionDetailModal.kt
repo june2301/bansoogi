@@ -42,11 +42,8 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.collection.data.model.CollectionDto
-import com.ddc.bansoogi.common.data.local.RealmManager
-import com.ddc.bansoogi.myInfo.data.entity.User
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
 import kotlinx.coroutines.launch
-import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -86,6 +83,7 @@ fun CollectionDetailDialog(
                 Text(
                     "닫기",
                     fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -112,7 +110,7 @@ fun CollectionDetailDialog(
                         modifier = Modifier
                             .background(
                                 color = Color(0xFFFBD752),
-                                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                                shape = RoundedCornerShape(16.dp)
                             )
                             .padding(horizontal = 12.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelLarge
