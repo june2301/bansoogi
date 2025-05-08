@@ -177,7 +177,7 @@ fun CollectionDetailDialog(
                                 }
                             ) {
                                 Text(
-                                    "그럼!",
+                                    "확인",
                                     fontSize = 20.sp,
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
@@ -186,7 +186,8 @@ fun CollectionDetailDialog(
                         dismissButton = {
                             TextButton(onClick = { showConfirmDialog = false }) {
                                 Text(
-                                    "아니.",
+                                    "취소",
+                                    fontSize = 20.sp,
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
                             }
