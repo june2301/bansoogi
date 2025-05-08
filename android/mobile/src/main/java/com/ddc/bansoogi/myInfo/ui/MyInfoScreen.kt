@@ -24,12 +24,12 @@ import androidx.navigation.NavController
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 import com.ddc.bansoogi.myInfo.view.MyInfoView
-import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.platform.LocalContext
-import coil.ImageLoader
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
+import androidx.compose.ui.res.painterResource
+import com.ddc.bansoogi.collection.data.entity.Character
+import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.common.navigation.NavRoutes
+import io.realm.kotlin.ext.query
 
 private val GreenChecked = Color(0xFF99CC00)
 
@@ -75,14 +75,16 @@ fun MyInfoContent(
     onToggleEffect: () -> Unit
 ) {
     val context = LocalContext.current
-    val imageLoader = remember {
-        ImageLoader.Builder(context)
-            .components {
-                add(GifDecoder.Factory())
-                add(ImageDecoderDecoder.Factory())
-            }
-            .build()
-    }
+    val realm = RealmManager.realm
+    val imageUrl = remember(myInfoDto.profileBansoogiId) {
+        val found = realm.query<Character>("bansoogiId == $0", myInfoDto.profileBansoogiId)
+            .first()
+            .find()
+            found?.imageUrl
+    } ?: "bansoogi_default_profile"
+
+    val imageResId = context.resources.getIdentifier(imageUrl.toString(), "drawable", context.packageName)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,10 +95,11 @@ fun MyInfoContent(
     ) {
         Spacer(modifier = Modifier.height(12.dp))
         Image(
-            painter = rememberAsyncImagePainter(
-                model = myInfoDto.profileBansoogiId,
-                imageLoader = imageLoader
-            ),
+//            painter = rememberAsyncImagePainter(
+//                model = myInfoDto.profileBansoogiId,
+//                imageLoader = imageLoader
+//            ),
+            painter = painterResource(id = imageResId),
             contentDescription = "프로필 이미지",
             modifier = Modifier
                 .size(120.dp)

@@ -22,6 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,6 +54,7 @@ fun CollectionDetailDialog(
     onDismiss: () -> Unit) {
     val context = LocalContext.current
     val gifResId = context.resources.getIdentifier(character.gifUrl, "drawable", context.packageName)
+    var showConfirmDialog: Boolean by remember { mutableStateOf(false) }
 
     val imageLoader = ImageLoader.Builder(context)
         .components {
@@ -135,8 +140,12 @@ fun CollectionDetailDialog(
                         val realm = RealmManager.realm
                         realm.writeBlocking {
                             val user = this.query<User>().first().find()
-                            user?.profileBansoogiId = character.id
+                            user?.let {
+                                it.profileBansoogiId = character.id
+                            }
                         }
+
+                        showConfirmDialog = true
                     },
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurfaceVariant),
@@ -153,6 +162,50 @@ fun CollectionDetailDialog(
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF888888)
                     )
+                    if (showConfirmDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showConfirmDialog = false },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        val target = fullList.find { it.id == character.id }
+                                        val imageUrl = target?.imageUrl ?: return@TextButton
+
+                                        val realm = RealmManager.realm
+                                        realm.writeBlocking {
+                                            val user = this.query<User>().first().find()
+                                            user?.let {
+                                                it.profileBansoogiId = character.id
+                                            }
+                                        }
+
+                                        showConfirmDialog = false
+                                        onDismiss()
+                                    }
+                                ) {
+                                    Text(
+                                        "그럼!",
+                                        fontSize = 20.sp,
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showConfirmDialog = false }) {
+                                    Text(
+                                        "아니.",
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                }
+                            },
+                            title = {
+                                Text(
+                                    "프로필 사진으로 등록할까요?",
+                                    fontSize = 20.sp,
+                                    color = MaterialTheme.colorScheme.onBackground
+                                ) },
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 OutlinedButton(

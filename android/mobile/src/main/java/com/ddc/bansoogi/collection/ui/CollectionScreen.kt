@@ -58,10 +58,6 @@ fun CollectionScreen() {
 
         val realm = RealmManager.realm
         val allCharacters = realm.query<Character>().find()
-        println("🧪 Realm에 있는 캐릭터 수: ${allCharacters.size}")
-        allCharacters.forEach {
-            println("🧪 ID: ${it.bansoogiId}, Title: ${it.title}")
-        }
     }
 
     val regularList = collectionDtoState.filter { it.id < 50 }
