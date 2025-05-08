@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.collection.data.local
 
+import android.content.Context
 import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.collection.data.entity.UnlockedCharacter
 import com.ddc.bansoogi.common.data.local.RealmManager
@@ -20,6 +21,16 @@ class CollectionDataSource {
         realm.query<UnlockedCharacter>()
             .asFlow()
             .map { it.list }
+
+    fun getImageResourceIdForBansoogiId(context: Context, bansoogiId: Int): Int {
+        val realm = RealmManager.realm
+        val imageUrl = realm.query<Character>("bansoogiId == $0", bansoogiId)
+            .first()
+            .find()
+            ?.imageUrl ?: "bansoogi_default_profile"
+
+        return context.resources.getIdentifier(imageUrl, "drawable", context.packageName)
+    }
 
     suspend fun insertDummyCharactersWithUnlock() {
         val realm = RealmManager.realm
