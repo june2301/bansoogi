@@ -35,6 +35,7 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import com.ddc.bansoogi.collection.data.model.CollectionModel
 import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.controller.MyInfoUpdateController
@@ -66,19 +67,12 @@ fun MyInfoUpdateScreen(navController: NavController) {
         }
 
         val context = LocalContext.current
-        val realm = RealmManager.realm
+        val collectionModel = remember { CollectionModel() }
+
         var profileBansoogiId by remember { mutableStateOf(initial.profileBansoogiId) }
 
-        val profileImageUrl by remember {
-            derivedStateOf {
-                realm.query<com.ddc.bansoogi.collection.data.entity.Character>("bansoogiId == $0", profileBansoogiId)
-                    .first()
-                    .find()
-                    ?.imageUrl ?: "bansoogi_default_profile"
-            }
-        }
-        val imageResId = remember(profileImageUrl) {
-            context.resources.getIdentifier(profileImageUrl, "drawable", context.packageName)
+        val imageResId = remember(profileBansoogiId) {
+            collectionModel.getImageResId(context, profileBansoogiId)
         }
 
         var nickname by remember { mutableStateOf(initial.nickname) }
