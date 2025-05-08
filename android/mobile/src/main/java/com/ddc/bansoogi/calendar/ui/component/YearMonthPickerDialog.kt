@@ -138,17 +138,17 @@ fun DialogButtons(
         horizontalArrangement = Arrangement.End
     ) {
         TextButton(
-            onClick = onDismiss
-        ) {
-            Text("취소")
-        }
-
-        TextButton(
             onClick = {
                 onConfirm()
             }
         ) {
             Text("확인")
+        }
+
+        TextButton(
+            onClick = onDismiss
+        ) {
+            Text("취소")
         }
     }
 }
