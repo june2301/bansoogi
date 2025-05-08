@@ -40,6 +40,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import com.ddc.bansoogi.collection.data.model.CollectionModel
 import com.ddc.bansoogi.common.util.openAppNotificationSettings
 
 
@@ -81,15 +82,10 @@ fun MyInfoContent(
     onToggleEffect: () -> Unit
 ) {
     val context = LocalContext.current
-    val realm = RealmManager.realm
-    val imageUrl = remember(myInfoDto.profileBansoogiId) {
-        val found = realm.query<Character>("bansoogiId == $0", myInfoDto.profileBansoogiId)
-            .first()
-            .find()
-            found?.imageUrl
-    } ?: "bansoogi_default_profile"
-
-    val imageResId = context.resources.getIdentifier(imageUrl.toString(), "drawable", context.packageName)
+    val collectionModel = remember { CollectionModel() }
+    val imageResId = remember(myInfoDto.profileBansoogiId) {
+        collectionModel.getImageResId(context, myInfoDto.profileBansoogiId)
+    }
 
     Column(
         modifier = Modifier
