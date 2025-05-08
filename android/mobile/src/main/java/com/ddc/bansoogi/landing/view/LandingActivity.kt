@@ -74,7 +74,7 @@ class LandingActivity : ComponentActivity(), LandingView {
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        ProfileInputScreen {
+                        ProfileInputScreen(controller) {
                             showTimeScreen()
                         }
                     }

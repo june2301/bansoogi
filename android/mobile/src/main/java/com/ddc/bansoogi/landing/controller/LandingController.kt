@@ -1,11 +1,13 @@
 package com.ddc.bansoogi.landing.controller
 
+import com.ddc.bansoogi.landing.data.model.ProfileModel
 import com.ddc.bansoogi.landing.data.model.TermsModel
 import com.ddc.bansoogi.landing.view.LandingView
 
 class LandingController(private val view: LandingView) {
 
     var termsModel = TermsModel()
+    var profileModel = ProfileModel()
 
     fun updateServiceChecked(value: Boolean) {
         termsModel.serviceChecked = value
