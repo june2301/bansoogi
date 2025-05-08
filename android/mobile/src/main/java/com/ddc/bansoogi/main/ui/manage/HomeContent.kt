@@ -38,6 +38,8 @@ import coil.request.ImageRequest
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.ui.RecordedModal
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
+import com.ddc.bansoogi.common.notification.NotificationDispatcher
+import com.ddc.bansoogi.common.notification.NotificationFactory
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.DayTimeModal
 
@@ -49,6 +51,10 @@ fun HomeContent(
 ) {
     var progressValue by remember { mutableStateOf(todayRecordDto.energyPoint) }
     var showModal by remember { mutableStateOf(false) }
+
+    // TODO: 알림 테스트용 - 나중에 삭제
+    var notified20 by remember { mutableStateOf(progressValue >= 20) }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -171,6 +177,17 @@ fun HomeContent(
                     progressValue += 5
                     todayRecordController.updateInteractionCnt(todayRecordDto.recordId)
                     todayRecordController.updateEnergy(todayRecordDto.recordId, 5)
+
+                    // TODO: 알림 테스트용 - 나중에 삭제
+                    if (progressValue >= 20 && !notified20) {
+                        notified20 = true
+                        NotificationDispatcher.show(
+                            context,
+                            NotificationDispatcher.Id.PHONE,
+                            NotificationFactory.phoneUsage(context, 20)
+                        )
+                    }
+
                 }
             },
             enabled = !isInSleepRange,

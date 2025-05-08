@@ -16,9 +16,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.ddc.bansoogi.common.navigation.NavRoutes
-import com.ddc.bansoogi.main.MainScreen
-import com.ddc.bansoogi.main.MenuScreen
+import com.ddc.bansoogi.main.ui.MainScreen
+import com.ddc.bansoogi.main.ui.MenuScreen
 import com.ddc.bansoogi.myinfo.ui.MyInfoScreen
+import com.ddc.bansoogi.today.ui.TodayRecordedScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
 
         setContent {
-            MyInfoScreen()
+            BansoogiApp()
         }
     }
 }
@@ -50,6 +51,9 @@ fun BansoogiApp() {
         }
         composable(NavRoutes.MYINFO) {
             MyInfoScreen()
+        }
+        composable(NavRoutes.TODAY) {
+            TodayRecordedScreen()
         }
     }
 }

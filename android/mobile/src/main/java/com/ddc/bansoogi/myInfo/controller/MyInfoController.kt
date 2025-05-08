@@ -1,43 +1,29 @@
 package com.ddc.bansoogi.myInfo.controller
 
+import android.content.Context
 import com.ddc.bansoogi.myInfo.data.local.MyInfoDataSource
+import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
-import com.ddc.bansoogi.myInfo.view.MyInfoView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 
-class MyInfoController(private val view: MyInfoView) {
+class MyInfoController {
     private val dataSource = MyInfoDataSource()
     private val model = MyInfoModel()
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope = CoroutineScope(Dispatchers.IO)
 
-    fun initialize() {
-        scope.launch {
-            dataSource.initialize() // 더미데이터 값 넣어주기
-            model.getMyInfo().collectLatest { info ->
-                view.displayMyInfo(info)
-            }
-        }
+    // UI가 구독할 Flow
+    fun myInfoFlow(): Flow<MyInfoDto> = model.getMyInfo()
+
+    // 더미 데이터 초기 삽입
+    fun initialize(ctx: Context) {
+        scope.launch { dataSource.initialize(ctx) }
     }
 
-    fun toggleAlarm() {
-        scope.launch {
-            val updated = model.toggleAlarm()
-            view.displayMyInfo(updated)
-        }
-    }
-    fun toggleBgSound() {
-        scope.launch {
-            val updated = model.toggleBgSound()
-            view.displayMyInfo(updated)
-        }
-    }
-    fun toggleEffect() {
-        scope.launch {
-            val updated = model.toggleEffect()
-            view.displayMyInfo(updated)
-        }
-    }
+    // 토글 메서드들 — DB만 갱신하면 Flow가 자동 emit
+    fun toggleNotification()   { scope.launch { model.toggleNotification() } }
+    fun toggleBgSound() { scope.launch { model.toggleBgSound() } }
+    fun toggleEffect()  { scope.launch { model.toggleEffect()  } }
 }

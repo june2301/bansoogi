@@ -10,22 +10,24 @@ import org.mongodb.kbson.ObjectId
 class MyInfoModel {
     private val dataSource = MyInfoDataSource()
 
+    fun notificationEnabledFlow(): Flow<Boolean> = dataSource.notificationEnabledFlow
+
     fun getMyInfo(): Flow<MyInfoDto> =
         dataSource.getMyInfo().map { entity -> entity.toDomain() }
 
     suspend fun updateMyInfo(input: MyInfoDto): MyInfoDto {
         val entity = User().apply {
-            userId             = ObjectId(input.userId)
-            nickname           = input.nickname
-            birthDate          = input.birthDate
-            profileBansoogiId  = input.profileBansoogiId
-            wakeUpTime         = input.wakeUpTime
-            sleepTime          = input.sleepTime
-            breakfastTime      = input.breakfastTime
-            lunchTime          = input.lunchTime
-            dinnerTime         = input.dinnerTime
+            userId               = ObjectId(input.userId)
+            nickname             = input.nickname
+            birthDate            = input.birthDate
+            profileBansoogiId    = input.profileBansoogiId
+            wakeUpTime           = input.wakeUpTime
+            sleepTime            = input.sleepTime
+            breakfastTime        = input.breakfastTime
+            lunchTime            = input.lunchTime
+            dinnerTime           = input.dinnerTime
             notificationDuration = input.notificationDuration
-            alarmEnabled         = input.alarmEnabled
+            notificationEnabled  = input.notificationEnabled
             bgSoundEnabled       = input.bgSoundEnabled
             effectSoundEnabled   = input.effectSoundEnabled
         }
@@ -40,8 +42,8 @@ class MyInfoModel {
     }
 
     /** 토글: DB 반영 후 최신값(domain) 리턴 */
-    suspend fun toggleAlarm(): MyInfoDto {
-        dataSource.toggleAlarmEnabled()
+    suspend fun toggleNotification(): MyInfoDto {
+        dataSource.toggleNotificationEnabled()
         val updatedEntity = dataSource.getMyInfo().first()
         return updatedEntity.toDomain()
     }
@@ -68,7 +70,7 @@ class MyInfoModel {
         lunchTime            = this.lunchTime,
         dinnerTime           = this.dinnerTime,
         notificationDuration = this.notificationDuration,
-        alarmEnabled         = this.alarmEnabled,
+        notificationEnabled  = this.notificationEnabled,
         bgSoundEnabled       = this.bgSoundEnabled,
         effectSoundEnabled   = this.effectSoundEnabled
     )
