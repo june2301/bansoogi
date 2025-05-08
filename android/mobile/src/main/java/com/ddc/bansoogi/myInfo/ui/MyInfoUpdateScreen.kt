@@ -1,7 +1,6 @@
 package com.ddc.bansoogi.myInfo.ui
 
 import android.app.DatePickerDialog
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,18 +30,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
 import com.ddc.bansoogi.collection.data.model.CollectionModel
-import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.controller.MyInfoUpdateController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
-import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
-import com.ddc.bansoogi.myInfo.view.MyInfoView
-import io.realm.kotlin.ext.query
 import kotlinx.coroutines.launch
 import com.ddc.bansoogi.common.notification.AlarmScheduler
 import java.util.*
@@ -59,7 +50,6 @@ fun MyInfoUpdateScreen(navController: NavController) {
     LaunchedEffect(Unit) { controller.initialize(context) }
 
     myInfo?.let { initial ->
-
         val updateController = remember {
             MyInfoUpdateController { _ ->
                 navController.popBackStack()
