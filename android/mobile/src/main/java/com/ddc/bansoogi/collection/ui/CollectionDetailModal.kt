@@ -1,5 +1,7 @@
 package com.ddc.bansoogi.collection.ui
 
+import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,18 +44,24 @@ import coil.request.ImageRequest
 import com.ddc.bansoogi.collection.data.model.CollectionDto
 import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.myInfo.data.entity.User
+import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
+import kotlinx.coroutines.launch
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@SuppressLint("RememberReturnType")
 @Composable
 fun CollectionDetailDialog(
     character: CollectionDto,
     fullList: List<CollectionDto>,
     onDismiss: () -> Unit) {
     val context = LocalContext.current
+    val model = remember { MyInfoModel() }
+    val scope = rememberCoroutineScope()
+
     val gifResId = context.resources.getIdentifier(character.gifUrl, "drawable", context.packageName)
     var showConfirmDialog: Boolean by remember { mutableStateOf(false) }
 
@@ -134,17 +143,6 @@ fun CollectionDetailDialog(
 
                 OutlinedButton(
                     onClick = {
-                        val target = fullList.find { it.id == character.id }
-                        val imageUrl = target?.imageUrl ?: return@OutlinedButton
-
-                        val realm = RealmManager.realm
-                        realm.writeBlocking {
-                            val user = this.query<User>().first().find()
-                            user?.let {
-                                it.profileBansoogiId = character.id
-                            }
-                        }
-
                         showConfirmDialog = true
                     },
                     shape = RoundedCornerShape(8.dp),
@@ -162,51 +160,46 @@ fun CollectionDetailDialog(
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF888888)
                     )
-                    if (showConfirmDialog) {
-                        AlertDialog(
-                            onDismissRequest = { showConfirmDialog = false },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        val target = fullList.find { it.id == character.id }
-                                        val imageUrl = target?.imageUrl ?: return@TextButton
+                }
 
-                                        val realm = RealmManager.realm
-                                        realm.writeBlocking {
-                                            val user = this.query<User>().first().find()
-                                            user?.let {
-                                                it.profileBansoogiId = character.id
-                                            }
-                                        }
-
+                if (showConfirmDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showConfirmDialog = false },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    scope.launch {
+                                        model.updateProfileBansoogiId(character.id)
+                                        Toast.makeText(context, "프로필이 변경되었습니다", Toast.LENGTH_SHORT).show()
                                         showConfirmDialog = false
                                         onDismiss()
                                     }
-                                ) {
-                                    Text(
-                                        "그럼!",
-                                        fontSize = 20.sp,
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
                                 }
-                            },
-                            dismissButton = {
-                                TextButton(onClick = { showConfirmDialog = false }) {
-                                    Text(
-                                        "아니.",
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
-                                }
-                            },
-                            title = {
+                            ) {
                                 Text(
-                                    "프로필 사진으로 등록할까요?",
+                                    "그럼!",
                                     fontSize = 20.sp,
                                     color = MaterialTheme.colorScheme.onBackground
-                                ) },
-                        )
-                    }
+                                )
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showConfirmDialog = false }) {
+                                Text(
+                                    "아니.",
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
+                            }
+                        },
+                        title = {
+                            Text(
+                                "프로필 사진으로 등록할까요?",
+                                fontSize = 20.sp,
+                                color = MaterialTheme.colorScheme.onBackground
+                            ) },
+                    )
                 }
+
                 Spacer(modifier = Modifier.height(4.dp))
                 OutlinedButton(
                     onClick = { /* 다운로드 로직 */ },

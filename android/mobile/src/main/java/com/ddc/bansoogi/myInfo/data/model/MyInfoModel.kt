@@ -33,6 +33,12 @@ class MyInfoModel {
         return input
     }
 
+    suspend fun updateProfileBansoogiId(bansoogiId: Int): MyInfoDto {
+        dataSource.updateProfileBansoogiId(bansoogiId)
+        val updated = dataSource.getMyInfo().first()
+        return updated.toDomain()
+    }
+
     /** 토글: DB 반영 후 최신값(domain) 리턴 */
     suspend fun toggleAlarm(): MyInfoDto {
         dataSource.toggleAlarmEnabled()

@@ -95,10 +95,6 @@ fun MyInfoContent(
     ) {
         Spacer(modifier = Modifier.height(12.dp))
         Image(
-//            painter = rememberAsyncImagePainter(
-//                model = myInfoDto.profileBansoogiId,
-//                imageLoader = imageLoader
-//            ),
             painter = painterResource(id = imageResId),
             contentDescription = "프로필 이미지",
             modifier = Modifier

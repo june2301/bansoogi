@@ -38,6 +38,14 @@ class MyInfoDataSource {
         }
     }
 
+    suspend fun updateProfileBansoogiId(bansoogiId: Int) {
+        realm.write {
+            query<User>().first().find()?.let {
+                it.profileBansoogiId = bansoogiId
+            }
+        }
+    }
+
     /** 토글 업데이트 */
     suspend fun toggleAlarmEnabled() {
         realm.write {
