@@ -48,4 +48,28 @@ class TodayRecordModel {
             }
         }
     }
+
+    fun getTodayRecordOnce(): TodayRecordDto? {
+        val entity = dataSource.getTodayRecordOnce()
+        return entity?.let {
+            TodayRecordDto(
+                recordId = entity.recordId,
+                energyPoint = entity.energyPoint,
+                standUpCnt = entity.standUpCnt,
+                stretchCnt = entity.stretchCnt,
+                phoneOffCnt = entity.phoneOffCnt,
+                lyingTime = entity.lyingTime,
+                sittingTime = entity.sittingTime,
+                phoneTime = entity.phoneTime,
+                sleepTime = entity.sleepTime,
+                breakfast = entity.breakfast,
+                lunch = entity.lunch,
+                dinner = entity.dinner,
+                interactionCnt = entity.interactionCnt,
+                isClosed = entity.isClosed,
+                createdAt = entity.createdAt,
+                updatedAt = entity.updatedAt
+            )
+        }
+    }
 }
