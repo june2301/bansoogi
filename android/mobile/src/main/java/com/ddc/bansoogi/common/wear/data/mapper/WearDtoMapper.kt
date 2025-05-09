@@ -6,7 +6,7 @@ import com.ddc.bansoogi.common.wear.data.model.WearReportDto
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 
 object WearDtoMapper {
-    fun toReport(dto: TodayRecordDto): WearReportDto {
+    fun toWearReport(dto: TodayRecordDto): WearReportDto {
         return WearReportDto(
             energyPoint = dto.energyPoint,
 
@@ -31,7 +31,7 @@ object WearDtoMapper {
         )
     }
 
-    fun toMyInfo(dto: MyInfoDto): WearMyInfoDto {
+    fun toWearMyInfo(dto: MyInfoDto): WearMyInfoDto {
         return WearMyInfoDto(
             wakeUpTime = dto.wakeUpTime,
             sleepTime = dto.sleepTime,

@@ -46,9 +46,9 @@
                 android:resource="@drawable/tile_preview" />
         </service>
 
-        <!-- 모바일과 통신을 위한 서비스 등록 -->
+        <!-- ✅ 모바일과 통신을 위한 수신 서비스 등록 -->
         <service
-            android:name=".common.mobile.receiver.WearReceiverService"
+            android:name=".common.mobile.communication.receiver.MobileToWearReceiverService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />

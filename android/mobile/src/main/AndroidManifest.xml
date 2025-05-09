@@ -28,9 +28,9 @@
             </intent-filter>
         </activity>
 
-        <!-- 워치 통신 수신 서비스 -->
+        <!-- ✅ 모바일과 통신을 위한 수신 서비스 등록 -->
         <service
-            android:name=".common.wear.receiver.MobileReceiverService"
+            android:name=".common.wear.communication.receiver.WearToMobileReceiverService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

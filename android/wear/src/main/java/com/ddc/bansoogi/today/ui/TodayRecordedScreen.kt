@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.tooling.preview.devices.WearDevices
-import com.ddc.bansoogi.common.mobile.sender.sendRequestReportToMobile
+import com.ddc.bansoogi.common.mobile.communication.sender.MobileTodayRecordSender
 import com.ddc.bansoogi.common.ui.BackgroundImage
 import com.ddc.bansoogi.common.ui.InfoRow
 import com.ddc.bansoogi.common.ui.InfoSection
@@ -39,7 +39,7 @@ fun TodayRecordedScreen() {
         TodayRecordStateHolder.update(cached)
 
         // 모바일로 데이터 송신 요청을 전송
-        sendRequestReportToMobile(context)
+        MobileTodayRecordSender.send(context)
     }
 
     val report = TodayRecordStateHolder.reportDto

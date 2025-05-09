@@ -15,8 +15,8 @@ class MyInfoModel {
     fun getMyInfo(): Flow<MyInfoDto> =
         dataSource.getMyInfo().map { entity -> entity.toDomain() }
 
-    fun getMyInfoOnce(): MyInfoDto? {
-        val entity = dataSource.getMyInfoOnce()
+    fun getMyInfoSync(): MyInfoDto? {
+        val entity = dataSource.getMyInfoSync()
         return entity?.let {
             entity.toDomain()
         }
