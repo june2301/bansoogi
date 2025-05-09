@@ -1,7 +1,9 @@
 package com.ddc.bansoogi.common.wear.data.mapper
 
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
+import com.ddc.bansoogi.common.wear.data.model.WearMyInfoDto
 import com.ddc.bansoogi.common.wear.data.model.WearReportDto
+import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 
 object WearDtoMapper {
     fun toReport(dto: TodayRecordDto): WearReportDto {
@@ -26,6 +28,23 @@ object WearDtoMapper {
             runTime = 0,
             exerciseTime = 0,
             stairsClimbed = 0
+        )
+    }
+
+    fun toMyInfo(dto: MyInfoDto): WearMyInfoDto {
+        return WearMyInfoDto(
+            wakeUpTime = dto.wakeUpTime,
+            sleepTime = dto.sleepTime,
+
+            breakfastTime = dto.breakfastTime,
+            lunchTime = dto.lunchTime,
+            dinnerTime = dto.dinnerTime,
+
+            notificationDuration = dto.notificationDuration,
+
+            notificationEnabled = dto.notificationEnabled,
+            bgSoundEnabled = dto.bgSoundEnabled,
+            effectSoundEnabled = dto.effectSoundEnabled
         )
     }
 }

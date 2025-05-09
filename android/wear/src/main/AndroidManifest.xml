@@ -45,12 +45,15 @@
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/tile_preview" />
         </service>
+
+        <!-- 모바일과 통신을 위한 서비스 등록 -->
         <service
-            android:name=".common.mobile.receiver.TodayRecordReceiverService"
+            android:name=".common.mobile.receiver.WearReceiverService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <data android:scheme="wear" android:host="*" android:path="/today_record" />
+                <data android:scheme="wear" android:host="*" android:path="/my_info" />
             </intent-filter>
         </service>
 

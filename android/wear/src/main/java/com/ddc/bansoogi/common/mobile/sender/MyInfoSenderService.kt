@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.google.android.gms.wearable.Wearable
 
-fun sendRequestReportToMobile(context: Context) {
+fun sendRequestMyInfoToMobile(context: Context) {
     val nodeClient = Wearable.getNodeClient(context)
     val messageClient = Wearable.getMessageClient(context)
 
@@ -14,7 +14,7 @@ fun sendRequestReportToMobile(context: Context) {
         }
 
         nodes.forEach { node ->
-            messageClient.sendMessage(node.id, "/today_record_request", byteArrayOf())
+            messageClient.sendMessage(node.id, "/my_info_request", byteArrayOf())
                 .addOnSuccessListener {
                     Log.d("WearDebug", "모바일 요청 전송 성공: ${node.displayName}")
                 }

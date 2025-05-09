@@ -3,7 +3,7 @@ package com.ddc.bansoogi.today.data.mapper
 import com.ddc.bansoogi.today.data.dto.ReportDto
 import com.google.gson.Gson
 
-object ReportDtoMapper {
+object ReportJsonMapper {
     fun toJson(report: ReportDto): String {
         return Gson().toJson(report)
     }

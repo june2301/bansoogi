@@ -28,8 +28,9 @@
             </intent-filter>
         </activity>
 
+        <!-- 워치 통신 수신 서비스 -->
         <service
-            android:name=".common.wear.receiver.TodayRecordRequestReceiverService"
+            android:name=".common.wear.receiver.MobileReceiverService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -37,7 +38,6 @@
                     tools:ignore="WearableBindListener" />
             </intent-filter>
         </service>
-
 
         <!-- ✅ Main 화면 -->
         <activity

@@ -15,6 +15,13 @@ class MyInfoModel {
     fun getMyInfo(): Flow<MyInfoDto> =
         dataSource.getMyInfo().map { entity -> entity.toDomain() }
 
+    fun getMyInfoOnce(): MyInfoDto? {
+        val entity = dataSource.getMyInfoOnce()
+        return entity?.let {
+            entity.toDomain()
+        }
+    }
+
     suspend fun updateMyInfo(input: MyInfoDto): MyInfoDto {
         val entity = User().apply {
             userId               = ObjectId(input.userId)
