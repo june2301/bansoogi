@@ -2,7 +2,6 @@ package com.ddc.bansoogi.common.util.health
 
 import android.util.Log
 import com.samsung.android.sdk.health.data.HealthDataStore
-import com.samsung.android.sdk.health.data.request.DataTypes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -25,7 +24,7 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
     val healthData: Flow<CustomHealthData> = _healthData.asStateFlow()
 
     // 업데이트 간격 (밀리초)
-    private var updateInterval = 1000L // 1초
+    private var updateInterval = 10000L // 10초
 
     // 데이터 수집 작업 실행 중 여부
     private var isCollecting = false
@@ -45,8 +44,6 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
 
                     // 데이터 업데이트
                     _healthData.value = CustomHealthData(todaySteps, stepGoal)
-
-                    Log.d("HEALTH_DATA", "Updated - Steps: $todaySteps, Goal: $stepGoal")
                 } catch (e: Exception) {
                     Log.e("HEALTH_DATA", "Error collecting data: ${e.message}", e)
                 }

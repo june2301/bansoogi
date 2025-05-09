@@ -18,6 +18,8 @@ fun AppNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     healthData: CustomHealthData,
+    onModalOpen: () -> Unit,
+    onModalClose: () -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -25,7 +27,11 @@ fun AppNavGraph(
         modifier = modifier
     ) {
         composable(NavRoutes.HOME) {
-            HomeScreen(healthData)
+            HomeScreen(
+                healthData,
+                onModalOpen = onModalOpen,
+                onModalClose = onModalClose,
+            )
         }
 
         composable(NavRoutes.COLLECTION) {

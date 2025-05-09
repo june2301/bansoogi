@@ -29,7 +29,6 @@ object Permissions {
 suspend fun readStepData(healthDataStore: HealthDataStore): Long {
     val startDate = LocalDate.now()
     val endDate = LocalDate.now().plusDays(1)
-    Log.d("STEPS", "Reading step data from $startDate to $endDate")
 
     val startTime = LocalDateTime.of(startDate, LocalTime.MIN)
     val endTime = LocalDateTime.of(endDate, LocalTime.MAX)
@@ -52,7 +51,6 @@ suspend fun readStepData(healthDataStore: HealthDataStore): Long {
 suspend fun readLastStepGoal(healthDataStore: HealthDataStore): Int {
     val startDate = LocalDate.now()
     val endDate = LocalDate.now().plusDays(1)
-    Log.d("STEPS_GOAL", "StartDate: $startDate; EndDate: $endDate")
     val readRequest = DataType.StepsGoalType.LAST
         .requestBuilder
         .setLocalDateFilter(LocalDateFilter.of(startDate, endDate))

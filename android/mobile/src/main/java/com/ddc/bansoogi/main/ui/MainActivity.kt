@@ -38,15 +38,22 @@ class MainActivity : ComponentActivity() {
 
     private var healthData by mutableStateOf(CustomHealthData(0L, 0))
 
+    companion object {
+        private const val UPDATE_INTERVAL = 10000L // 포그라운드: 10초
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         healthDataStore = HealthDataService.getStore(activityContext)
-//        var result = setupHealthData(lifecycleScope, healthDataStore)
 
         setupHealthPermissions()
 
         setContent {
-            MainScreen(healthData)
+            MainScreen(
+                healthData,
+                onModalOpen = { startHealthDataUpdates() },
+                onModalClose = { stopHealthDataUpdates() }
+            )
         }
     }
 
@@ -56,10 +63,14 @@ class MainActivity : ComponentActivity() {
     private fun setupHealthPermissions() {
         lifecycleScope.launch {
             try {
-                val grantedPermissions = healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS)
+                val grantedPermissions =
+                    healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS)
 
                 if (grantedPermissions.size != Permissions.PERMISSIONS.size) {
-                    val result = healthDataStore.requestPermissions(Permissions.PERMISSIONS, this@MainActivity)
+                    val result = healthDataStore.requestPermissions(
+                        Permissions.PERMISSIONS,
+                        this@MainActivity
+                    )
                 }
 
                 // 모든 권한이 있으면 실시간 데이터 매니저 초기화 및 시작
@@ -79,32 +90,26 @@ class MainActivity : ComponentActivity() {
         // Flow 수집 시작
         lifecycleScope.launch {
             healthDataManager.healthData.collect { data ->
-                // 데이터가 업데이트될 때마다 UI 상태 갱신
                 healthData = data
-                Log.d("STEPS", "Updated Step Goal: ${data.step}")
-                Log.d("TODAY STEP", "Updated Today Step: ${data.stepGoal}")
             }
         }
-
-        // 데이터 수집 시작
-        healthDataManager.startCollecting()
     }
-
-    override fun onResume() {
-        super.onResume()
-        // 앱이 전면에 올 때마다 수동 갱신
+    // 모달이 열릴 때 호출될 메서드
+    fun startHealthDataUpdates() {
         if (::healthDataManager.isInitialized) {
-            healthDataManager.refreshData()
+            healthDataManager.setUpdateInterval(UPDATE_INTERVAL)
+            healthDataManager.refreshData() // 즉시 한 번 갱신
+            healthDataManager.startCollecting() // 데이터 수집 시작
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        // 배터리 절약을 위해 앱이 백그라운드로 갈 때 수집 속도 줄이기 (옵션)
+    // 모달이 닫힐 때 호출될 메서드
+    fun stopHealthDataUpdates() {
         if (::healthDataManager.isInitialized) {
-            healthDataManager.setUpdateInterval(60000) // 1분으로 증가
+            healthDataManager.stopCollecting() // 데이터 수집 중지
         }
     }
+
 
     override fun onDestroy() {
         // 액티비티 종료 시 수집 중지
@@ -113,35 +118,14 @@ class MainActivity : ComponentActivity() {
         }
         super.onDestroy()
     }
-
-//    fun setupHealthData(lifecycleScope: LifecycleCoroutineScope, healthDataStore: HealthDataStore): CustomHealthData {
-//        var stepGoal = 0
-//        var todaySteps = 0L
-//        lifecycleScope.launch {
-//            try {
-//                val grantedPermissions = healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS)
-//
-//                if (grantedPermissions.size != Permissions.PERMISSIONS.size) {
-//                    val result = healthDataStore.requestPermissions(Permissions.PERMISSIONS, this@MainActivity)
-//                }
-//
-//                // 권한이 허용된 후에만 데이터 읽기 시도
-//                if (healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS).size == Permissions.PERMISSIONS.size) {
-//                    stepGoal = readLastStepGoal(healthDataStore)
-//                    todaySteps = readStepData(healthDataStore)
-//                    Log.d("STEPS", "Step Goal: $stepGoal")
-//                    Log.d("TODAY STEP", "Today Step: $todaySteps")
-//                }
-//            } catch (e: Exception) {
-//                Log.e("STEPS", "Error with Samsung Health: ${e.message}", e)
-//            }
-//        }
-//        return CustomHealthData(todaySteps, stepGoal)
-//    }
 }
 
 @Composable
-fun MainScreen(healthData: CustomHealthData) {
+fun MainScreen(
+    healthData: CustomHealthData,
+    onModalOpen:  () -> Unit,
+    onModalClose: () -> Unit
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -190,6 +174,8 @@ fun MainScreen(healthData: CustomHealthData) {
                 navController = navController,
                 modifier = Modifier.padding(paddingValues),
                 healthData = healthData,
+                onModalOpen = onModalOpen,
+                onModalClose = onModalClose
             )
         }
     }

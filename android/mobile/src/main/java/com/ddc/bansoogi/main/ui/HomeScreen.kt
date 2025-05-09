@@ -22,7 +22,11 @@ import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 import java.time.LocalTime
 
 @Composable
-fun HomeScreen(healthData: CustomHealthData) {
+fun HomeScreen(
+    healthData: CustomHealthData,
+    onModalOpen: () -> Unit,
+    onModalClose: () -> Unit,
+) {
     var todayRecordDtoState = remember { mutableStateOf<TodayRecordDto?>(null) }
     var showEggManager = remember { mutableStateOf(false) }
     var isInSleepRange = remember { mutableStateOf(false) }
@@ -91,7 +95,9 @@ fun HomeScreen(healthData: CustomHealthData) {
                 todayRecord,
                 todayRecordController,
                 isInSleepRange.value,
-                healthData
+                healthData,
+                onModalOpen = onModalOpen,
+                onModalClose = onModalClose
             )
         } ?: Box(
             modifier = Modifier.fillMaxSize(),
