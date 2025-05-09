@@ -49,8 +49,8 @@ class TodayRecordModel {
         }
     }
 
-    fun getTodayRecordOnce(): TodayRecordDto? {
-        val entity = dataSource.getTodayRecordOnce()
+    fun getTodayRecordSync(): TodayRecordDto? {
+        val entity = dataSource.getTodayRecordSync()
         return entity?.let {
             TodayRecordDto(
                 recordId = entity.recordId,

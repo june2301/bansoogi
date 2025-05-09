@@ -49,7 +49,7 @@ class TodayRecordDataSource {
         }
     }
 
-    fun getTodayRecordOnce(): TodayRecord? {
+    fun getTodayRecordSync(): TodayRecord? {
         return realm.query<TodayRecord>().first().find()
     }
 

@@ -22,6 +22,9 @@ class MyInfoDataSource {
             .asFlow()
             .map { it.list.firstOrNull() ?: User() }
 
+    fun getMyInfoSync(): User? =
+        realm.query<User>().first().find()
+
     // TODO: 더미데이터 값 설정(나중에 controller 한 줄과 함께 지우면 됩니다)
     // TODO: (+) 프로필 정보 입력할 때 알림 설정하는 로직 그대로 옮겨줘야 함
     suspend fun initialize(appCtx: Context) {

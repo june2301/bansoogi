@@ -30,8 +30,9 @@
             </intent-filter>
         </activity>
 
+        <!-- ✅ 모바일과 통신을 위한 수신 서비스 등록 -->
         <service
-            android:name=".common.wear.receiver.TodayRecordRequestReceiverService"
+            android:name=".common.wear.communication.receiver.WearToMobileReceiverService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -39,7 +40,6 @@
                     tools:ignore="WearableBindListener" />
             </intent-filter>
         </service>
-
 
         <!-- ✅ Main 화면 -->
         <activity

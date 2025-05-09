@@ -1,33 +1,33 @@
-package com.ddc.bansoogi.today.data.store
+package com.ddc.bansoogi.myinfo.data.store
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import com.ddc.bansoogi.common.mobile.data.mapper.JsonMapper
-import com.ddc.bansoogi.today.data.dto.ReportDto
+import com.ddc.bansoogi.myinfo.data.dto.MyInfoDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-suspend fun saveReportCache(context: Context, report: ReportDto) {
-    val json = JsonMapper.toJson(report)
+suspend fun saveMyInfoCache(context: Context, myInfo: MyInfoDto) {
+    val json = JsonMapper.toJson(myInfo)
 
-    context.reportDataStore.edit { prefs ->
-        prefs[ReportPreferenceKeys.RECORD] = json
+    context.myInfoDataStore.edit { prefs ->
+        prefs[MyInfoPreferenceKeys.MYINFO] = json
     }
 }
 
-fun getCachedReport(context: Context): Flow<ReportDto?> {
-    return context.reportDataStore.data
+fun getCachedMyInfo(context: Context): Flow<MyInfoDto?> {
+    return context.myInfoDataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
         .map { prefs ->
-            val json = prefs[ReportPreferenceKeys.RECORD] ?: ""
+            val json = prefs[MyInfoPreferenceKeys.MYINFO] ?: ""
 
             runCatching {
-                JsonMapper.fromJson<ReportDto>(json)
+                JsonMapper.fromJson<MyInfoDto>(json)
             }.getOrNull()
         }
 }
