@@ -41,7 +41,7 @@ class CollectionDataSource {
         val characterList = listOf(
             Character().apply {
                 bansoogiId = 1
-                title = "기본 반숙"
+                title = "기본 반숙이"
                 imageUrl = "bansoogi_default_profile"
                 silhouetteImageUrl = "unknown"
                 gifUrl = "bansoogi_basic"
@@ -49,11 +49,11 @@ class CollectionDataSource {
             },
             Character().apply {
                 bansoogiId = 2
-                title = "밥먹는 반숙"
+                title = "밥먹는 반숙이"
                 imageUrl = "bansoogi_eat"
                 silhouetteImageUrl = "unknown"
                 gifUrl = "bansoogi_eating"
-                description = "밥먹는 반숙이입니다."
+                description = "밥 먹는 반숙이입니다."
             }
         )
 

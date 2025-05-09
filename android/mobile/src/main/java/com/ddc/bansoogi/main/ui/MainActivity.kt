@@ -24,6 +24,7 @@ import com.ddc.bansoogi.common.ui.CommonNavigationBar
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MainScreen()
         }

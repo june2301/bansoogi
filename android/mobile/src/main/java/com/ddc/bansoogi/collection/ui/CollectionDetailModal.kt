@@ -1,7 +1,10 @@
 package com.ddc.bansoogi.collection.ui
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,6 +45,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.collection.data.model.CollectionDto
+import com.ddc.bansoogi.collection.util.saveDownloadableImage
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
 import kotlinx.coroutines.launch
 import io.realm.kotlin.types.RealmInstant
@@ -49,6 +53,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("RememberReturnType")
 @Composable
 fun CollectionDetailDialog(
@@ -201,7 +206,33 @@ fun CollectionDetailDialog(
 
                 Spacer(modifier = Modifier.height(4.dp))
                 OutlinedButton(
-                    onClick = { /* 다운로드 로직 */ },
+                    onClick = {
+                        val activity = context as? ComponentActivity ?: return@OutlinedButton
+
+                        scope.launch {
+                            val loader = ImageLoader(context)
+                            val resId = context.resources.getIdentifier(character.imageUrl, "drawable", context.packageName)
+
+                            val request = ImageRequest.Builder(context)
+                                .data(resId)
+                                .allowHardware(false)
+                                .build()
+
+                            val result = loader.execute(request).drawable
+                            val bitmap = (result as? android.graphics.drawable.BitmapDrawable)?.bitmap
+
+                            bitmap?.let {
+                                saveDownloadableImage(
+                                    activity = activity,
+                                    characterBitmap = it,
+                                    title = character.title,
+                                    description = character.description
+                                )
+                            } ?: run {
+                                Toast.makeText(context, "이미지를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    },
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurfaceVariant),
                     contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp)
