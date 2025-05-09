@@ -25,6 +25,14 @@ import com.ddc.bansoogi.landing.ui.screen.NicknameInputScreen
 import com.ddc.bansoogi.landing.ui.screen.TermsScreen
 import com.ddc.bansoogi.landing.ui.screen.TimeSettingScreen
 import com.ddc.bansoogi.main.ui.MainActivity
+import com.ddc.bansoogi.myInfo.data.entity.User
+import com.ddc.bansoogi.myInfo.data.local.MyInfoDataSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class LandingActivity : ComponentActivity(), LandingView {
 
@@ -97,11 +105,47 @@ class LandingActivity : ComponentActivity(), LandingView {
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        TimeSettingScreen(controller) {
-                            moveToMainActivity()
-                        }
+                        TimeSettingScreen(
+                            controller,
+                            onFinish = {
+                                saveUserAndMoveToMain()
+                            }
+                        )
                     }
                 }
+            }
+        }
+    }
+
+    private fun saveUserAndMoveToMain() {
+        val date = controller.profileModel.birthDate
+        val formatter = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+        val dateString = formatter.format(date)
+
+        val user = User().apply {
+            nickname = controller.profileModel.nickname
+            birthDate = dateString
+            profileBansoogiId = R.drawable.bansoogi_default_profile
+            wakeUpTime = controller.timeSettingModel.wakeUpTime
+            sleepTime = controller.timeSettingModel.bedTimeTime
+            breakfastTime = controller.timeSettingModel.breakfastTime
+            lunchTime = controller.timeSettingModel.lunchTime
+            dinnerTime = controller.timeSettingModel.dinnerTime
+            notificationDuration = controller.timeSettingModel.durationMinutes
+            alarmEnabled = false
+            bgSoundEnabled = true
+            effectSoundEnabled = true
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    MyInfoDataSource().updateUser(user)
+                }
+                moveToMainActivity()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                showStartScreen()
             }
         }
     }

@@ -12,6 +12,9 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.landing.view.LandingActivity
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.common.data.local.RealmManager
+import com.ddc.bansoogi.myInfo.data.entity.User
+import io.realm.kotlin.ext.query
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -38,7 +41,14 @@ class SplashActivity : AppCompatActivity() {
         imageLoader.enqueue(request)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, LandingActivity::class.java))
+
+            val isUserEmpty = RealmManager.realm.query<User>().find().isEmpty()
+
+            if (isUserEmpty) {
+                startActivity(Intent(this, LandingActivity::class.java))
+            } else {
+                startActivity(Intent(this, MainActivity::class.java))
+            }
             finish()
         }, splashScreenDelayTime)
     }
