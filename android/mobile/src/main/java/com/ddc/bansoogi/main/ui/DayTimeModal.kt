@@ -268,25 +268,24 @@ fun DayTimeModal(
                         InfoRow(
                             label = "총 걸음수 :",
                             value = healthData.step.toInt(),
-                            unit = "회"
+                            unit = " 회"
                         )
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .weight(0.1f)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Button(
-                        onClick = onNavigateToToday,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF2E616A)
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.fillMaxWidth(0.8f)
-                    ) {
-                        Text("확인", color = Color.White)
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "총 계단 수 :",
+                            value = healthData.floorsClimbed.toInt(),
+                            unit = " 계단"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "수면 시간 :",
+                            value = healthData.sleepData.toInt(),
+                            unit = " 분"
+                        )
                     }
                 }
             }

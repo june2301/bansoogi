@@ -20,7 +20,7 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     // 데이터를 저장할 StateFlow
-    private val _healthData = MutableStateFlow(CustomHealthData(0L, 0))
+    private val _healthData = MutableStateFlow(CustomHealthData(0L, 0, 0.0f, 0))
     val healthData: Flow<CustomHealthData> = _healthData.asStateFlow()
 
     // 업데이트 간격 (밀리초)
@@ -41,9 +41,11 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
                     // 데이터 가져오기
                     val stepGoal = readLastStepGoal(healthDataStore)
                     val todaySteps = readStepData(healthDataStore)
+                    val floorsClimbed = readFloorsClimbed(healthDataStore)
+                    val sleepData = readSleepData(healthDataStore)
 
                     // 데이터 업데이트
-                    _healthData.value = CustomHealthData(todaySteps, stepGoal)
+                    _healthData.value = CustomHealthData(todaySteps, stepGoal, floorsClimbed, sleepData)
                 } catch (e: Exception) {
                     Log.e("HEALTH_DATA", "Error collecting data: ${e.message}", e)
                 }
@@ -65,7 +67,9 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
             try {
                 val stepGoal = readLastStepGoal(healthDataStore)
                 val todaySteps = readStepData(healthDataStore)
-                _healthData.value = CustomHealthData(todaySteps, stepGoal)
+                val floorsClimbed = readFloorsClimbed(healthDataStore)
+                val sleepData = readSleepData(healthDataStore)
+                _healthData.value = CustomHealthData(todaySteps, stepGoal, floorsClimbed, sleepData)
             } catch (e: Exception) {
                 Log.e("HEALTH_DATA", "Error refreshing data: ${e.message}", e)
             }
