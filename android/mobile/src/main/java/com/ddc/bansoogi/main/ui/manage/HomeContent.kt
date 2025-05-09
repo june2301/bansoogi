@@ -40,14 +40,17 @@ import com.ddc.bansoogi.calendar.ui.RecordedModal
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.notification.NotificationDispatcher
 import com.ddc.bansoogi.common.notification.NotificationFactory
+import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.DayTimeModal
+import com.samsung.android.sdk.health.data.HealthDataStore
 
 @Composable
 fun HomeContent(
     todayRecordDto: TodayRecordDto,
     todayRecordController: TodayRecordController,
-    isInSleepRange: Boolean
+    isInSleepRange: Boolean,
+    healthData: CustomHealthData
 ) {
     var progressValue by remember { mutableStateOf(todayRecordDto.energyPoint) }
     var showModal by remember { mutableStateOf(false) }
@@ -224,7 +227,8 @@ fun HomeContent(
                 onNavigateToToday = {
                     // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
                     showModal = false
-                }
+                },
+                healthData = healthData,
             )
         }
         else {

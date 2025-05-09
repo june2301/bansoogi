@@ -33,6 +33,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
+import com.ddc.bansoogi.common.util.health.CustomHealthData
+import com.samsung.android.sdk.health.data.HealthDataStore
 
 @Composable
 fun ModalHeader(
@@ -150,7 +152,8 @@ fun Divider() {
 fun DayTimeModal(
     todayRecordDto: TodayRecordDto,
     onDismissRequest: () -> Unit,
-    onNavigateToToday: () -> Unit
+    onNavigateToToday: () -> Unit,
+    healthData: CustomHealthData,
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -263,8 +266,8 @@ fun DayTimeModal(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InfoRow(
-                            label = "평균 심박수 :",
-                            value = 71,
+                            label = "총 걸음수 :",
+                            value = healthData.step.toInt(),
                             unit = "회"
                         )
                     }
