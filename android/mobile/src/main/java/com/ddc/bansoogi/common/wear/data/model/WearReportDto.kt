@@ -1,6 +1,6 @@
-package com.ddc.bansoogi.today.data
+package com.ddc.bansoogi.common.wear.data.model
 
-data class ReportDto (
+data class WearReportDto (
     val energyPoint: Int,
 
     val standupCount: Int,

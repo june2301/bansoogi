@@ -6,12 +6,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.tooling.preview.devices.WearDevices
+import com.ddc.bansoogi.common.mobile.sender.sendRequestToMobile
 import com.ddc.bansoogi.common.ui.BackgroundImage
 import com.ddc.bansoogi.common.ui.InfoRow
 import com.ddc.bansoogi.common.ui.InfoSection
@@ -19,31 +23,26 @@ import com.ddc.bansoogi.common.ui.OverlayBackground
 import com.ddc.bansoogi.common.ui.ScreenHeader
 import com.ddc.bansoogi.common.ui.VerticalSpacer
 import com.ddc.bansoogi.common.util.calculateBoxHeight
-import com.ddc.bansoogi.today.data.ReportDto
+import com.ddc.bansoogi.today.data.dto.ReportDto
+import com.ddc.bansoogi.today.data.store.getCachedReport
+import com.ddc.bansoogi.today.state.TodayRecordStateHolder
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun TodayRecordedScreen() {
-    val report = ReportDto(
-        energyPoint = 65,
+    val context = LocalContext.current
 
-        standupCount = 3,
-        stretchCount = 2,
-        phoneOffCount = 1,
+    // 초기 로컬 데이터 로딩
+    LaunchedEffect(Unit) {
+        // 초기에는 로컬에서 데이터를 호출
+        val cached = getCachedReport(context).first()
+        TodayRecordStateHolder.update(cached)
 
-        lyingTime = 40,
-        sittingTime = 120,
-        phoneTime = 90,
-        sleepTime = 360,
+        // 모바일로 데이터 송신 요청을 전송
+        sendRequestToMobile(context)
+    }
 
-        walkCount = 1628,
-        runTime = 3,
-        exerciseTime = 0,
-        stairsClimbed = 1,
-
-        breakfast = true,
-        lunch = true,
-        dinner = false
-    )
+    val report = TodayRecordStateHolder.reportDto
 
     Box(
         modifier = Modifier
@@ -53,7 +52,13 @@ fun TodayRecordedScreen() {
 
         OverlayBackground()
 
-        TodayRecordedContent(report)
+        if (report != null) {
+            TodayRecordedContent(report)
+        } else {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                Text("데이터 수신 대기 중...")
+            }
+        }
     }
 }
 

@@ -80,6 +80,9 @@ dependencies {
     // 생명주기 감지
     implementation(libs.lifecycle.process)
 
+    // 워치 통신을 위한 설정
+    implementation(libs.gson)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

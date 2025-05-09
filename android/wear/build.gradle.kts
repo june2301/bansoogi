@@ -73,4 +73,10 @@ dependencies {
 
     // navigation
     implementation(libs.androidx.navigation.compose)
+
+    // 워치 통신을 위한 설정
+    implementation(libs.gson)
+
+    // 워치에 데이터 캐시 저장
+    implementation(libs.androidx.datastore.preferences)
 }
