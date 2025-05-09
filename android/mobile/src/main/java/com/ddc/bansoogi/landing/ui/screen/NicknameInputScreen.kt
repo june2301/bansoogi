@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ddc.bansoogi.common.util.extend.char.isAllowedChar
 import com.ddc.bansoogi.landing.controller.LandingController
 import com.ddc.bansoogi.landing.ui.component.DefaultBodyText
 import com.ddc.bansoogi.landing.ui.component.DefaultTitleText
@@ -72,12 +73,3 @@ fun NicknameInputScreen(controller: LandingController, onNext: () -> Unit) {
         )
     }
 }
-
-private fun Char.isAsciiLetter(): Boolean =
-    this in 'a'..'z' || this in 'A'..'Z'
-
-private fun Char.isCompleteHangul(): Boolean =
-    this in '\uAC00'..'\uD7A3'
-
-private fun Char.isAllowedChar(): Boolean =
-    isDigit() || isAsciiLetter() || isCompleteHangul()

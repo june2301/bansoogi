@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.ddc.bansoogi.common.util.extend.char.isAllowedChar
 
 @Composable
 fun NicknameTextField(
@@ -48,12 +49,3 @@ fun NicknameTextField(
         modifier = modifier
     )
 }
-
-private fun Char.isAsciiLetter(): Boolean =
-    this in 'a'..'z' || this in 'A'..'Z'
-
-private fun Char.isCompleteHangul(): Boolean =
-    this in '\uAC00'..'\uD7A3'
-
-private fun Char.isAllowedChar(): Boolean =
-    isDigit() || isAsciiLetter() || isCompleteHangul()
