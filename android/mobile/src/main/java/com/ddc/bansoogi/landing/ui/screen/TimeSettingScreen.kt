@@ -25,7 +25,7 @@ import com.ddc.bansoogi.landing.ui.component.DishTimeComponent
 import com.ddc.bansoogi.landing.ui.component.DurationPicker
 import com.ddc.bansoogi.landing.ui.component.NextButton
 import com.ddc.bansoogi.landing.ui.component.RoundedContainerBox
-import com.ddc.bansoogi.landing.ui.component.SubTitleText
+import com.ddc.bansoogi.landing.ui.component.text.SubTitleText
 import com.ddc.bansoogi.landing.ui.component.TimeInputTextField
 
 @Composable

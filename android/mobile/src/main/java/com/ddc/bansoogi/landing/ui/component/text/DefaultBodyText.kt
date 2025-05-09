@@ -1,4 +1,4 @@
-package com.ddc.bansoogi.landing.ui.component
+package com.ddc.bansoogi.landing.ui.component.text
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

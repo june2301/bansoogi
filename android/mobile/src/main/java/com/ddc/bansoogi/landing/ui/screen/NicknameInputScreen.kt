@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ddc.bansoogi.common.util.extend.char.isAllowedChar
 import com.ddc.bansoogi.landing.controller.LandingController
-import com.ddc.bansoogi.landing.ui.component.DefaultBodyText
-import com.ddc.bansoogi.landing.ui.component.DefaultTitleText
+import com.ddc.bansoogi.landing.ui.component.text.DefaultBodyText
+import com.ddc.bansoogi.landing.ui.component.text.DefaultTitleText
 import com.ddc.bansoogi.landing.ui.component.NextButton
 import com.ddc.bansoogi.landing.ui.component.NicknameTextField
 import com.ddc.bansoogi.landing.ui.component.RoundedContainerBox

@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ddc.bansoogi.landing.controller.LandingController
 import com.ddc.bansoogi.landing.ui.component.CheckboxRow
-import com.ddc.bansoogi.landing.ui.component.DefaultTitleText
+import com.ddc.bansoogi.landing.ui.component.text.DefaultTitleText
 import com.ddc.bansoogi.landing.ui.component.NextButton
 import com.ddc.bansoogi.landing.ui.component.RoundedContainerBox
 
