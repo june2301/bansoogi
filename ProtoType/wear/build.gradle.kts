@@ -38,6 +38,7 @@ android {
     buildFeatures {
         compose = true
     }
+    sourceSets["main"].assets.srcDirs("src/main/assets")
 }
 
 dependencies {
@@ -54,6 +55,7 @@ dependencies {
     implementation(libs.gms.play.services.location)
     implementation("androidx.health:health-services-client:1.1.0-alpha04")
     implementation("com.google.guava:guava:31.1-android")
+    implementation("org.tensorflow:tensorflow-lite:2.14.0")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)

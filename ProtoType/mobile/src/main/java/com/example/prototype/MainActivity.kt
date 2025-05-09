@@ -3,6 +3,7 @@ package com.example.prototype
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    ActivityScreen(ProtoBleReceiverService.activityLiveData.asFlow())
+                    ActivityScreen(ProtoBleReceiverService.activityLiveData.asFlow(), ProtoBleReceiverService.poseLiveData.asFlow())
                 }
             }
         }
@@ -91,15 +92,29 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun ActivityScreen(stateFlow: Flow<Int>) {
-    val state by stateFlow.collectAsState(initial = 0)
+fun ActivityScreen(
+    activityFlow: Flow<Int>,
+    poseFlow: Flow<Int>,
+) {
+    val activityState by activityFlow.collectAsState(initial = 0)
+    val poseState by poseFlow.collectAsState(initial = -1)
 
-    val text =
-        when (state) {
+    Log.d("MainActivity", "activity=$activityState pose=$poseState")
+
+    val activityText =
+        when (activityState) {
             0 -> "정지"
             1 -> "걷는 중"
             2 -> "뛰는 중"
             3 -> "오르는 중"
+            else -> "알 수 없음"
+        }
+    val poseText =
+        when (poseState) {
+            0 -> "앉아 있음"
+            1 -> "누워 있음"
+            2 -> "서 있는 중"
+            -1 -> "(정적 자세 미수신)"
             else -> "알 수 없음"
         }
 
@@ -120,7 +135,7 @@ fun ActivityScreen(stateFlow: Flow<Int>) {
         )
 
         Text(
-            text = text,
+            text = activityText,
             fontSize = 48.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
@@ -129,6 +144,18 @@ fun ActivityScreen(stateFlow: Flow<Int>) {
                 Modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp),
+        )
+
+        Text(
+            text = "자세: $poseText",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.secondary,
+            textAlign = TextAlign.Center,
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
         )
     }
 }

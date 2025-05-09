@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,10 +26,15 @@ class ProtoBleReceiverService :
         // DataLayer path for activity updates
         private const val ACTIVITY_UPDATE_PATH = "/activity_update"
         private const val WALK_STATE_PATH = "/walk_state"
+        private const val POSE_STATE_PATH = "/pose_state"
 
         // LiveData for activity state (0:idle,1:walk,2:run,3:ascend)
         private val _activityLiveData = MutableLiveData<Int>()
         val activityLiveData: LiveData<Int> = _activityLiveData
+
+        // LiveData for static pose (0:sitting,1:lying,2:standing)
+        private val _poseLiveData = MutableLiveData<Int>()
+        val poseLiveData: LiveData<Int> = _poseLiveData
     }
 
     private lateinit var messageClient: MessageClient
@@ -81,8 +87,16 @@ class ProtoBleReceiverService :
             .build()
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
-        if (messageEvent.path == ACTIVITY_UPDATE_PATH || messageEvent.path == WALK_STATE_PATH) {
-            processActivityState(messageEvent.data)
+        when (messageEvent.path) {
+            ACTIVITY_UPDATE_PATH, WALK_STATE_PATH -> {
+                Log.d(TAG, "RX activity path=${messageEvent.path} len=${messageEvent.data.size} byte0=${messageEvent.data.getOrNull(0)}")
+                processActivityState(messageEvent.data)
+            }
+            POSE_STATE_PATH -> {
+                Log.d(TAG, "RX pose path=${messageEvent.path} len=${messageEvent.data.size} byte0=${messageEvent.data.getOrNull(0)}")
+                processPoseState(messageEvent.data)
+            }
+            else -> Log.d(TAG, "Unhandled path ${messageEvent.path}")
         }
     }
 
@@ -90,5 +104,11 @@ class ProtoBleReceiverService :
         if (data.isEmpty()) return
         val state = data[0].toInt()
         _activityLiveData.postValue(state)
+    }
+
+    private fun processPoseState(data: ByteArray) {
+        if (data.isEmpty()) return
+        val pose = data[0].toInt()
+        _poseLiveData.postValue(pose)
     }
 }
