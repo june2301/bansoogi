@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ddc.bansoogi.landing.controller.LandingController
 import com.ddc.bansoogi.landing.ui.component.CheckboxRow
@@ -32,7 +31,6 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
         RoundedContainerBox {
             Column(
                 modifier = Modifier
-
                     .padding(16.dp)
             ) {
                 Box(

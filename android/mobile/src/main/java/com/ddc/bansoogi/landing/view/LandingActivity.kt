@@ -97,11 +97,10 @@ class LandingActivity : ComponentActivity(), LandingView {
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        TimeSettingScreen {
+                        TimeSettingScreen(controller) {
                             moveToMainActivity()
                         }
                     }
-
                 }
             }
         }
