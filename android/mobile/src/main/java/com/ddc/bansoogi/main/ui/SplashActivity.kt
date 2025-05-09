@@ -15,6 +15,10 @@ import com.ddc.bansoogi.R
 import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.myInfo.data.entity.User
 import io.realm.kotlin.ext.query
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -42,6 +46,8 @@ class SplashActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
 
+// MARK: 기존 로직
+//////////////////////////////////////////////////////////////////////////////
             val isUserEmpty = RealmManager.realm.query<User>().find().isEmpty()
 
             if (isUserEmpty) {
@@ -50,6 +56,29 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(Intent(this, MainActivity::class.java))
             }
             finish()
+//////////////////////////////////////////////////////////////////////////////
+
+//MARK: DB를 모두 제거하여 초기상태 진입
+//////////////////////////////////////////////////////////////////////////////
+//            CoroutineScope(Dispatchers.Main).launch {
+//                withContext(Dispatchers.IO) {
+//                    RealmManager.realm.write {
+//                        deleteAll()
+//                    }
+//                }
+//
+//                val isUserEmpty = RealmManager.realm.query<User>().find().isEmpty()
+//
+//                val nextIntent = if (isUserEmpty) {
+//                    Intent(applicationContext, LandingActivity::class.java)
+//                } else {
+//                    Intent(applicationContext, MainActivity::class.java)
+//                }
+//
+//                startActivity(nextIntent)
+//                finish()
+//            }
+//////////////////////////////////////////////////////////////////////////////
         }, splashScreenDelayTime)
     }
 }
