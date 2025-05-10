@@ -11,4 +11,9 @@ object TodayRecordStateHolder {
     fun update(newDto: ReportDto?) {
         reportDto = newDto ?: ReportDto.default()
     }
+
+    fun updateEnergy(newEnergy: Int) {
+        val updated = (reportDto ?: ReportDto.default()).copy(energyPoint = newEnergy)
+        reportDto = updated
+    }
 }

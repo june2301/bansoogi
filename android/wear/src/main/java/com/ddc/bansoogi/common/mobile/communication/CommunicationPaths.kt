@@ -5,6 +5,7 @@ object CommunicationPaths {
     object MobileToWear {
         private const val PREFIX = "/mobile_to_wear"
 
+        const val ENERGY_DATA = "$PREFIX/data/energy" // 에너지 데이터를 웨어로 전송
         const val TODAY_RECORD_DATA = "$PREFIX/data/today_record" // 데이터를 웨어로 전송
         const val MY_INFO_DATA = "$PREFIX/data/my_info" // 데이터를 웨어로 전송
     }
@@ -13,7 +14,8 @@ object CommunicationPaths {
     object WearToMobile {
         private const val PREFIX = "/wear_to_mobile"
 
-        const val TODAY_RECORD_REQUEST = "${PREFIX}/request/today_record" // 데이터 전송 요청을 받음
-        const val MT_INFO_REQUEST = "${PREFIX}/request/my_info" // 데이터 전송 요청을 받음
+        const val ENERGY_REQUEST = "${PREFIX}/request/energy" // 에너지 데이터 전송 요청
+        const val TODAY_RECORD_REQUEST = "${PREFIX}/request/today_record" // 데이터 전송 요청
+        const val MT_INFO_REQUEST = "${PREFIX}/request/my_info" // 데이터 전송 요청
     }
 }

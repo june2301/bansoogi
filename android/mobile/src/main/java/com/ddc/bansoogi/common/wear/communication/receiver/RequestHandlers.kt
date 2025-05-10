@@ -13,6 +13,15 @@ class RequestHandler(
     private val context: Context,
     private val scope: CoroutineScope
 ) {
+    fun handleEnergyRequest() {
+        handleDataRequest(
+            getData = { TodayRecordModel().getTodayRecordSync() },
+            mapData = { WearDtoMapper.toEnergy(it) },
+            sendData = { WearTodayRecordSender.sendEnergy(context, it) },
+            scope = scope
+        )
+    }
+
     fun handleTodayRecordRequest() {
         handleDataRequest(
             getData = { TodayRecordModel().getTodayRecordSync() },

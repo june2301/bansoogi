@@ -6,6 +6,10 @@ import com.ddc.bansoogi.common.wear.data.model.WearReportDto
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 
 object WearDtoMapper {
+    fun toEnergy(dto: TodayRecordDto): Int {
+        return dto.energyPoint
+    }
+
     fun toWearReport(dto: TodayRecordDto): WearReportDto {
         return WearReportDto(
             energyPoint = dto.energyPoint,

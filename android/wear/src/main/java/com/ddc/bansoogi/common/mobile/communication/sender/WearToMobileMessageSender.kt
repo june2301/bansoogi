@@ -39,7 +39,7 @@ object WearToMobileMessageSender {
             nodes.forEach { node ->
                 messageClient.sendMessage(node.id, path, dataBytes)
                     .addOnSuccessListener {
-                        Log.d("WearMessageSender", "전송 성공: ${node.displayName}")
+                        Log.d("WearMessageSender", "전송 성공: ${node.displayName} 경로: $path")
                     }
                     .addOnFailureListener {
                         Log.e("WearMessageSender", "전송 실패", it)
