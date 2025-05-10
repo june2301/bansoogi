@@ -49,7 +49,7 @@
 
         <!-- ✅ Landing 화면 -->
         <activity
-            android:name=".LandingActivity"
+            android:name=".landing.view.LandingActivity"
             android:exported="true" />
 
         <!-- ✅ person -->

@@ -10,8 +10,15 @@ import androidx.appcompat.app.AppCompatActivity
 import coil.ImageLoader
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.ddc.bansoogi.LandingActivity
+import com.ddc.bansoogi.landing.view.LandingActivity
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.common.data.local.RealmManager
+import com.ddc.bansoogi.myInfo.data.entity.User
+import io.realm.kotlin.ext.query
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -38,8 +45,40 @@ class SplashActivity : AppCompatActivity() {
         imageLoader.enqueue(request)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, LandingActivity::class.java))
+
+// MARK: 기존 로직
+//////////////////////////////////////////////////////////////////////////////
+            val isUserEmpty = RealmManager.realm.query<User>().find().isEmpty()
+
+            if (isUserEmpty) {
+                startActivity(Intent(this, LandingActivity::class.java))
+            } else {
+                startActivity(Intent(this, MainActivity::class.java))
+            }
             finish()
+//////////////////////////////////////////////////////////////////////////////
+
+//MARK: DB를 모두 제거하여 초기상태 진입
+//////////////////////////////////////////////////////////////////////////////
+//            CoroutineScope(Dispatchers.Main).launch {
+//                withContext(Dispatchers.IO) {
+//                    RealmManager.realm.write {
+//                        deleteAll()
+//                    }
+//                }
+//
+//                val isUserEmpty = RealmManager.realm.query<User>().find().isEmpty()
+//
+//                val nextIntent = if (isUserEmpty) {
+//                    Intent(applicationContext, LandingActivity::class.java)
+//                } else {
+//                    Intent(applicationContext, MainActivity::class.java)
+//                }
+//
+//                startActivity(nextIntent)
+//                finish()
+//            }
+//////////////////////////////////////////////////////////////////////////////
         }, splashScreenDelayTime)
     }
 }
