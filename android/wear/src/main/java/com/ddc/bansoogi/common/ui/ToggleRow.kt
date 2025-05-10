@@ -23,6 +23,7 @@ private val GreenChecked = Color(0xFF99CC00)
 fun ToggleRow(
     label: String,
     value: Boolean,
+    toggleClick: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -40,7 +41,7 @@ fun ToggleRow(
 
         Switch(
             checked = value,
-            onCheckedChange = {},
+            onCheckedChange = toggleClick,
             colors = SwitchDefaults.colors(
                 checkedTrackColor = GreenChecked
             )
