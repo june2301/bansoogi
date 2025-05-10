@@ -17,4 +17,11 @@ object MobileTodayRecordSender {
             CommunicationPaths.WearToMobile.TODAY_RECORD_REQUEST
         )
     }
+
+    fun sendInteractionTrigger(context: Context) {
+        WearToMobileMessageSender.sendReqeust(
+            context,
+            CommunicationPaths.WearToMobile.INTERACTION_TRIGGER
+        )
+    }
 }

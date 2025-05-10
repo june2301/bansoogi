@@ -15,11 +15,13 @@ class WearToMobileReceiverService: WearableListenerService() {
 
     // 핸들러
     private lateinit var requestHandler: RequestHandler
+    private lateinit var triggerHandlers: TriggerHandlers
 
     // 서비스 생성될 때, 핸들러에 객체 주입
     override fun onCreate() {
         super.onCreate()
         requestHandler = RequestHandler(applicationContext, serviceScope)
+        triggerHandlers = TriggerHandlers(applicationContext, serviceScope)
     }
 
     override fun onDestroy() {
@@ -36,6 +38,8 @@ class WearToMobileReceiverService: WearableListenerService() {
             CommunicationPaths.WearToMobile.ENERGY_REQUEST -> requestHandler.handleEnergyRequest()
             CommunicationPaths.WearToMobile.TODAY_RECORD_REQUEST -> requestHandler.handleTodayRecordRequest()
             CommunicationPaths.WearToMobile.MT_INFO_REQUEST -> requestHandler.handleMyInfoRequest()
+
+            CommunicationPaths.WearToMobile.INTERACTION_TRIGGER -> triggerHandlers.handleInteractionTrigger()
 
             else -> Log.w("WatchReceiver", "알 수 없는 경로: ${messageEvent.path}")
         }

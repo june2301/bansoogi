@@ -73,7 +73,13 @@ fun MainScreen(navController: NavHostController) {
         BackgroundImage()
 
         SideButtons(
-            navController = navController
+            navController = navController,
+            onInteractionBtnClick = {
+                // 1. 반숙이 상호작용 움직임 출력
+
+                // 2. 모바일로 상호작용 전송
+                MobileTodayRecordSender.sendInteractionTrigger(context)
+            }
         )
 
         BansoogiContent(
@@ -83,19 +89,35 @@ fun MainScreen(navController: NavHostController) {
 }
 
 @Composable
-fun SideButtons(navController: NavHostController) {
+fun SideButtons(
+    navController: NavHostController,
+    onInteractionBtnClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        IconCircleButton(
-            iconResource = R.drawable.cookie,
-            description = "밥 먹기 버튼"
-        ) {
-            // TODO: 왼쪽 버튼 클릭 이벤트
+        Column() {
+            IconCircleButton(
+                iconResource = R.drawable.cookie,
+                description = "밥 먹기 버튼"
+            ) {
+                // TODO: 왼쪽 버튼 클릭 이벤트
+            }
+
+            VerticalSpacer()
+
+            IconCircleButton(
+                iconResource = R.drawable.bansoogi_temp_interaction,
+                description = "상호 작용"
+            ) {
+                onInteractionBtnClick()
+            }
         }
+
         IconCircleButton(
             iconResource = R.drawable.dehaze,
             description = "메뉴 버튼"
