@@ -1,5 +1,7 @@
 package com.ddc.bansoogi.collection.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,6 +31,7 @@ import com.ddc.bansoogi.collection.data.local.CollectionDataSource
 import com.ddc.bansoogi.common.data.local.RealmManager
 import io.realm.kotlin.ext.query
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Preview
 @Composable
 fun CollectionScreen() {
@@ -60,8 +63,8 @@ fun CollectionScreen() {
         val allCharacters = realm.query<Character>().find()
     }
 
-    val regularList = collectionDtoState.filter { it.id < 50 }
-    val hiddenList = collectionDtoState.filter { it.id >= 50 }
+    val regularList = collectionDtoState.filter { it.id <= 30 }
+    val hiddenList = collectionDtoState.filter { it.id > 30 }
 
     Column(
         modifier = Modifier
