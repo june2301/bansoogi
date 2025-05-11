@@ -7,9 +7,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.ui.platform.LocalContext
@@ -66,74 +68,95 @@ fun CollectionScreen() {
     val regularList = collectionDtoState.filter { it.id <= 30 }
     val hiddenList = collectionDtoState.filter { it.id > 30 }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0x90EEEEEE))
             .padding(horizontal = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp)
-                .background(Color.White, shape = RoundedCornerShape(16.dp))
-                .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
-                .padding(vertical = 12.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+        item {
+            Spacer(modifier = Modifier.height(12.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White, shape = RoundedCornerShape(16.dp))
+                    .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
+                    .padding(vertical = 12.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.bansoogi_default_profile),
-                    contentDescription = "내 컬렉션 아이콘",
-                    modifier = Modifier.size(32.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.bansoogi_default_profile),
+                        contentDescription = "내 컬렉션 아이콘",
+                        modifier = Modifier.size(32.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "내 컬렉션",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+            }
+        }
+
+        item { SectionHeader("일반", R.drawable.egg_white) }
+
+        items(regularList.chunked(4)) { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                rowItems.forEach { character ->
+                    Box(modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(1f)
+                    ) {
+                        CollectionGridItem(character) {
+                            if (character.isUnlocked) controller.onCharacterClick(character)
+                        }
+                    }
+                }
+                repeat(4 - rowItems.size) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+
+        item { SectionHeader("히든", R.drawable.egg_gold) }
+
+        items(hiddenList.chunked(4)) { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                rowItems.forEach { character ->
+                    Box(modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(1f)
+                    ) {
+                        CollectionGridItem(character) {
+                            if (character.isUnlocked) controller.onCharacterClick(character)
+                        }
+                    }
+                }
+                repeat(4 - rowItems.size) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+
+        item {
+            selected?.let {
+                CollectionDetailDialog(
+                    character = it,
+                    fullList = collectionDtoState,
+                    onDismiss = { controller.dismissCharacterDetail() }
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "내 컬렉션",
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                )
             }
-        }
-
-        SectionHeader("일반", R.drawable.egg_white)
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
-            modifier = Modifier.heightIn(max = 300.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(regularList) { character ->
-                CollectionGridItem(character, onClick = { if (character.isUnlocked) controller.onCharacterClick(character) })
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        SectionHeader("히든", R.drawable.egg_gold)
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
-            modifier = Modifier.heightIn(max = 300.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(hiddenList) { character ->
-                CollectionGridItem(character, onClick = { if (character.isUnlocked) controller.onCharacterClick(character) })
-            }
-        }
-
-        selected?.let {
-            CollectionDetailDialog(
-                character = it,
-                fullList = collectionDtoState,
-                onDismiss = { controller.dismissCharacterDetail() }
-            )
         }
     }
 }
