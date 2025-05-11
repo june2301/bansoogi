@@ -1,0 +1,22 @@
+# Python 가상환경 (로컬 pyenv-venv 등)
+venv/
+__pycache__/
+*.pyc
+
+# pyenv 버전 공유 (이 파일은 Git에 포함되도록 한다)
+# .python-version → 포함 O (공유 목적)
+
+# Data (원시·중간 결과 절대 제외)
+data/**/*
+!data/README.md        # 설명용 최소 파일만 트래킹
+!data/*.md             # 데이터 설명 문서
+
+# 모델 바이너리 (학습 산출물)
+model/*.tflite
+model/*.h5
+
+# IDE/OS 관련 파일
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

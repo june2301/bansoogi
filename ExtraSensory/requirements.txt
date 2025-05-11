@@ -1,0 +1,13 @@
+# data 처리
+numpy==1.26.4
+pandas==2.2.2
+scipy==1.11.4
+tqdm==4.66.4
+
+# 머신러닝
+tensorflow==2.14.0
+
+scikit-learn==1.4.2
+
+# (선택) 데이터 시각화/EDA
+matplotlib==3.8.0
