@@ -14,6 +14,9 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.example.prototype.pose.DynamicSkip
+import com.example.prototype.pose.TFLiteStaticPoseClassifier
+import com.example.prototype.pose.WindowBuffer
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Node
@@ -28,6 +31,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 /**
  * Foreground service that uses SensorManager Step Detector to track activity state
@@ -41,6 +45,7 @@ class WalkDetectionService :
         private const val CHANNEL_ID = "walk_detection"
         private const val NOTI_ID = 2
         private const val WALK_STATE_PATH = "/walk_state" // Data Layer path
+        private const val POSE_STATE_PATH = "/pose_state" // Data Layer path
     }
 
     private lateinit var sensorManager: SensorManager
@@ -55,6 +60,13 @@ class WalkDetectionService :
     private lateinit var messageClient: MessageClient
     private var connectedNode: Node? = null
     private var started = false
+    private lateinit var poseClassifier: TFLiteStaticPoseClassifier
+    private lateinit var accWindowBuffer: WindowBuffer
+    private lateinit var linWindowBuffer: WindowBuffer
+    private var poseHysteresis: IntArray = intArrayOf(-1, -1) // last two pose outputs
+    private var queuedRawWindow: FloatArray? = null
+    private val gravity = FloatArray(3)
+    private val ALPHA = 0.9f
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
@@ -85,6 +97,7 @@ class WalkDetectionService :
             sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
             val stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
             val pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
+            val accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
             if (stepSensor == null) {
                 Log.e(TAG, "STEP_DETECTOR sensor not available")
                 stopSelf()
@@ -94,6 +107,11 @@ class WalkDetectionService :
             pressureSensor?.let {
                 sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
             }
+            sensorManager.registerListener(this, accSensor, SensorManager.SENSOR_DELAY_GAME, 25000) // raw for CNN
+
+            poseClassifier = TFLiteStaticPoseClassifier(this)
+            accWindowBuffer = WindowBuffer(125)
+            linWindowBuffer = WindowBuffer(125)
 
             // launch idle checker
             idleJob =
@@ -179,6 +197,37 @@ class WalkDetectionService :
                     stairCandidate = deltaH > ALT_TH_METERS
                 }
             }
+            Sensor.TYPE_ACCELEROMETER -> {
+                val ax = event.values[0]
+                val ay = event.values[1]
+                val az = event.values[2]
+
+                // low-pass to estimate gravity
+                gravity[0] = ALPHA * gravity[0] + (1 - ALPHA) * ax
+                gravity[1] = ALPHA * gravity[1] + (1 - ALPHA) * ay
+                gravity[2] = ALPHA * gravity[2] + (1 - ALPHA) * az
+
+                val linX = ax - gravity[0]
+                val linY = ay - gravity[1]
+                val linZ = az - gravity[2]
+
+                val rawWin = accWindowBuffer.addSample(ax, ay, az)
+                val linWin = linWindowBuffer.addSample(linX, linY, linZ)
+
+                rawWin?.let { queuedRawWindow = it }
+
+                linWin?.let { linWindow ->
+                    val skip = DynamicSkip.shouldSkipLinear(linWindow)
+                    Log.d(TAG, "LIN SMA=${"%.2f".format(computeSma(linWindow))} skip=$skip")
+                    if (skip) return@let
+                    queuedRawWindow?.let { raw ->
+                        val pose = poseClassifier.predict(raw)
+                        poseHysteresis[0] = poseHysteresis[1]
+                        poseHysteresis[1] = pose
+                        if (poseHysteresis[0] == poseHysteresis[1]) updatePoseState(pose)
+                    }
+                }
+            }
         }
     }
 
@@ -198,8 +247,29 @@ class WalkDetectionService :
         val payload = byteArrayOf(state.toByte())
         messageClient
             .sendMessage(nodeId, WALK_STATE_PATH, payload)
+            .addOnSuccessListener { Log.d(TAG, "sent WALK_STATE=$state") }
             .addOnFailureListener { e ->
                 Log.e(TAG, "sendActivityState failed", e)
+                findNode()
+            }
+    }
+
+    private fun updatePoseState(pose: Int) {
+        // Pose codes: 0 sitting,1 lying,2 standing. We map to 10+pose for activityState
+        val mappedState = 10 + pose
+        if (activityState == mappedState) return
+        activityState = mappedState
+        sendPoseState(pose)
+    }
+
+    private fun sendPoseState(pose: Int) {
+        val nodeId = connectedNode?.id ?: return
+        val payload = byteArrayOf(pose.toByte())
+        messageClient
+            .sendMessage(nodeId, POSE_STATE_PATH, payload)
+            .addOnSuccessListener { Log.d(TAG, "sent POSE_STATE=$pose") }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "sendPoseState failed", e)
                 findNode()
             }
     }
@@ -214,10 +284,20 @@ class WalkDetectionService :
             }
         }
 
+    private fun computeSma(window: FloatArray): Float {
+        val n = window.size / 3
+        var sum = 0f
+        for (i in 0 until n) {
+            sum += abs(window[3 * i]) + abs(window[3 * i + 1]) + abs(window[3 * i + 2])
+        }
+        return sum / n
+    }
+
     override fun onDestroy() {
         scope.cancel()
         idleJob?.cancel()
         sensorManager.unregisterListener(this)
+        poseClassifier.close()
         super.onDestroy()
     }
 
