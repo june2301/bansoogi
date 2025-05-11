@@ -16,9 +16,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        flatDir {
+            dirs("libs/samsung/health")
+        }
     }
 }
 
 rootProject.name = "PPG"
 include(":app")
- 

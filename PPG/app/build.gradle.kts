@@ -39,7 +39,7 @@ android {
 }
 
 dependencies {
-
+    implementation(files("${rootDir}/libs/samsung/health/samsung-health-sensor-api-v1.3.0.aar"))
     implementation(libs.play.services.wearable)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
