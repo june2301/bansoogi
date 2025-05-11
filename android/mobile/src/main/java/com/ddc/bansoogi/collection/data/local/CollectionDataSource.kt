@@ -101,7 +101,7 @@ class CollectionDataSource {
                 imageUrl = "bansoogi8_furikake"
                 silhouetteImageUrl = "unknown"
                 gifUrl = "bansoogi8_furikaking"
-                description = "깨가 조금 튀어서 주근깨가 생겼습니다."
+                description = "깨가 튀어서 주근깨가 생겼습니다."
             },
             Character().apply {
                 bansoogiId = 9
@@ -197,13 +197,25 @@ class CollectionDataSource {
                 imageUrl = "bansoogi34_revive"
                 silhouetteImageUrl = "unknown"
                 gifUrl = "bansoogi34_reviving"
-                description = "마음에 드는 껍질을 써서 신났습니다."
+                description = "마음에 드는 껍질을 써봤습니다."
             }
         )
 
         val unlockList = listOf(
             UnlockedCharacter().apply {
-                bansoogiId = 2 // bansoogiId = 2 캐릭터만 해금된 상태
+                bansoogiId = 2
+                acquisitionCount = 3
+                createdAt = RealmInstant.now()
+                updatedAt = RealmInstant.now()
+            },
+            UnlockedCharacter().apply {
+                bansoogiId = 7
+                acquisitionCount = 1
+                createdAt = RealmInstant.now()
+                updatedAt = RealmInstant.now()
+            },
+            UnlockedCharacter().apply {
+                bansoogiId = 32
                 acquisitionCount = 1
                 createdAt = RealmInstant.now()
                 updatedAt = RealmInstant.now()
