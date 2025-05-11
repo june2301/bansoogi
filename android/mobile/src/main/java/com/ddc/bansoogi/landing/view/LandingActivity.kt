@@ -132,7 +132,7 @@ class LandingActivity : ComponentActivity(), LandingView {
             lunchTime = controller.timeSettingModel.lunchTime
             dinnerTime = controller.timeSettingModel.dinnerTime
             notificationDuration = controller.timeSettingModel.durationMinutes
-            alarmEnabled = false
+            notificationEnabled = false
             bgSoundEnabled = true
             effectSoundEnabled = true
         }

@@ -179,12 +179,14 @@ fun TimeSettingScreen(controller: LandingController, onFinish: () -> Unit) {
 
                 if (allValid) {
 
-                    controller.timeSettingModel.wakeUpTime
-                    controller.timeSettingModel.bedTimeTime
-                    controller.timeSettingModel.breakfastTime
-                    controller.timeSettingModel.lunchTime
-                    controller.timeSettingModel.dinnerTime
-                    controller.timeSettingModel.durationMinutes
+                    controller.timeSettingModel.wakeUpTime = wakeUpTimeState.value
+                    controller.timeSettingModel.bedTimeTime = bedTimeState.value
+
+                    controller.timeSettingModel.breakfastTime = if (breakfastEnabled.value) breakfastTimeState.value else ""
+                    controller.timeSettingModel.lunchTime = if (lunchEnabled.value) lunchTimeState.value else ""
+                    controller.timeSettingModel.dinnerTime = if (dinnerEnabled.value) dinnerTimeState.value else ""
+
+                    controller.timeSettingModel.durationMinutes = durationTimeState.value
 
                     onFinish()
                 }
