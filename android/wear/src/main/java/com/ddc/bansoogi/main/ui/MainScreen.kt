@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -41,13 +42,29 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.common.mobile.communication.sender.MobileTodayRecordSender
 import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.BackgroundImage
 import com.ddc.bansoogi.common.ui.VerticalSpacer
+import com.ddc.bansoogi.today.data.store.getCachedReport
+import com.ddc.bansoogi.today.state.TodayRecordStateHolder
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun MainScreen(navController: NavHostController) {
-    var progressValue by remember { mutableIntStateOf(80) }
+    val context = LocalContext.current
+
+    // 초기 로컬 데이터 로딩
+    LaunchedEffect(Unit) {
+        // 초기에는 로컬에서 데이터를 호출
+        val cached = getCachedReport(context).first()
+        TodayRecordStateHolder.update(cached)
+
+        // 모바일로 데이터 송신 요청을 전송
+        MobileTodayRecordSender.sendEnergyRequest(context)
+    }
+
+    var progressValue = TodayRecordStateHolder.reportDto?.energyPoint ?: 0
 
     Box(
         modifier = Modifier.fillMaxSize(),

@@ -33,6 +33,7 @@ class WearToMobileReceiverService: WearableListenerService() {
 
         // 각 경로에 따라 함수 실행
         when (messageEvent.path) {
+            CommunicationPaths.WearToMobile.ENERGY_REQUEST -> requestHandler.handleEnergyRequest()
             CommunicationPaths.WearToMobile.TODAY_RECORD_REQUEST -> requestHandler.handleTodayRecordRequest()
             CommunicationPaths.WearToMobile.MT_INFO_REQUEST -> requestHandler.handleMyInfoRequest()
 

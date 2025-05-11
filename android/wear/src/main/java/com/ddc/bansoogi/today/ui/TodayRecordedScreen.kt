@@ -77,6 +77,14 @@ fun TodayRecordedContent(report: ReportDto) {
 
         InfoSection(
             items = listOf(
+                { InfoRow("에너지", report.energyPoint, unit = "점") },
+            )
+        )
+
+        VerticalSpacer()
+
+        InfoSection(
+            items = listOf(
                 { InfoRow("누워 있던 시간", report.lyingTime, unit = "분") },
                 { InfoRow("앉아 있던 시간", report.sittingTime, unit = "분") },
                 { InfoRow("휴대폰 사용 시간", report.phoneTime, unit = "분") }

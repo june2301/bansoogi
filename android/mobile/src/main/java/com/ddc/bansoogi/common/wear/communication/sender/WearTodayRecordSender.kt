@@ -5,6 +5,14 @@ import com.ddc.bansoogi.common.wear.communication.CommunicationPaths
 import com.ddc.bansoogi.common.wear.data.model.WearReportDto
 
 object WearTodayRecordSender {
+    fun sendEnergy(context: Context, energy: Int) {
+        MobileToWearMessageSender.sendData(
+            context,
+            energy,
+            CommunicationPaths.MobileToWear.ENERGY_DATA
+        )
+    }
+
     fun send(context: Context, reportDto: WearReportDto) {
         MobileToWearMessageSender.sendData(
             context,
