@@ -41,19 +41,19 @@ class CollectionDataSource {
         val characterList = listOf(
             Character().apply {
                 bansoogiId = 1
-                title = "기본 반숙이"
+                title = "반숙이"
                 imageUrl = "bansoogi_default_profile"
                 silhouetteImageUrl = "unknown"
                 gifUrl = "bansoogi_basic"
-                description = "가장 처음 등장하는 반숙이입니다."
+                description = "우리의 반숙이입니다."
             },
             Character().apply {
                 bansoogiId = 2
-                title = "밥먹는 반숙이"
-                imageUrl = "bansoogi_eat"
+                title = "완숙이"
+                imageUrl = "bansoogi2_dry"
                 silhouetteImageUrl = "unknown"
-                gifUrl = "bansoogi_eating"
-                description = "밥 먹는 반숙이입니다."
+                gifUrl = "bansoogi2_drying"
+                description = "어쩐지 다 익어버렸습니다."
             }
         )
 
