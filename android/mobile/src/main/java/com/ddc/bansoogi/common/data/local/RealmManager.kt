@@ -4,6 +4,7 @@ import com.ddc.bansoogi.calendar.data.entity.RecordedReport
 import com.ddc.bansoogi.calendar.data.local.Bansoogi
 import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.collection.data.entity.UnlockedCharacter
+import com.ddc.bansoogi.common.data.entity.ActivityLog
 import com.ddc.bansoogi.common.data.entity.TodayRecord
 import com.ddc.bansoogi.person.data.entity.Person
 import com.ddc.bansoogi.myInfo.data.entity.User
@@ -20,6 +21,7 @@ object RealmManager {
             TodayRecord::class,
             Character::class,
             UnlockedCharacter::class,
+            ActivityLog::class
         )
     )
 

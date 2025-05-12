@@ -201,26 +201,28 @@ class CollectionDataSource {
             }
         )
 
-        val unlockList = listOf(
-            UnlockedCharacter().apply {
-                bansoogiId = 2
-                acquisitionCount = 3
-                createdAt = RealmInstant.now()
-                updatedAt = RealmInstant.now()
-            },
-            UnlockedCharacter().apply {
-                bansoogiId = 7
-                acquisitionCount = 1
-                createdAt = RealmInstant.now()
-                updatedAt = RealmInstant.now()
-            },
-            UnlockedCharacter().apply {
-                bansoogiId = 32
-                acquisitionCount = 1
-                createdAt = RealmInstant.now()
-                updatedAt = RealmInstant.now()
-            }
-        )
+        // MARK: 임시 데이터 추가
+//        val unlockList: List<UnlockedCharacter> = listOf(
+//            UnlockedCharacter().apply {
+//                bansoogiId = 2
+//                acquisitionCount = 3
+//                createdAt = RealmInstant.now()
+//                updatedAt = RealmInstant.now()
+//            },
+//            UnlockedCharacter().apply {
+//                bansoogiId = 7
+//                acquisitionCount = 1
+//                createdAt = RealmInstant.now()
+//                updatedAt = RealmInstant.now()
+//            },
+//            UnlockedCharacter().apply {
+//                bansoogiId = 32
+//                acquisitionCount = 1
+//                createdAt = RealmInstant.now()
+//                updatedAt = RealmInstant.now()
+//            }
+//        )
+        val unlockList: List<UnlockedCharacter> = emptyList()
 
         realm.write {
             characterList.forEach { copyToRealm(it) }
