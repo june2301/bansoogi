@@ -48,6 +48,8 @@ import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.calendar.data.model.DetailReportDto
 import com.ddc.bansoogi.common.ui.component.BansoogiAnimation
+import com.ddc.bansoogi.main.ui.InfoRow
+import com.ddc.bansoogi.main.ui.SectionHeader
 import kotlin.String
 
 @Composable
@@ -399,6 +401,35 @@ fun RecordContent(
                             value = report.phoneOffCount,
                             unit = "회"
                         )
+
+                        // 건강 정보 섹션
+                        SectionHeader(
+                            title = "건강 정보"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "총 걸음수 :",
+                            value = report.walkCount,
+                            unit = " 회"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "총 계단 수 :",
+                            value = report.stairsClimbed.toInt(),
+                            unit = " 계단"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+//                        InfoRow(
+//                            label = "수면 시간 :",
+//                            value = report.sleepData.toInt(),
+//                            unit = " 분"
+//                        )
                     }
                 }
             }

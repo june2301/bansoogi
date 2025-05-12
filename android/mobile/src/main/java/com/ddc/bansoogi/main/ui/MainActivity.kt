@@ -48,6 +48,13 @@ class MainActivity : ComponentActivity() {
         
         setupHealthPermissions()
 
+        // 앱 시작 시 바로 데이터 수집 시작
+        lifecycleScope.launch {
+            if (healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS).size == Permissions.PERMISSIONS.size) {
+                startHealthDataUpdates()
+            }
+        }
+
         setContent {
             MainScreen(
                 healthData,
