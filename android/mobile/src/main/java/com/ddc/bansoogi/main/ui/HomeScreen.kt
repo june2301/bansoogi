@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.main.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -10,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
+import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
@@ -19,7 +20,18 @@ import com.ddc.bansoogi.main.ui.manage.HomeContent
 import com.ddc.bansoogi.main.view.TodayRecordView
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
+import io.realm.kotlin.types.RealmInstant
+import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
+import kotlin.math.abs
+
+fun RealmInstant.toLocalDate(): LocalDate {
+    val instant = Instant.ofEpochSecond(this.epochSeconds, this.nanosecondsOfSecond.toLong())
+    return instant.atZone(ZoneId.systemDefault()).toLocalDate()
+}
 
 @Composable
 fun HomeScreen(
@@ -31,43 +43,14 @@ fun HomeScreen(
     var showEggManager = remember { mutableStateOf(false) }
     var isInSleepRange = remember { mutableStateOf(false) }
 
-    val myInfoState = remember { mutableStateOf<MyInfoDto?>(null) } // 기존 변수 그대로 사용
+    val myInfoState = remember { mutableStateOf<MyInfoDto?>(null) }
     val myInfoController = remember { MyInfoController() }
-
-    // 데이터 없을 경우 flow 추적 오류
-    // TODO: 초기 MyInfo 데이터 입력 받는 로직 구현되면 지울 예정
-    val context = LocalContext.current
-    LaunchedEffect(Unit) { myInfoController.initialize(context) }
-
-    LaunchedEffect(Unit) {
-        myInfoController.myInfoFlow().collect { dto ->
-            myInfoState.value = dto
-        }
-    }
+    var recordController = remember { RecordedController() }
 
     var todayRecordController = remember {
         TodayRecordController(object : TodayRecordView {
             override fun displayTodayRecord(todayRecordDto: TodayRecordDto) {
                 todayRecordDtoState.value = todayRecordDto
-
-                val now = LocalTime.now()
-
-                // 취침시간 ~ 기상시간 사이라면 : isInSleepRange = true
-                if (myInfoState.value!=null && !now.isBefore(LocalTime.parse(myInfoState.value?.sleepTime))
-                    && !now.isAfter(LocalTime.parse(myInfoState.value?.wakeUpTime))) {
-                    isInSleepRange.value = true;
-                }
-
-                // 이미 결산이 완료되었고, 취침 시간이 아니라면!
-                if (todayRecordDto.isClosed) {
-                    // TODO: 오늘 날짜 vs. todayRecord.createdAt 0일 혹은 1일 차이나는 지 확인하는 코드로 수정 필요!
-                    if (isInSleepRange.value && 2<=1) {
-                        showEggManager.value = false
-                    }
-                    else {
-                        showEggManager.value = true
-                    }
-                }
             }
 
             override fun showEmptyState() {
@@ -75,8 +58,64 @@ fun HomeScreen(
             }
         })
     }
+
     LaunchedEffect(Unit) {
         todayRecordController.initialize()
+    }
+
+    LaunchedEffect(Unit) {
+        myInfoController.myInfoFlow().collect { dto ->
+            myInfoState.value = dto
+        }
+    }
+
+    // todayRecord와 myInfo 변경에 반응
+    LaunchedEffect(todayRecordDtoState.value, myInfoState.value) {
+        val myInfo = myInfoState.value ?: return@LaunchedEffect
+
+        val now = LocalTime.now()
+
+        try {
+            val sleepTime = LocalTime.parse(myInfo.sleepTime)
+            val wakeUpTime = LocalTime.parse(myInfo.wakeUpTime)
+
+            // 취침시간 ~ 기상시간 사이라면 : isInSleepRange = true
+            isInSleepRange.value = (now.isBefore(sleepTime) && now.isBefore(wakeUpTime))
+                    || (now.isAfter(sleepTime) && now.isAfter(wakeUpTime))
+
+            val todayRecord = todayRecordDtoState.value ?: return@LaunchedEffect
+
+            val createdDate = todayRecord.createdAt?.toLocalDate()
+            if (createdDate != null) {
+                val diffDays =
+                    abs(ChronoUnit.DAYS.between(RealmInstant.now().toLocalDate(), createdDate))
+
+                if (todayRecord.isClosed) {
+                    // 이미 결산이 완료되었고, 취침 시간이 아니라면!
+                    if (!(isInSleepRange.value && diffDays <= 1)) {
+                        showEggManager.value = true
+                    }
+                } else {
+                    // 결산이 완료되진 않았는데, 취침시간이거나, 이미 지난 날짜라면 => 결산 + isClosed 갱신
+                    if ((isInSleepRange.value && diffDays <= 1) || (!isInSleepRange.value && diffDays > 0)) {
+                        showEggManager.value = false
+                        todayRecordController.updateIsClosed()
+                        recordController.createRecordedReport(
+                            todayRecord,
+                            1,
+                            healthData.step.toInt(),
+                            0,
+                            0,
+                            healthData.floorsClimbed.toInt()
+                        )
+                    }
+                }
+            } else {
+                Log.d("HomeScreen", "생성 날짜가 null입니다")
+            }
+        } catch (e: Exception) {
+            Log.e("HomeScreen", "오류 발생: ${e.message}", e)
+        }
     }
 
     // Egg Manager 페이지 보여주기!
@@ -85,7 +124,6 @@ fun HomeScreen(
             myInfo = myInfoState.value,
             onDismiss = {
                 showEggManager.value = false
-                // 새로운 TodayRecord 생성
                 todayRecordController.renewTodayRecord()
             }
         )

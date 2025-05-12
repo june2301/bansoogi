@@ -29,6 +29,13 @@ class TodayRecordController(private val view: TodayRecordView) {
         }
     }
 
+    fun updateIsClosed() {
+        coroutineScope.launch {
+            model.updateIsClosed()
+            refreshTodayRecord()
+        }
+    }
+
     fun renewTodayRecord() {
         coroutineScope.launch {
             model.renewTodayRecord()

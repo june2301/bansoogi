@@ -12,6 +12,10 @@ class TodayRecordModel {
         dataSource.initialize()
     }
 
+    suspend fun updateIsClosed() {
+        dataSource.updateIsClosed()
+    }
+
     suspend fun renewTodayRecord() {
         dataSource.renewTodayRecord()
     }
