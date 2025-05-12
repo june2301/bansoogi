@@ -31,7 +31,7 @@ class ActivityLogModel {
                 fromState = fromBehavior
                 duration = durationTime
                 reactedDate = "%04d-%02d-%02d".format(date.year, date.monthValue, date.dayOfMonth)
-                reactedDate = time.format(DateTimeFormatter.ofPattern("HH:mm"))
+                reactedTime = time.format(DateTimeFormatter.ofPattern("HH:mm"))
             },
         )
     }
@@ -39,7 +39,6 @@ class ActivityLogModel {
     fun getLogsByTypeAndDate(type: String, date: String): List<ActivityLogDto> {
         return dataSource.getLogsByTypeAndDate(type, date)
             .map {
-                Log.d("Log TEST", it.reactedTime + ", " + it.type + ", " +it.fromState)
                 it.toDto()
             }
     }
