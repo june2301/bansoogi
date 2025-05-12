@@ -242,7 +242,6 @@ fun HomeContent(
             )
         }
         else {
-//            val formatDate = LocalDate.now().minusDays(16).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             val formatDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             Log.d("date", formatDate)
             RecordedModal(
