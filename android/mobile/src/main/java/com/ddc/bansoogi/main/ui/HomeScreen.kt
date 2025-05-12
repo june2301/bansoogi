@@ -124,7 +124,6 @@ fun HomeScreen(
             myInfo = myInfoState.value,
             onDismiss = {
                 showEggManager.value = false
-                // 새로운 TodayRecord 생성
                 todayRecordController.renewTodayRecord()
             }
         )
