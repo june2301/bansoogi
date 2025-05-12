@@ -49,6 +49,10 @@ class TodayRecordDataSource {
         }
     }
 
+    fun getTodayRecordSync(): TodayRecord? {
+        return realm.query<TodayRecord>().first().find()
+    }
+
     fun getTodayRecord(): Flow<TodayRecord?> {
         return realm.query<TodayRecord>()
             .asFlow()

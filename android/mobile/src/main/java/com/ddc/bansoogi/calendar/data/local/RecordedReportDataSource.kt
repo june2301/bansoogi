@@ -12,6 +12,12 @@ import kotlinx.coroutines.flow.map
 class RecordedReportDataSource {
     private val realm = RealmManager.realm
 
+    suspend fun createRecordedReport(recordedReport: RecordedReport): Unit {
+        realm.write {
+            copyToRealm(recordedReport)
+        }
+    }
+
     fun getRecordedReportList(): Flow<List<RecordedReport>> =
         realm.query<RecordedReport>()
             .asFlow()

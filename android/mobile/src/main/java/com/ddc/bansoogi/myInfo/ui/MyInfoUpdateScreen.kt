@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -29,14 +30,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import com.ddc.bansoogi.common.notification.AlarmScheduler
+import com.ddc.bansoogi.collection.data.model.CollectionModel
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.controller.MyInfoUpdateController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
+import kotlinx.coroutines.launch
+import com.ddc.bansoogi.common.notification.AlarmScheduler
 import java.util.*
 
 @Composable
@@ -51,7 +50,6 @@ fun MyInfoUpdateScreen(navController: NavController) {
     LaunchedEffect(Unit) { controller.initialize(context) }
 
     myInfo?.let { initial ->
-
         val updateController = remember {
             MyInfoUpdateController { _ ->
                 navController.popBackStack()
@@ -59,14 +57,12 @@ fun MyInfoUpdateScreen(navController: NavController) {
         }
 
         val context = LocalContext.current
+        val collectionModel = remember { CollectionModel() }
 
-        val imageLoader = remember {
-            ImageLoader.Builder(context)
-                .components {
-                    add(GifDecoder.Factory())
-                    add(ImageDecoderDecoder.Factory())
-                }
-                .build()
+        var profileBansoogiId by remember { mutableStateOf(initial.profileBansoogiId) }
+
+        val imageResId = remember(profileBansoogiId) {
+            collectionModel.getImageResId(context, profileBansoogiId)
         }
 
         var nickname by remember { mutableStateOf(initial.nickname) }
@@ -127,6 +123,9 @@ fun MyInfoUpdateScreen(navController: NavController) {
             mealOrder.remove(label)
         }
 
+        var showResetButton by remember { mutableStateOf(false) }
+        val scope = rememberCoroutineScope()
+
         var notificationDuration by remember { mutableStateOf(initial.notificationDuration) }
         fun incDuration() { notificationDuration += 15 }
         fun decDuration() { if (notificationDuration > 15) notificationDuration -= 15 }
@@ -142,17 +141,39 @@ fun MyInfoUpdateScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Image(
-                painter = rememberAsyncImagePainter(
-                    model = initial.profileBansoogiId,
-                    imageLoader = imageLoader
-                ),
-                contentDescription = "프로필 이미지",
+            Box(
                 modifier = Modifier
                     .size(120.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .border(2.dp, Color.Gray, RoundedCornerShape(12.dp))
-            )
+                    .clickable { showResetButton = !showResetButton },
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = imageResId),
+                    contentDescription = "프로필 이미지",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(12.dp))
+                        .border(2.dp, Color.Gray, RoundedCornerShape(12.dp))
+                )
+
+                if (showResetButton) {
+                    TextButton(
+                        onClick = {
+                            scope.launch {
+                                profileBansoogiId = 1
+                                showResetButton = false
+                            }
+                        },
+                        colors = ButtonDefaults.textButtonColors(
+                            containerColor = Color(0xAA000000),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text("사진 초기화")
+                    }
+                }
+            }
+
             Spacer(Modifier.height(24.dp))
 
             OutlinedTextField(
@@ -478,12 +499,11 @@ fun MyInfoUpdateScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-
                         val newInfo = MyInfoDto(
                             userId               = initial.userId,
                             nickname             = nickname,
                             birthDate            = birthDate.text,
-                            profileBansoogiId    = initial.profileBansoogiId,
+                            profileBansoogiId    = profileBansoogiId,
                             wakeUpTime           = wakeUpTime.text,
                             sleepTime            = sleepTime.text,
                             breakfastTime        = timesMap["아침"]?.value?.text.orEmpty(),
@@ -497,7 +517,6 @@ fun MyInfoUpdateScreen(navController: NavController) {
                         updateController.save(newInfo)
 
                         AlarmScheduler.scheduleAllDailyAlarms(context, newInfo)
-
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(

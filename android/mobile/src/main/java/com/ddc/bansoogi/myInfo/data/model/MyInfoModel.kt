@@ -15,6 +15,13 @@ class MyInfoModel {
     fun getMyInfo(): Flow<MyInfoDto> =
         dataSource.getMyInfo().map { entity -> entity.toDomain() }
 
+    fun getMyInfoSync(): MyInfoDto? {
+        val entity = dataSource.getMyInfoSync()
+        return entity?.let {
+            entity.toDomain()
+        }
+    }
+
     suspend fun updateMyInfo(input: MyInfoDto): MyInfoDto {
         val entity = User().apply {
             userId               = ObjectId(input.userId)
@@ -33,6 +40,12 @@ class MyInfoModel {
         }
         dataSource.updateUser(entity)
         return input
+    }
+
+    suspend fun updateProfileBansoogiId(bansoogiId: Int): MyInfoDto {
+        dataSource.updateProfileBansoogiId(bansoogiId)
+        val updated = dataSource.getMyInfo().first()
+        return updated.toDomain()
     }
 
     /** 토글: DB 반영 후 최신값(domain) 리턴 */

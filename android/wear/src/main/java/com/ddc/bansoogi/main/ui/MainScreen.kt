@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,13 +43,34 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.common.mobile.communication.sender.MobileTodayRecordSender
 import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.BackgroundImage
+import com.ddc.bansoogi.common.ui.SpriteAnimation
 import com.ddc.bansoogi.common.ui.VerticalSpacer
+import com.ddc.bansoogi.today.data.store.getCachedReport
+import com.ddc.bansoogi.today.state.TodayRecordStateHolder
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun MainScreen(navController: NavHostController) {
-    var progressValue by remember { mutableIntStateOf(80) }
+    val context = LocalContext.current
+
+    // 초기 로컬 데이터 로딩
+    LaunchedEffect(Unit) {
+        // 초기에는 로컬에서 데이터를 호출
+        val cached = getCachedReport(context).first()
+        TodayRecordStateHolder.update(cached)
+
+        // 모바일로 데이터 송신 요청을 전송
+        MobileTodayRecordSender.sendEnergyRequest(context)
+    }
+
+    var progressValue = TodayRecordStateHolder.reportDto?.energyPoint ?: 0
+
+    // 상호작용 상태 변수
+    var triggerInteraction by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -56,29 +79,56 @@ fun MainScreen(navController: NavHostController) {
         BackgroundImage()
 
         SideButtons(
-            navController = navController
+            navController = navController,
+            onInteractionBtnClick = {
+                // 1. 반숙이 상호작용 움직임 출력 -> 변수 변경
+                triggerInteraction = true
+
+                // 2. 모바일로 상호작용 전송
+                MobileTodayRecordSender.sendInteractionTrigger(context)
+            }
         )
 
         BansoogiContent(
-            progressValue = progressValue
+            progressValue = progressValue,
+            triggerInteraction = triggerInteraction,
+            onFinished = {
+                triggerInteraction = false
+            }
         )
     }
 }
 
 @Composable
-fun SideButtons(navController: NavHostController) {
+fun SideButtons(
+    navController: NavHostController,
+    onInteractionBtnClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        IconCircleButton(
-            iconResource = R.drawable.cookie,
-            description = "밥 먹기 버튼"
-        ) {
-            // TODO: 왼쪽 버튼 클릭 이벤트
+        Column() {
+            IconCircleButton(
+                iconResource = R.drawable.cookie,
+                description = "밥 먹기 버튼"
+            ) {
+                // TODO: 밥 먹기 클릭 이벤트
+            }
+
+            VerticalSpacer()
+
+            IconCircleButton(
+                iconResource = R.drawable.bansoogi_temp_interaction,
+                description = "상호 작용"
+            ) {
+                onInteractionBtnClick()
+            }
         }
+
         IconCircleButton(
             iconResource = R.drawable.dehaze,
             description = "메뉴 버튼"
@@ -120,7 +170,11 @@ fun IconCircleButton(iconResource: Int, description: String, onBtnClick: () -> U
 }
 
 @Composable
-fun BansoogiContent(progressValue: Int) {
+fun BansoogiContent(
+    progressValue: Int,
+    triggerInteraction: Boolean,
+    onFinished: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -128,7 +182,8 @@ fun BansoogiContent(progressValue: Int) {
         verticalArrangement = Arrangement.Center
     ) {
         BansoogiAnimation(
-            bansoogiResource = R.drawable.bansoogi_basic
+            triggerInteraction = triggerInteraction,
+            onFinished = onFinished
         )
 
         VerticalSpacer()
@@ -140,30 +195,37 @@ fun BansoogiContent(progressValue: Int) {
 }
 
 @Composable
-fun BansoogiAnimation(bansoogiResource: Int) {
-    val context = LocalContext.current
-    val imageLoader = remember {
-        ImageLoader.Builder(context)
-            .components {
-                add(GifDecoder.Factory())
-                add(ImageDecoderDecoder.Factory())
-            }
-            .build()
+fun BansoogiAnimation(
+    triggerInteraction: Boolean,
+    onFinished: () -> Unit
+) {
+    if (triggerInteraction) {
+        BansoogiSmileAnimation(
+            onFinished = onFinished
+        )
+    } else {
+        BansoogiBasicAnimation()
     }
+}
 
-    Image(
-        painter = rememberAsyncImagePainter(
-            ImageRequest.Builder(LocalContext.current)
-                .data(bansoogiResource)
-                .build(),
-            imageLoader = imageLoader
-        ),
-        contentDescription = "반숙이",
-        modifier = Modifier
-            .size(140.dp)
-            .scale(1.3f)
-            .offset(x = 8.dp, y = (-8).dp),
-        contentScale = ContentScale.Fit
+@Composable
+fun BansoogiBasicAnimation() {
+    SpriteAnimation(R.drawable.bansoogi_basic_sprite)
+}
+
+@Composable
+fun BansoogiSmileAnimation(
+    onFinished: () -> Unit
+) {
+    SpriteAnimation(
+        spriteResource = R.drawable.bansoogi_smile_to_me_sprite,
+        modifier = Modifier,
+        frameWidth = 128,
+        frameHeight = 128,
+        totalFrames = 53,
+        frameDurationMillis = 200,
+        loop = false,
+        onAnimationFinished = onFinished
     )
 }
 
