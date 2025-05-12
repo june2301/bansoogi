@@ -7,6 +7,7 @@ object CommunicationPaths {
 
         const val ENERGY_DATA = "$PREFIX/data/energy" // 에너지 데이터를 웨어로 전송
         const val TODAY_RECORD_DATA = "$PREFIX/data/today_record" // 데이터를 웨어로 전송
+        
         const val MY_INFO_DATA = "$PREFIX/data/my_info" // 데이터를 웨어로 전송
     }
 
@@ -17,5 +18,7 @@ object CommunicationPaths {
         const val ENERGY_REQUEST = "${PREFIX}/request/energy" // 에너지 데이터 전송 요청
         const val TODAY_RECORD_REQUEST = "${PREFIX}/request/today_record" // 데이터 전송 요청
         const val MT_INFO_REQUEST = "${PREFIX}/request/my_info" // 데이터 전송 요청
+
+        const val INTERACTION_TRIGGER = "${PREFIX}/trigger/interaction" // 상호작용 트리거 전송
     }
 }
