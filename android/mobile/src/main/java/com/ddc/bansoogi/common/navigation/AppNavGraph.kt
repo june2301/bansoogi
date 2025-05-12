@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import com.ddc.bansoogi.calendar.ui.CalendarScreen
 import com.ddc.bansoogi.collection.ui.CollectionScreen
 import com.ddc.bansoogi.main.ui.HomeScreen
@@ -21,7 +22,12 @@ fun AppNavGraph(
         startDestination = NavRoutes.HOME,
         modifier = modifier
     ) {
-        composable(NavRoutes.HOME) {
+        composable(
+            route = NavRoutes.HOME,
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "bansoogi://home" }
+            )
+        ) {
             HomeScreen()
         }
 

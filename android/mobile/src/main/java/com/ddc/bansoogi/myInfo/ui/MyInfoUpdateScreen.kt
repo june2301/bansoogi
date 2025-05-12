@@ -36,6 +36,7 @@ import com.ddc.bansoogi.myInfo.controller.MyInfoUpdateController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 import kotlinx.coroutines.launch
 import com.ddc.bansoogi.common.notification.AlarmScheduler
+import com.ddc.bansoogi.common.notification.SyncHelper
 import java.util.*
 
 @Composable
@@ -517,6 +518,7 @@ fun MyInfoUpdateScreen(navController: NavController) {
                         updateController.save(newInfo)
 
                         AlarmScheduler.scheduleAllDailyAlarms(context, newInfo)
+                        SyncHelper.syncNotificationToWatch(context, newInfo)
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
