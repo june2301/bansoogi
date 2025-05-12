@@ -6,14 +6,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
-import androidx.core.content.ContextCompat
-import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
+import android.util.Log
+import com.ddc.bansoogi.myinfo.data.dto.MyInfoDto
 import java.util.*
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.first
 
 // 알람 종류 구분용 ENUM
 enum class AlarmType(
     val requestCode: Int,
-    val independentOnWatch: Boolean  // true - 워치 어플 실행용
+    val independentOnWatch: Boolean
 ) {
     WAKE(1005, false),
     SLEEP(1006, false),
@@ -39,18 +41,18 @@ object AlarmScheduler {
     fun scheduleDailyAlarm(
         context: Context,
         type: AlarmType,
-        time: String? // HH:MM
+        time: String?
     ) {
+        Log.d("WatchSched", "scheduleDailyAlarm type=$type time=$time")
         val (hour, minute) = parseTimeOrNull(time) ?: return
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent   = Intent(context, DailyAlarmReceiver::class.java).apply {
+        val intent = Intent(context, WatchDailyAlarmReceiver::class.java).apply {
             putExtra("alarm_type", type.name)
+            putExtra("alarm_time", time)
         }
         val pending  = PendingIntent.getBroadcast(
-            context,
-            type.requestCode,
-            intent,
+            context, type.requestCode, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -59,7 +61,8 @@ object AlarmScheduler {
             set(Calendar.MINUTE,      minute)
             set(Calendar.SECOND,      0)
             set(Calendar.MILLISECOND, 0)
-            if (timeInMillis <= System.currentTimeMillis()) add(Calendar.DAY_OF_YEAR, 1)
+            if (timeInMillis <= System.currentTimeMillis())
+                add(Calendar.DAY_OF_YEAR, 1)
         }.timeInMillis
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
@@ -67,30 +70,26 @@ object AlarmScheduler {
         ) {
             val req = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            ContextCompat.startActivity(context, req, null)
-
+            context.startActivity(req)
             alarmMgr.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP,
-                nextTime,
-                AlarmManager.INTERVAL_DAY,
-                pending
+                AlarmManager.RTC_WAKEUP, nextTime, AlarmManager.INTERVAL_DAY, pending
             )
-            return
+        } else {
+            alarmMgr.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP, nextTime, pending
+            )
         }
-
-        alarmMgr.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            nextTime,
-            pending
-        )
     }
 
-    /** MyInfoDto 하나를 받아 5개 알람을 모두 예약 */
-    fun scheduleAllDailyAlarms(context: Context, info: MyInfoDto) {
-        scheduleDailyAlarm(context, AlarmType.WAKE,      info.wakeUpTime)
-        scheduleDailyAlarm(context, AlarmType.BREAKFAST, info.breakfastTime)
-        scheduleDailyAlarm(context, AlarmType.LUNCH,     info.lunchTime)
-        scheduleDailyAlarm(context, AlarmType.DINNER,    info.dinnerTime)
-        scheduleDailyAlarm(context, AlarmType.SLEEP,     info.sleepTime)
+    /** DataStore 에 저장된 다섯 개 시간을 한 번에 읽어와 모두 예약 */
+    fun scheduleAllFromInfo(context: Context, info: MyInfoDto) {
+        listOf(
+            AlarmType.BREAKFAST to info.breakfastTime,
+            AlarmType.LUNCH     to info.lunchTime,
+            AlarmType.DINNER    to info.dinnerTime
+        ).forEach { (type, t) ->
+            scheduleDailyAlarm(context, type, t)
+        }
     }
+
 }

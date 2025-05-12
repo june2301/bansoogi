@@ -20,18 +20,18 @@ class DailyAlarmReceiver : BroadcastReceiver() {
         // 알림 Builder 선택
         val builder = when (type) {
             AlarmType.WAKE       -> NotificationFactory.wakeUp(context)
-            AlarmType.BREAKFAST  -> NotificationFactory.meal(context, "아침 식사 시간이에요")
-            AlarmType.LUNCH      -> NotificationFactory.meal(context, "점심 식사 시간이에요")
-            AlarmType.DINNER     -> NotificationFactory.meal(context, "저녁 식사 시간이에요")
+            AlarmType.BREAKFAST  -> NotificationFactory.meal(context, type)
+            AlarmType.LUNCH      -> NotificationFactory.meal(context, type)
+            AlarmType.DINNER     -> NotificationFactory.meal(context, type)
             AlarmType.SLEEP      -> NotificationFactory.sleepReminder(context)
         }
 
         // 알림 발송
         val id = when (type) {
             AlarmType.WAKE      -> NotificationDispatcher.Id.WAKE
-            AlarmType.BREAKFAST -> NotificationDispatcher.Id.BREAKFAST
-            AlarmType.LUNCH     -> NotificationDispatcher.Id.LUNCH
-            AlarmType.DINNER    -> NotificationDispatcher.Id.DINNER
+            AlarmType.BREAKFAST -> NotificationDispatcher.Id.MEAL
+            AlarmType.LUNCH     -> NotificationDispatcher.Id.MEAL
+            AlarmType.DINNER    -> NotificationDispatcher.Id.MEAL
             AlarmType.SLEEP     -> NotificationDispatcher.Id.SLEEP
         }
         NotificationDispatcher.show(context, id, builder)
