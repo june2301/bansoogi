@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ddc.bansoogi.landing.controller.LandingController
+import com.ddc.bansoogi.landing.ui.component.AgreementDialog
+import com.ddc.bansoogi.landing.ui.component.AgreementType
 import com.ddc.bansoogi.landing.ui.component.CheckboxRow
 import com.ddc.bansoogi.landing.ui.component.text.DefaultTitleText
 import com.ddc.bansoogi.landing.ui.component.NextButton
@@ -26,6 +28,8 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
     var serviceChecked by remember { mutableStateOf(controller.termsModel.serviceChecked) }
     var privacyChecked by remember { mutableStateOf(controller.termsModel.privacyChecked) }
     var healthChecked by remember { mutableStateOf(controller.termsModel.healthChecked) }
+
+    var currentDialogType by remember { mutableStateOf<AgreementType?>(null) }
 
     Column {
         RoundedContainerBox {
@@ -46,33 +50,46 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
                         serviceChecked = it
                         controller.updateServiceChecked(it)
                     },
-                    label = "[필수] Bansoogi 서비스 이용약관에 동의합니다."
+                    agreementType = AgreementType.SERVICE,
+                    onLabelClick = { currentDialogType = it }
                 )
+
                 CheckboxRow(
                     checked = privacyChecked,
                     onCheckedChange = {
                         privacyChecked = it
                         controller.updatePrivacyChecked(it)
                     },
-                    label = "[필수] 개인정보 처리방침에 동의합니다."
+                    agreementType = AgreementType.PRIVACY,
+                    onLabelClick = { currentDialogType = it }
                 )
-                CheckboxRow(
-                    checked = healthChecked,
-                    onCheckedChange = {
-                        healthChecked = it
-                        controller.updateHealthChecked(it)
-                    },
-                    label = "[필수] 삼성 헬스 데이터 연동에 동의합니다."
-                )
+
+                // TODO: Health 사용시에 추가
+//                CheckboxRow(
+//                    checked = healthChecked,
+//                    onCheckedChange = {
+//                        healthChecked = it
+//                        controller.updateHealthChecked(it)
+//                    },
+//                    agreementType = AgreementType.HEALTH,
+//                    onLabelClick = { currentDialogType = it }
+//                )
 
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
 
         NextButton(
-            enabled = serviceChecked && privacyChecked && healthChecked,
-             onClick = {
-                if (serviceChecked && privacyChecked && healthChecked) {
+            // TODO: Health Data 활용 시 추가 예정
+//            enabled = serviceChecked && privacyChecked && healthChecked,
+//            onClick = {
+//                if (serviceChecked && privacyChecked && healthChecked) {
+//                    onNext()
+//                }
+//            },
+            enabled = serviceChecked && privacyChecked,
+            onClick = {
+                if (serviceChecked && privacyChecked) {
                     onNext()
                 }
             },
@@ -80,5 +97,28 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
                 .align(Alignment.CenterHorizontally)
         )
     }
-}
 
+    currentDialogType?.let { type ->
+        AgreementDialog(
+            agreementType = type,
+            onDismiss = { currentDialogType = null },
+            onAgree = {
+                when (type) {
+                    AgreementType.SERVICE -> {
+                        serviceChecked = true
+                        controller.updateServiceChecked(true)
+                    }
+                    AgreementType.PRIVACY -> {
+                        privacyChecked = true
+                        controller.updatePrivacyChecked(true)
+                    }
+                    AgreementType.HEALTH -> {
+                        healthChecked = true
+                        controller.updateHealthChecked(true)
+                    }
+                }
+                currentDialogType = null
+            }
+        )
+    }
+}
