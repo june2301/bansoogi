@@ -1,9 +1,17 @@
 package com.ddc.bansoogi.calendar.data.model
 
+import com.ddc.bansoogi.calendar.data.entity.RecordedReport
+import com.ddc.bansoogi.calendar.data.local.Bansoogi
 import com.ddc.bansoogi.calendar.data.local.RecordedReportDataSource
+import com.ddc.bansoogi.common.data.model.TodayRecordDto
+import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.mongodb.kbson.ObjectId
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
+import kotlin.Int
 
 class RecordedReportModel {
     private val dataSource = RecordedReportDataSource()
@@ -11,6 +19,44 @@ class RecordedReportModel {
     // 더미데이터용 추후 삭제 예정
     suspend fun initialize() {
         dataSource.initialize()
+    }
+
+    suspend fun createRecordedReport(
+        todayRecordDto: TodayRecordDto,
+        bansoogiIdData: Int,
+        walkCountData: Int,
+        runTileData: Int,
+        exerciseTimeData: Int,
+        stairsClimbedData: Int
+    ) {
+        val date = todayRecordDto.createdAt.toLocalDate()
+
+        dataSource.createRecordedReport(
+            RecordedReport().apply {
+                finalEnergyPoint = todayRecordDto.energyPoint
+                bansoogiId = bansoogiIdData
+
+                standupCount = todayRecordDto.standUpCnt
+                stretchCount = todayRecordDto.stretchCnt
+                phoneOffCount = todayRecordDto.phoneOffCnt
+
+                lyingTime = todayRecordDto.lyingTime
+                sittingTime = todayRecordDto.sittingTime
+                phoneTime = todayRecordDto.phoneTime
+                sleepTime = todayRecordDto.sleepTime
+
+                walkCount = walkCountData
+                runTime = runTileData
+                exerciseTime = exerciseTimeData
+                stairsClimbed = stairsClimbedData
+
+                breakfast = todayRecordDto.breakfast
+                lunch = todayRecordDto.lunch
+                dinner = todayRecordDto.dinner
+
+                reportedDate = "%04d-%02d-%02d".format(date.year, date.monthValue, date.dayOfMonth)
+            }
+        )
     }
 
     fun getCalendarMarkers(): Flow<List<CalendarMarkerDto>> =
@@ -59,4 +105,9 @@ class RecordedReportModel {
             dinner = report.dinner
         )
     }
+}
+
+fun RealmInstant.toLocalDate(): LocalDate {
+    val instant = Instant.ofEpochSecond(this.epochSeconds, this.nanosecondsOfSecond.toLong())
+    return instant.atZone(ZoneId.systemDefault()).toLocalDate()
 }
