@@ -54,7 +54,12 @@ fun MyInfoScreen() {
         OverlayBackground()
 
         if (myInfo != null) {
-            MyInfoContent(myInfo)
+            MyInfoContent(
+                myInfo = myInfo,
+                notificationToggleClick = { MobileMyInfoSender.sendToggleNotificationTrigger(context) },
+                bgSoundToggleClick = { MobileMyInfoSender.sendToggleBgSoundTrigger(context) },
+                effectSoundClick = { MobileMyInfoSender.sendToggleEffectSoundTrigger(context) }
+            )
         } else {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Text("데이터 수신 대기 중...")
@@ -64,7 +69,12 @@ fun MyInfoScreen() {
 }
 
 @Composable
-fun MyInfoContent(myInfo: MyInfoDto) {
+fun MyInfoContent(
+    myInfo: MyInfoDto,
+    notificationToggleClick: (Boolean) -> Unit,
+    bgSoundToggleClick: (Boolean) -> Unit,
+    effectSoundClick: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,9 +107,9 @@ fun MyInfoContent(myInfo: MyInfoDto) {
 
         InfoSection(
             items = listOf(
-                { ToggleRow("알림 설정", myInfo.notificationEnabled) },
-                { ToggleRow("배경음 설정", myInfo.bgSoundEnabled) },
-                { ToggleRow("효과음 설정", myInfo.effectSoundEnabled) }
+                { ToggleRow("알림 설정", myInfo.notificationEnabled, notificationToggleClick) },
+                { ToggleRow("배경음 설정", myInfo.bgSoundEnabled, bgSoundToggleClick) },
+                { ToggleRow("효과음 설정", myInfo.effectSoundEnabled, effectSoundClick) }
             )
         )
 
