@@ -25,21 +25,69 @@ object NotificationFactory {
         baseBuilder(context, NotificationHelper.CHANNEL_TODAY_RECORD)
             .setContentTitle("오늘의 활동 리포트")
             .setContentText("터치해서 상세 내용을 확인하세요.")
+            .setContentIntent(
+                buildDeepLinkPendingIntent(
+                    context,
+                    "bansoogi://home",
+                    NotificationDispatcher.Id.SUMMARY.value
+                )
+            )
 
     fun sleepReminder(context: Context): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_SLEEP)
             .setContentTitle("취침 시간이 되었어요")
             .setContentText("하루를 마무리하고 푹 쉬세요!")
+            .setContentIntent(
+                buildDeepLinkPendingIntent(
+                    context,
+                    "bansoogi://home",
+                    NotificationDispatcher.Id.SLEEP.value
+                )
+            )
 
     fun wakeUp(context: Context) =
         baseBuilder(context, NotificationHelper.CHANNEL_WAKE)
             .setContentTitle("기상 시간이에요")
             .setContentText("상쾌한 하루를 시작해 볼까요?")
+            .setContentIntent(
+                buildDeepLinkPendingIntent(
+                    context,
+                    "bansoogi://home",
+                    NotificationDispatcher.Id.WAKE.value
+                )
+            )
 
-    fun meal(context: Context, content: String) =
-        baseBuilder(context, NotificationHelper.CHANNEL_MEAL)
+    fun meal(
+        context: Context,
+        type: AlarmType
+    ): NotificationCompat.Builder {
+        val description = when (type) {
+            AlarmType.BREAKFAST -> "아침 식사 시간이에요"
+            AlarmType.LUNCH     -> "점심 식사 시간이에요"
+            AlarmType.DINNER    -> "저녁 식사 시간이에요"
+            else                -> "식사 시간이에요"
+        }
+
+        val builder = baseBuilder(context, NotificationHelper.CHANNEL_MEAL)
             .setContentTitle("식사 알림")
-            .setContentText(content)
+            .setContentText(description)
+            .setContentIntent(
+                buildDeepLinkPendingIntent(
+                    context,
+                    "bansoogi://home",
+                    NotificationDispatcher.Id.WAKE.value
+                )
+            )
+
+        // 폰／워치 독립 여부 처리
+        if (type.independentOnWatch) {
+            builder.setLocalOnly(true)
+        }
+
+        return builder
+    }
+
+
 
     /* 공통 속성을 모아 둔 private 메서드 */
     private fun baseBuilder(context: Context, channelId: String) =
