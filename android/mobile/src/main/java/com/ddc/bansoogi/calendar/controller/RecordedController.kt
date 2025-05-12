@@ -18,7 +18,7 @@ class RecordedController {
         todayRecordDto: TodayRecordDto,
         bansoogiIdData: Int,
         walkCountData: Int,
-        runTileData: Int,
+        runTimeData: Int,
         exerciseTimeData: Int,
         stairsClimbedData: Int
     ) {
@@ -26,7 +26,7 @@ class RecordedController {
             todayRecordDto,
             bansoogiIdData,
             walkCountData,
-            runTileData,
+            runTimeData,
             exerciseTimeData,
             stairsClimbedData
         )

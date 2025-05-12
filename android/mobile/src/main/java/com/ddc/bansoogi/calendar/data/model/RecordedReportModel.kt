@@ -25,7 +25,7 @@ class RecordedReportModel {
         todayRecordDto: TodayRecordDto,
         bansoogiIdData: Int,
         walkCountData: Int,
-        runTileData: Int,
+        runTimeData: Int,
         exerciseTimeData: Int,
         stairsClimbedData: Int
     ) {
@@ -46,7 +46,7 @@ class RecordedReportModel {
                 sleepTime = todayRecordDto.sleepTime
 
                 walkCount = walkCountData
-                runTime = runTileData
+                runTime = runTimeData
                 exerciseTime = exerciseTimeData
                 stairsClimbed = stairsClimbedData
 

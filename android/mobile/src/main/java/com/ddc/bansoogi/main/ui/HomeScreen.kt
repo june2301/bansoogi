@@ -103,10 +103,10 @@ fun HomeScreen(
                         recordController.createRecordedReport(
                             todayRecord,
                             1,
-                            800,
-                            800,
-                            800,
-                            800
+                            healthData.step.toInt(),
+                            0,
+                            0,
+                            healthData.floorsClimbed.toInt()
                         )
                     }
                 }
