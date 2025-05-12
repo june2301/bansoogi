@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,7 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Picker
@@ -34,6 +37,7 @@ import androidx.wear.tooling.preview.devices.WearDevices
 import com.example.ppg.R
 import com.example.ppg.presentation.theme.PPGTheme
 import kotlinx.coroutines.delay
+import java.time.LocalTime
 
 enum class UiState { SELECT, PREPARE, RECORD }
 
@@ -68,6 +72,7 @@ fun WearApp(appName: String) {
         )
 
         var uiState by rememberSaveable { mutableStateOf(UiState.SELECT) }
+        var lastStopTime by rememberSaveable { mutableStateOf("") }
         val pickerState = rememberPickerState(
             initialNumberOfOptions = options.size,
             initiallySelectedOption = 0
@@ -84,7 +89,9 @@ fun WearApp(appName: String) {
                     TimeText(modifier = Modifier.align(Alignment.TopCenter))
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 32.dp)
                     ) {
                         Picker(
                             state = pickerState,
@@ -105,6 +112,18 @@ fun WearApp(appName: String) {
                         ) {
                             Text("시작")
                         }
+                    }
+                    if (lastStopTime.isNotEmpty()) {
+                        Text(
+                            text = "마지막 측정 종료: $lastStopTime",
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 8.dp),
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colors.secondary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
             }
@@ -133,6 +152,17 @@ fun WearApp(appName: String) {
                 }
             }
             UiState.RECORD -> {
+                var remaining by rememberSaveable { mutableStateOf(60) }
+
+                LaunchedEffect(Unit) {
+                    for (sec in 60 downTo 1) {
+                        remaining = sec
+                        delay(1000)
+                    }
+                    lastStopTime = LocalTime.now().withNano(0).toString()
+                    uiState = UiState.SELECT
+                }
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -140,11 +170,27 @@ fun WearApp(appName: String) {
                     contentAlignment = Alignment.Center
                 ) {
                     TimeText(modifier = Modifier.align(Alignment.TopCenter))
-                    Text(
-                        text = "Recording ${options[pickerState.selectedOption]}…",
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colors.primary
-                    )
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "남은 시간: ${"%02d".format(remaining)}s",
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colors.primary
+                        )
+
+                        Text(
+                            text = "Recording ${options[pickerState.selectedOption]}…",
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colors.primary
+                        )
+
+                        Button(onClick = {
+                            lastStopTime = LocalTime.now().withNano(0).toString()
+                            uiState = UiState.SELECT
+                        }) {
+                            Text("취소")
+                        }
+                    }
                 }
             }
         }
