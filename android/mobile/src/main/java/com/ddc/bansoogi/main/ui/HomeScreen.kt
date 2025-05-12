@@ -26,6 +26,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
+import kotlin.math.abs
 
 fun RealmInstant.toLocalDate(): LocalDate {
     val instant = Instant.ofEpochSecond(this.epochSeconds, this.nanosecondsOfSecond.toLong())
@@ -86,7 +87,8 @@ fun HomeScreen(
 
             val createdDate = todayRecord.createdAt?.toLocalDate()
             if (createdDate != null) {
-                val diffDays = ChronoUnit.DAYS.between(RealmInstant.now().toLocalDate(), createdDate)
+                val diffDays =
+                    abs(ChronoUnit.DAYS.between(RealmInstant.now().toLocalDate(), createdDate))
 
                 if (todayRecord.isClosed) {
                     // 이미 결산이 완료되었고, 취침 시간이 아니라면!
@@ -94,8 +96,8 @@ fun HomeScreen(
                         showEggManager.value = true
                     }
                 } else {
-                    // 결산이 완료되진 않았는데, 취침시간이라면 => 결산 + isClosed 갱신
-                    if (isInSleepRange.value && diffDays <= 1) {
+                    // 결산이 완료되진 않았는데, 취침시간이거나, 이미 지난 날짜라면 => 결산 + isClosed 갱신
+                    if ((isInSleepRange.value && diffDays <= 1) || (!isInSleepRange.value && diffDays > 0)) {
                         showEggManager.value = false
                         todayRecordController.updateIsClosed()
                         recordController.createRecordedReport(
