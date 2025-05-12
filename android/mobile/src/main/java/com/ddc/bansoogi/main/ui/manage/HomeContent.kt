@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.main.ui.manage
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,6 +46,8 @@ import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.DayTimeModal
 import com.samsung.android.sdk.health.data.HealthDataStore
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HomeContent(
@@ -239,10 +242,12 @@ fun HomeContent(
             )
         }
         else {
+//            val formatDate = LocalDate.now().minusDays(16).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val formatDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            Log.d("date", formatDate)
             RecordedModal(
                 onDismissRequest = { showModal = false },
-                // TODO: TODAY 날짜로 변환
-                selectedDate = "2025-04-26"
+                selectedDate = formatDate
             )
         }
     }
