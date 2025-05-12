@@ -1,6 +1,7 @@
 package com.ddc.bansoogi.main.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -11,28 +12,120 @@ import androidx.compose.material3.Scaffold
 import com.ddc.bansoogi.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ddc.bansoogi.common.navigation.AppNavGraph
 import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.CommonNavigationBar
+import com.ddc.bansoogi.common.util.health.CustomHealthData
+import com.ddc.bansoogi.common.util.health.Permissions
+import com.ddc.bansoogi.common.util.health.RealTimeHealthDataManager
+import com.samsung.android.sdk.health.data.HealthDataService
+import com.samsung.android.sdk.health.data.HealthDataStore
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    val activityContext = this
+    private lateinit var healthDataStore: HealthDataStore
+    private lateinit var healthDataManager: RealTimeHealthDataManager
+
+    private var healthData by mutableStateOf(CustomHealthData(0L, 0, 0.0f, 0))
+
+    companion object {
+        private const val UPDATE_INTERVAL = 10000L // 포그라운드: 10초
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        healthDataStore = HealthDataService.getStore(activityContext)
+        
+        setupHealthPermissions()
 
         setContent {
-            MainScreen()
+            MainScreen(
+                healthData,
+                onModalOpen = { startHealthDataUpdates() },
+                onModalClose = { stopHealthDataUpdates() }
+            )
         }
+    }
+
+    /**
+     * setupHealthPermission: health 앱에 대한 권한이 있는 지 체크
+     */
+    private fun setupHealthPermissions() {
+        lifecycleScope.launch {
+            try {
+                val grantedPermissions =
+                    healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS)
+
+                if (grantedPermissions.size != Permissions.PERMISSIONS.size) {
+                    val result = healthDataStore.requestPermissions(
+                        Permissions.PERMISSIONS,
+                        this@MainActivity
+                    )
+                }
+
+                // 모든 권한이 있으면 실시간 데이터 매니저 초기화 및 시작
+                if (healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS).size == Permissions.PERMISSIONS.size) {
+                    initializeHealthDataManager()
+                }
+            } catch (e: Exception) {
+                Log.e("STEPS", "Error with Samsung Health permissions: ${e.message}", e)
+            }
+        }
+    }
+
+    private fun initializeHealthDataManager() {
+        // 실시간 데이터 매니저 초기화
+        healthDataManager = RealTimeHealthDataManager(healthDataStore)
+
+        // Flow 수집 시작
+        lifecycleScope.launch {
+            healthDataManager.healthData.collect { data ->
+                healthData = data
+            }
+        }
+    }
+    // 모달이 열릴 때 호출될 메서드
+    fun startHealthDataUpdates() {
+        if (::healthDataManager.isInitialized) {
+            healthDataManager.setUpdateInterval(UPDATE_INTERVAL)
+            healthDataManager.refreshData() // 즉시 한 번 갱신
+            healthDataManager.startCollecting() // 데이터 수집 시작
+        }
+    }
+
+    // 모달이 닫힐 때 호출될 메서드
+    fun stopHealthDataUpdates() {
+        if (::healthDataManager.isInitialized) {
+            healthDataManager.stopCollecting() // 데이터 수집 중지
+        }
+    }
+
+
+    override fun onDestroy() {
+        // 액티비티 종료 시 수집 중지
+        if (::healthDataManager.isInitialized) {
+            healthDataManager.stopCollecting()
+        }
+        super.onDestroy()
     }
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    healthData: CustomHealthData,
+    onModalOpen:  () -> Unit,
+    onModalClose: () -> Unit
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -79,7 +172,10 @@ fun MainScreen() {
         ) { paddingValues ->
             AppNavGraph(
                 navController = navController,
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
+                healthData = healthData,
+                onModalOpen = onModalOpen,
+                onModalClose = onModalClose
             )
         }
     }

@@ -11,29 +11,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
+import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.manage.EggManagerModal
 import com.ddc.bansoogi.main.ui.manage.HomeContent
 import com.ddc.bansoogi.main.view.TodayRecordView
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
-import com.ddc.bansoogi.myInfo.view.MyInfoView
 import java.time.LocalTime
 
-@Preview
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    healthData: CustomHealthData,
+    onModalOpen: () -> Unit,
+    onModalClose: () -> Unit,
+) {
     var todayRecordDtoState = remember { mutableStateOf<TodayRecordDto?>(null) }
     var showEggManager = remember { mutableStateOf(false) }
     var isInSleepRange = remember { mutableStateOf(false) }
 
-    val myInfoState = remember { mutableStateOf<MyInfoDto?>(null) }   // 기존 변수 그대로 사용
+    val myInfoState = remember { mutableStateOf<MyInfoDto?>(null) } // 기존 변수 그대로 사용
     val myInfoController = remember { MyInfoController() }
 
     // 데이터 없을 경우 flow 추적 오류
-    // TODO: 초기 MyInfo 데이터 입력받는 로직 구현되면 지울 예정
+    // TODO: 초기 MyInfo 데이터 입력 받는 로직 구현되면 지울 예정
     val context = LocalContext.current
     LaunchedEffect(Unit) { myInfoController.initialize(context) }
 
@@ -89,7 +91,14 @@ fun HomeScreen() {
         )
     } else {
         todayRecordDtoState.value?.let { todayRecord ->
-            HomeContent(todayRecord, todayRecordController, isInSleepRange.value)
+            HomeContent(
+                todayRecord,
+                todayRecordController,
+                isInSleepRange.value,
+                healthData,
+                onModalOpen = onModalOpen,
+                onModalClose = onModalClose
+            )
         } ?: Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center

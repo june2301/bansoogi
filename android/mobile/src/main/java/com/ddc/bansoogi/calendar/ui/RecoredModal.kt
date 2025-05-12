@@ -47,7 +47,9 @@ import androidx.compose.ui.window.DialogProperties
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.calendar.data.model.DetailReportDto
+import com.ddc.bansoogi.common.data.model.ActivityLogDto
 import com.ddc.bansoogi.common.ui.component.BansoogiAnimation
+import com.ddc.bansoogi.common.util.mapper.ActivityLogMapper.toKoreanBehaviorState
 import kotlin.String
 
 @Composable
@@ -363,6 +365,8 @@ fun RecordContent(
                             unit = "회"
                         )
 
+                        ActivityLogList(report.standLog)
+
                        VerticalSpacer()
 
                         InfoRow(
@@ -371,26 +375,7 @@ fun RecordContent(
                             unit = "회"
                         )
 
-                        // 이벤트 내역
-                        // 로그 불러와서 적용해야 함
-                        Row(modifier = Modifier
-                            .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "10:57분",
-                                fontSize = 12.sp,
-                                color = Color.Gray,
-                                modifier = Modifier.padding(top = 4.dp, start = 8.dp)
-                            )
-
-                            Text(
-                                text = "43분 앉아있음 추적",
-                                fontSize = 12.sp,
-                                color = Color.Gray,
-                                modifier = Modifier.padding(top = 4.dp, start = 8.dp)
-                            )
-                        }
+                        ActivityLogList(report.stretchLog)
 
                         VerticalSpacer()
 
@@ -399,10 +384,46 @@ fun RecordContent(
                             value = report.phoneOffCount,
                             unit = "회"
                         )
+
+                        ActivityLogList(report.phoneOffLog)
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ActivityLogList(logs: List<ActivityLogDto>) {
+    Column {
+        logs.forEach { log ->
+            ActivityLogItem(log)
+        }
+    }
+}
+
+@Composable
+fun ActivityLogItem(log: ActivityLogDto) {
+    Row(modifier = Modifier
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = log.reactedTime,
+            fontSize = 12.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 4.dp, start = 8.dp)
+        )
+
+        val readableState = log.fromState.toKoreanBehaviorState()
+        val durationText = "${log.duration ?: 0}분 $readableState 추적"
+
+        Text(
+            text = durationText,
+            fontSize = 12.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 4.dp, start = 8.dp)
+        )
     }
 }
 
@@ -419,8 +440,13 @@ fun RecordedModalPreview() {
             bansoogiResource = 1,
 
             standupCount = 1,
+            standLog = emptyList(),
+
             stretchCount = 2,
+            stretchLog = emptyList(),
+
             phoneOffCount = 3,
+            phoneOffLog = emptyList(),
 
             lyingTime = 10,
             sittingTime = 20,
