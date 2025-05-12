@@ -14,15 +14,17 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -39,9 +41,10 @@ android {
 }
 
 dependencies {
-    implementation(files("${rootDir}/libs/samsung/health/samsung-health-sensor-api-v1.3.0.aar"))
+    implementation(files("$rootDir/libs/samsung/health/samsung-health-sensor-api-v1.3.0.aar"))
     implementation(libs.play.services.wearable)
     implementation(platform(libs.compose.bom))
+    implementation(libs.core.splashscreen)
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
