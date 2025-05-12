@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.main.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.LaunchedEffect
+import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
@@ -40,14 +42,9 @@ fun HomeScreen(
     var showEggManager = remember { mutableStateOf(false) }
     var isInSleepRange = remember { mutableStateOf(false) }
 
-    val myInfoState = remember { mutableStateOf<MyInfoDto?>(null) } // 기존 변수 그대로 사용
+    val myInfoState = remember { mutableStateOf<MyInfoDto?>(null) }
     val myInfoController = remember { MyInfoController() }
-
-    LaunchedEffect(Unit) {
-        myInfoController.myInfoFlow().collect { dto ->
-            myInfoState.value = dto
-        }
-    }
+    var recordController = remember { RecordedController() }
 
     var todayRecordController = remember {
         TodayRecordController(object : TodayRecordView {
@@ -60,34 +57,62 @@ fun HomeScreen(
             }
         })
     }
+
     LaunchedEffect(Unit) {
         todayRecordController.initialize()
+    }
 
-        if (todayRecordDtoState.value == null) return@LaunchedEffect
+    LaunchedEffect(Unit) {
+        myInfoController.myInfoFlow().collect { dto ->
+            myInfoState.value = dto
+        }
+    }
+
+    // todayRecord와 myInfo 변경에 반응
+    LaunchedEffect(todayRecordDtoState.value, myInfoState.value) {
+        val myInfo = myInfoState.value ?: return@LaunchedEffect
 
         val now = LocalTime.now()
 
-        // 취침시간 ~ 기상시간 사이라면 : isInSleepRange = true
-        if (myInfoState.value!=null && !now.isBefore(LocalTime.parse(myInfoState.value?.sleepTime))
-            && !now.isAfter(LocalTime.parse(myInfoState.value?.wakeUpTime))) {
-            isInSleepRange.value = true;
-        }
+        try {
+            val sleepTime = LocalTime.parse(myInfo.sleepTime)
+            val wakeUpTime = LocalTime.parse(myInfo.wakeUpTime)
 
-        // 이미 결산이 완료되었고, 취침 시간이 아니라면!
-        var diffDays = ChronoUnit.DAYS.between(RealmInstant.now().toLocalDate(),
-            todayRecordDtoState.value?.createdAt?.toLocalDate()
-        )
-        if (todayRecordDtoState.value?.isClosed == true) {
-            if (!(isInSleepRange.value && diffDays<=1)) {
-                showEggManager.value = true
-            }
-        } else {
-            // 결산이 완료되진 않았는데, 취침시간이라면 => 결산 + isClosed 갱신
-            if (isInSleepRange.value && diffDays<=1) {
-                showEggManager.value = false
+            // 취침시간 ~ 기상시간 사이라면 : isInSleepRange = true
+            isInSleepRange.value = (now.isBefore(sleepTime) && now.isBefore(wakeUpTime))
+                    || (now.isAfter(sleepTime) && now.isAfter(wakeUpTime))
 
-                todayRecordController.updateIsClosed()
+            val todayRecord = todayRecordDtoState.value ?: return@LaunchedEffect
+
+            val createdDate = todayRecord.createdAt?.toLocalDate()
+            if (createdDate != null) {
+                val diffDays = ChronoUnit.DAYS.between(RealmInstant.now().toLocalDate(), createdDate)
+
+                if (todayRecord.isClosed) {
+                    // 이미 결산이 완료되었고, 취침 시간이 아니라면!
+                    if (!(isInSleepRange.value && diffDays <= 1)) {
+                        showEggManager.value = true
+                    }
+                } else {
+                    // 결산이 완료되진 않았는데, 취침시간이라면 => 결산 + isClosed 갱신
+                    if (isInSleepRange.value && diffDays <= 1) {
+                        showEggManager.value = false
+                        todayRecordController.updateIsClosed()
+                        recordController.createRecordedReport(
+                            todayRecord,
+                            1,
+                            800,
+                            800,
+                            800,
+                            800
+                        )
+                    }
+                }
+            } else {
+                Log.d("HomeScreen", "생성 날짜가 null입니다")
             }
+        } catch (e: Exception) {
+            Log.e("HomeScreen", "오류 발생: ${e.message}", e)
         }
     }
 
