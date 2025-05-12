@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,14 +41,19 @@ import com.ddc.bansoogi.calendar.ui.RecordedModal
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.notification.NotificationDispatcher
 import com.ddc.bansoogi.common.notification.NotificationFactory
+import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.DayTimeModal
+import com.samsung.android.sdk.health.data.HealthDataStore
 
 @Composable
 fun HomeContent(
     todayRecordDto: TodayRecordDto,
     todayRecordController: TodayRecordController,
-    isInSleepRange: Boolean
+    isInSleepRange: Boolean,
+    healthData: CustomHealthData,
+    onModalOpen: () -> Unit,
+    onModalClose: () -> Unit,
 ) {
     var progressValue by remember { mutableStateOf(todayRecordDto.energyPoint) }
     var showModal by remember { mutableStateOf(false) }
@@ -125,6 +131,7 @@ fun HomeContent(
                         .height(60.dp)
                         .clickable {
                             showModal = true
+                            onModalOpen()
                         },
                     contentScale = ContentScale.Fit
                 )
@@ -220,11 +227,15 @@ fun HomeContent(
         if (!isInSleepRange) {
             DayTimeModal(
                 todayRecordDto = todayRecordDto,
-                onDismissRequest = { showModal = false },
+                onDismissRequest = {
+                    showModal = false
+                    onModalClose() },
                 onNavigateToToday = {
                     // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
                     showModal = false
-                }
+                    onModalClose()
+                },
+                healthData = healthData,
             )
         }
         else {
