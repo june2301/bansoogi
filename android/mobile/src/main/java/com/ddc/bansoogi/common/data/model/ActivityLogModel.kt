@@ -1,6 +1,5 @@
 package com.ddc.bansoogi.common.data.model
 
-import android.util.Log
 import com.ddc.bansoogi.common.data.entity.ActivityLog
 import com.ddc.bansoogi.common.data.local.ActivityLogDataSource
 import java.time.LocalDateTime

@@ -4,5 +4,6 @@ import java.time.LocalDate
 
 data class CalendarMarkerDto (
     val date: LocalDate,
-    val bansoogiAnimationId: Int?
+    val bansoogiGifUrl: String?,
+    val bansoogiImageUrl: String?
 )
