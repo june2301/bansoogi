@@ -1,5 +1,14 @@
 package com.ddc.bansoogi.sensor
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+
 /**
  * High-level façade that owns all Android-framework sensors used by the project.
  *
@@ -11,31 +20,39 @@ class AndroidSensorManager(private val context: Context) {
     private val sensorManager: SensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    //  Public sensor wrappers – initiate them lazily so that missing hardware
-    //  won’t crash the app during initialisation.
-    // ─────────────────────────────────────────────────────────────────────────────
+    // Internal wrappers – not exposed outside this class
+    private val offBodyWrapper by lazy { BooleanSensorWrapper(Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT) }
+    private val linAccWrapper by lazy { LinearAccelerationSensorWrapper() }
+    private val stepDetectorWrapper by lazy { StepDetectorSensorWrapper() }
+    private val pressureWrapper by lazy {
+        FloatArraySensorWrapper(
+            Sensor.TYPE_PRESSURE,
+            samplingHz = 1
+        )
+    }
+    private val heartRateWrapper by lazy { HeartRateSensorWrapper() }
 
-    val offBody by lazy { BooleanSensorWrapper(Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT) }
-    val linearAcceleration by lazy { LinearAccelerationSensorWrapper() }
-    val stepDetector by lazy { StepDetectorSensorWrapper() }
-    val pressure by lazy { FloatArraySensorWrapper(Sensor.TYPE_PRESSURE, samplingHz = 1) }
-    val heartRate by lazy { HeartRateSensorWrapper() }
+    // Public read-only event streams
+    val offBody = offBodyWrapper.events
+    val linearAcceleration = linAccWrapper.events
+    val stepDetector = stepDetectorWrapper.events
+    val pressure = pressureWrapper.events
+    val heartRate = heartRateWrapper.events
 
     fun startAll() {
-        offBody.start()
-        linearAcceleration.start()
-        stepDetector.start()
-        pressure.start()
-        heartRate.start()
+        offBodyWrapper.start()
+        linAccWrapper.start()
+        stepDetectorWrapper.start()
+        pressureWrapper.start()
+        heartRateWrapper.start()
     }
 
     fun stopAll() {
-        offBody.stop()
-        linearAcceleration.stop()
-        stepDetector.stop()
-        pressure.stop()
-        heartRate.stop()
+        offBodyWrapper.stop()
+        linAccWrapper.stop()
+        stepDetectorWrapper.stop()
+        pressureWrapper.stop()
+        heartRateWrapper.stop()
     }
 
     // ========================================================================
