@@ -1,9 +1,11 @@
 package com.ddc.bansoogi.main.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,10 +44,11 @@ class MainActivity : ComponentActivity() {
         private const val UPDATE_INTERVAL = 10000L // 포그라운드: 10초
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         healthDataStore = HealthDataService.getStore(activityContext)
-        
+
         setupHealthPermissions()
 
         setContent {
@@ -120,6 +123,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MainScreen(
     healthData: CustomHealthData,

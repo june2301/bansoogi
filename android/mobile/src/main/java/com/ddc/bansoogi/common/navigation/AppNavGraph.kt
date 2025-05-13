@@ -1,5 +1,7 @@
 package com.ddc.bansoogi.common.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -14,6 +16,7 @@ import com.ddc.bansoogi.myInfo.ui.MyInfoScreen
 import com.ddc.bansoogi.myInfo.ui.MyInfoUpdateScreen
 import com.samsung.android.sdk.health.data.HealthDataStore
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun AppNavGraph(
     navController: NavHostController,

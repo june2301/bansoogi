@@ -44,6 +44,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
+import com.ddc.bansoogi.common.util.SpriteSheetAnimation
 import com.ddc.bansoogi.collection.data.model.CollectionDto
 import com.ddc.bansoogi.collection.util.saveDownloadableImage
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
@@ -64,22 +65,22 @@ fun CollectionDetailDialog(
     val model = remember { MyInfoModel() }
     val scope = rememberCoroutineScope()
 
-    val gifResId = context.resources.getIdentifier(character.gifUrl, "drawable", context.packageName)
+//    val gifResId = context.resources.getIdentifier(character.gifUrl, "drawable", context.packageName)
     var showConfirmDialog: Boolean by remember { mutableStateOf(false) }
-
-    val imageLoader = ImageLoader.Builder(context)
-        .components {
-            add(GifDecoder.Factory())
-            add(ImageDecoderDecoder.Factory())
-        }
-        .build()
-
-    val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(context)
-            .data(gifResId)
-            .build(),
-        imageLoader = imageLoader
-    )
+//
+//    val imageLoader = ImageLoader.Builder(context)
+//        .components {
+//            add(GifDecoder.Factory())
+//            add(ImageDecoderDecoder.Factory())
+//        }
+//        .build()
+//
+//    val painter = rememberAsyncImagePainter(
+//        model = ImageRequest.Builder(context)
+//            .data(gifResId)
+//            .build(),
+//        imageLoader = imageLoader
+//    )
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -94,11 +95,17 @@ fun CollectionDetailDialog(
             }
         },
         icon = {
-            Image(
-                painter = painter,
-                contentDescription = character.title,
-                modifier = Modifier
-                    .size(160.dp)
+//            Image(
+//                painter = painter,
+//                contentDescription = character.title,
+//                modifier = Modifier
+//                    .size(160.dp)
+//            )
+            SpriteSheetAnimation(
+                context = context,
+                spriteSheetName = "${character.gifUrl}_sheet.png",
+                jsonName = "${character.imageUrl}.json",
+                modifier = Modifier.size(160.dp)
             )
         },
         title = {
