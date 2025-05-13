@@ -30,34 +30,10 @@ class RecordedReportDataSource {
 
         if (!hasRecordedReport) {
             realm.write {
-                for (day in 1..30) {
+                for (day in 2..16) {
                     copyToRealm(RecordedReport().apply {
                         finalEnergyPoint = 90
-                        bansoogiId = day + 1
-                        standupCount = 3
-                        stretchCount = 2
-                        phoneOffCount = 1
-                        lyingTime = 180
-                        sittingTime = 600
-                        phoneTime = 200
-                        sleepTime = 420
-                        walkCount = 5000
-                        runTime = 10
-                        exerciseTime = 30
-                        stairsClimbed = 5
-                        breakfast = true
-                        lunch = true
-                        dinner = true
-                        reportedDate = "2025-04-%02d".format(day)
-                    })
-                }
-            }
-
-            realm.write {
-                for (day in 1..16) {
-                    copyToRealm(RecordedReport().apply {
-                        finalEnergyPoint = 90
-                        bansoogiId = day + 1
+                        bansoogiId = day
                         standupCount = 3
                         stretchCount = 2
                         phoneOffCount = 1
@@ -94,7 +70,7 @@ class RecordedReportDataSource {
                         breakfast = true
                         lunch = true
                         dinner = true
-                        reportedDate = "2025-05-%02d".format(day)
+                        reportedDate = "2025-04-%02d".format(day + 20)
                     })
                 }
             }
