@@ -17,7 +17,7 @@ import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.manage.EggManagerModal
 import com.ddc.bansoogi.main.ui.manage.HomeContent
-import com.ddc.bansoogi.main.ui.util.isInSleepRange
+import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.main.view.TodayRecordView
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
@@ -74,7 +74,7 @@ fun HomeScreen(
         val myInfo = myInfoState.value ?: return@LaunchedEffect
 
         try {
-            isInSleepRange.value = isInSleepRange(myInfo)
+            isInSleepRange.value = InteractionUtil.isInSleepRange(myInfo)
 
             val todayRecord = todayRecordDtoState.value ?: return@LaunchedEffect
 

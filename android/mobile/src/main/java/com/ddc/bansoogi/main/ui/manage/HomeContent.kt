@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,8 +29,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,11 +50,8 @@ import com.ddc.bansoogi.common.notification.NotificationFactory
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.DayTimeModal
-import com.ddc.bansoogi.main.ui.handle.handleInteraction
-import com.ddc.bansoogi.main.ui.util.getRemainingCooldownMillis
-import com.ddc.bansoogi.main.ui.util.isInteractionConditionMet
+import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -189,7 +190,7 @@ fun HomeContent(
         val isCoolDown = remember { mutableStateOf(true) }
 
         LaunchedEffect(todayRecordDto.interactionLatestTime) {
-            val remainingTime = getRemainingCooldownMillis(todayRecordDto.interactionLatestTime)
+            val remainingTime = InteractionUtil.getRemainingCooldownMillis(todayRecordDto.interactionLatestTime)
             if (remainingTime > 0) {
                 isCoolDown.value = true
                 delay(remainingTime)
@@ -213,14 +214,12 @@ fun HomeContent(
                             NotificationFactory.phoneUsage(context, 20)
                         )
                     }
-
                 }
             },
-            enabled = !isInSleepRange && !isCoolDown.value && isInteractionConditionMet(todayRecordDto),
             modifier = Modifier
                 .padding(vertical = 10.dp)
                 .height(60.dp)
-                .fillMaxWidth(0.4f)
+                .fillMaxWidth(0.45f)
                 .border(
                     width = 4.dp,
                     color = Color.DarkGray,
@@ -232,12 +231,28 @@ fun HomeContent(
                 contentColor = Color(0xFF2E616A)
             )
         ) {
-            Text(
-                text = "상호작용",
-                color = Color(0xFF2E616A),
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Text(
+                    text = "상호작용",
+                    color = Color(0xFF2E616A),
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.schedule_vector),
+                    contentDescription = "스케줄 아이콘",
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .size(20.dp),
+                    tint = if (isCoolDown.value) Color.Gray else Color(0xFF4CAF50)
+                )
+            }
+
         }
         Spacer(modifier = Modifier.height(120.dp))
     }

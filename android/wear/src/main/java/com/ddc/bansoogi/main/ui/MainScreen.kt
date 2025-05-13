@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -21,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,20 +31,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.wear.tooling.preview.devices.WearDevices
-import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.request.ImageRequest
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.common.mobile.communication.sender.MobileTodayRecordSender
 import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.BackgroundImage
-import com.ddc.bansoogi.common.ui.SpriteAnimation
+import com.ddc.bansoogi.common.ui.SpriteSheetAnimation
 import com.ddc.bansoogi.common.ui.VerticalSpacer
 import com.ddc.bansoogi.today.data.store.getCachedReport
 import com.ddc.bansoogi.today.state.TodayRecordStateHolder
@@ -71,6 +65,15 @@ fun MainScreen(navController: NavHostController) {
 
     // 상호작용 상태 변수
     var triggerInteraction by remember { mutableStateOf(false) }
+
+    // 임시 호출
+    LaunchedEffect(triggerInteraction) {
+        if (triggerInteraction) {
+            // 5초 후에 showInteraction을 false로 설정하고 onFinished 콜백 호출
+            delay(5000)
+            triggerInteraction = false
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -114,6 +117,7 @@ fun SideButtons(
         Column() {
             IconCircleButton(
                 iconResource = R.drawable.cookie,
+                size = 20.dp,
                 description = "밥 먹기 버튼"
             ) {
                 // TODO: 밥 먹기 클릭 이벤트
@@ -122,7 +126,8 @@ fun SideButtons(
             VerticalSpacer()
 
             IconCircleButton(
-                iconResource = R.drawable.bansoogi_temp_interaction,
+                iconResource = R.drawable.bansoogi_face,
+                size = 32.dp,
                 description = "상호 작용"
             ) {
                 onInteractionBtnClick()
@@ -131,6 +136,7 @@ fun SideButtons(
 
         IconCircleButton(
             iconResource = R.drawable.dehaze,
+            size = 20.dp,
             description = "메뉴 버튼"
         ) {
             navController.navigate(NavRoutes.MENU)
@@ -139,7 +145,11 @@ fun SideButtons(
 }
 
 @Composable
-fun IconCircleButton(iconResource: Int, description: String, onBtnClick: () -> Unit) {
+fun IconCircleButton(
+    iconResource: Int,
+    size: Dp,
+    description: String,
+    onBtnClick: () -> Unit) {
     // 셀 클릭 시, 회색 창 제거
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -162,8 +172,8 @@ fun IconCircleButton(iconResource: Int, description: String, onBtnClick: () -> U
             painter = painterResource(iconResource),
             contentDescription = description,
             modifier = Modifier
-                .width(20.dp)
-                .height(20.dp),
+                .width(size)
+                .height(size),
             contentScale = ContentScale.Fit
         )
     }
@@ -200,32 +210,32 @@ fun BansoogiAnimation(
     onFinished: () -> Unit
 ) {
     if (triggerInteraction) {
-        BansoogiSmileAnimation(
+        BansoogiAnimation(
+            bansoogiRes = "bansoogi_smile",
             onFinished = onFinished
         )
     } else {
-        BansoogiBasicAnimation()
+        BansoogiAnimation(
+            bansoogiRes = "bansoogi_basic",
+            onFinished = { }
+        )
     }
 }
 
 @Composable
-fun BansoogiBasicAnimation() {
-    SpriteAnimation(R.drawable.bansoogi_basic_sprite)
-}
-
-@Composable
-fun BansoogiSmileAnimation(
+fun BansoogiAnimation(
+    bansoogiRes: String,
     onFinished: () -> Unit
 ) {
-    SpriteAnimation(
-        spriteResource = R.drawable.bansoogi_smile_to_me_sprite,
-        modifier = Modifier,
-        frameWidth = 128,
-        frameHeight = 128,
-        totalFrames = 53,
-        frameDurationMillis = 200,
-        loop = false,
-        onAnimationFinished = onFinished
+    val context = LocalContext.current
+
+    SpriteSheetAnimation(
+        context = context,
+        spriteSheetName = "${bansoogiRes}_sheet.png",
+        jsonName = "${bansoogiRes}.json",
+        modifier = Modifier
+            .size(160.dp)
+            .scale(1.3f)
     )
 }
 
