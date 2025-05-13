@@ -201,10 +201,7 @@ fun HomeContent(
             onClick = {
                 // TODO: 상호작용 애니메이션 출력
 
-                // 점수 업데이트
-                scope.launch {
-                    handleInteraction(todayRecordDto, isInSleepRange)
-                }
+                todayRecordController.onInteract(todayRecordDto, isInSleepRange)
 
                 if (!isInSleepRange && todayRecordDto.energyPoint < 100) { // -> 함수 내부에 범위 체크
                     // TODO: 알림 테스트용 - 나중에 삭제
