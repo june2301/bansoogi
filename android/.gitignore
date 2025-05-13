@@ -1,4 +1,5 @@
 *.iml
+**/ChatHistory_schema_v*.xml
 .gradle
 /local.properties
 /.idea/caches
