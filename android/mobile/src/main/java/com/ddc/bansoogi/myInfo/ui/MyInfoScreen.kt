@@ -54,9 +54,6 @@ fun MyInfoScreen(navController: NavController) {
     val myInfo by controller.myInfoFlow()
         .collectAsState(initial = null)
 
-    val context = LocalContext.current
-    LaunchedEffect(Unit) { controller.initialize(context) }
-
     myInfo?.let { info ->
         MyInfoContent(
             myInfoDto       = info,
@@ -311,25 +308,23 @@ private fun NotificationToggleRow(
     }
 
     val context = LocalContext.current
-    val activity = remember { context.findActivity() }   // 확장 함수 아래 참고
+    val activity = remember { context.findActivity() }
     var showSettingsDialog by remember { mutableStateOf(false) }
 
     /* 권한 런처 */
     val permissionLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
-                onToggle()                    // 허용 → DB true
+                onToggle()
             } else {
-                // 다이얼로그가 안 뜬 경우(= 영구 거부) -> settings 안내
                 val rationale = ActivityCompat.shouldShowRequestPermissionRationale(
                     activity, Manifest.permission.POST_NOTIFICATIONS
                 )
-                if (!rationale) showSettingsDialog = true   // 영구 거부
+                if (!rationale) showSettingsDialog = true
                 else Toast.makeText(context, "알림 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
-    /* UI Row */
     Row(
         Modifier
             .fillMaxWidth()
@@ -361,7 +356,7 @@ private fun NotificationToggleRow(
             confirmButton = {
                 TextButton(onClick = {
                     showSettingsDialog = false
-                    context.openAppNotificationSettings()   // 설정 화면
+                    context.openAppNotificationSettings()
                 }) { Text("설정으로 이동") }
             },
             dismissButton = {

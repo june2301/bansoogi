@@ -47,9 +47,6 @@ fun MyInfoUpdateScreen(navController: NavController) {
     val myInfo by controller.myInfoFlow()
         .collectAsState(initial = null)
 
-    val context = LocalContext.current
-    LaunchedEffect(Unit) { controller.initialize(context) }
-
     myInfo?.let { initial ->
         val updateController = remember {
             MyInfoUpdateController { _ ->
