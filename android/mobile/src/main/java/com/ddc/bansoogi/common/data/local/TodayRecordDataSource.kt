@@ -86,4 +86,17 @@ class TodayRecordDataSource {
                 }
         }
     }
+
+    suspend fun updateInteractionTime(recordId: ObjectId) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        interactionLatestTime = RealmInstant.now()
+                    }
+                }
+        }
+    }
 }

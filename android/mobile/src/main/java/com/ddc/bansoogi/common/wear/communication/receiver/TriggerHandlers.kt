@@ -1,7 +1,7 @@
 package com.ddc.bansoogi.common.wear.communication.receiver
 
 import android.content.Context
-import android.util.Log
+import com.ddc.bansoogi.main.ui.handle.handleInteraction
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -11,9 +11,9 @@ class TriggerHandlers(
     private val scope: CoroutineScope
 ) {
     fun handleInteractionTrigger() {
-        // TODO: 상호작용 데이터 처리
-
-        Log.d("Mobile Receiver", "상호작용 트리거 발생")
+        scope.launch {
+            handleInteraction()
+        }
     }
 
     fun handleToggleNotificationTrigger() {
