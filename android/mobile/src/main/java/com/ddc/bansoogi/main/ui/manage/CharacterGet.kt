@@ -17,6 +17,7 @@ import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.collection.data.entity.UnlockedCharacter
 import com.ddc.bansoogi.collection.data.local.CollectionDataSource
 import com.ddc.bansoogi.collection.util.CharacterPicker
+import com.ddc.bansoogi.common.data.entity.TodayRecord
 import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.common.util.SpriteSheetAnimation
 import io.realm.kotlin.ext.query
@@ -26,12 +27,21 @@ import kotlinx.coroutines.delay
 @Composable
 fun CharacterGetScreen(navController: NavController) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
-    var currentStage by remember { mutableStateOf(0) } // 0: 빛남+펑, 1: 캐릭터 등장
+    var currentStage by remember { mutableIntStateOf(0) } // 0: 빛남+펑, 1: 캐릭터 등장
     var selectedCharacter by remember { mutableStateOf<Character?>(null) }
+    var canDraw by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
+        val realm = RealmManager.realm
+        val today = realm.query<TodayRecord>().find().lastOrNull()
+        canDraw = (today?.energyPoint ?: 0) >= 80
+
+        if (!canDraw) {
+            navController.popBackStack() // 에너지 부족하면 바로 복귀
+            return@LaunchedEffect
+        }
+
         val characters = CollectionDataSource().getAllBansoogi()
         characters.collect { list ->
             selectedCharacter = CharacterPicker.pickRandomBansoogi(list)
