@@ -15,9 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.collection.data.entity.Character
+import com.ddc.bansoogi.collection.data.entity.UnlockedCharacter
 import com.ddc.bansoogi.collection.data.local.CollectionDataSource
 import com.ddc.bansoogi.collection.util.CharacterPicker
+import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.common.util.SpriteSheetAnimation
+import io.realm.kotlin.ext.query
+import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -41,6 +45,28 @@ fun CharacterGetScreen(navController: NavController) {
         if (selectedCharacter != null) {
             delay(2000) // 빛남+펑 sprite 이후
             currentStage = 1 // 캐릭터 등장
+
+            // 획득 처리
+            val realm = RealmManager.realm
+            val bansoogiId = selectedCharacter!!.bansoogiId
+            realm.write {
+                val existing = query<UnlockedCharacter>("bansoogiId == $0", bansoogiId).first().find()
+                if (existing != null) {
+                    findLatest(existing)?.apply {
+                        acquisitionCount += 1
+                        updatedAt = RealmInstant.now()
+                    }
+                } else {
+                    copyToRealm(
+                        UnlockedCharacter().apply {
+                            this.bansoogiId = bansoogiId
+                            this.acquisitionCount = 1
+                            this.createdAt = RealmInstant.now()
+                            this.updatedAt = RealmInstant.now()
+                        }
+                    )
+                }
+            }
         }
     }
 
