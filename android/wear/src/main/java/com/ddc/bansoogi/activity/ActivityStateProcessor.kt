@@ -83,6 +83,19 @@ class ActivityStateProcessor(
         sensorManager.heartRate
             .onEach { bpm -> Log.d(TAG, "HeartRate bpm=$bpm") }
             .launchIn(scope)
+
+        // ───── Dynamic classifier ─────
+        val dynamicClassifier = DynamicClassifier(
+            stepTimestamps = sensorManager.stepDetector,
+            pressure = sensorManager.pressure,
+            linearAcceleration = sensorManager.linearAcceleration,
+            heartRate = sensorManager.heartRate,
+            externalScope = scope
+        )
+
+        dynamicClassifier.state
+            .onEach { dyn -> dyn?.let { Log.d(TAG, "Dynamic → $it") } }
+            .launchIn(scope)
     }
 
     companion object {
