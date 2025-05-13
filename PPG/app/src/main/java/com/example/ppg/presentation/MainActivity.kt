@@ -218,7 +218,7 @@ private fun WearApp() {
             UiState.RECORD ->
                 RecordScreen(
                     label = postures[pickerState.selectedOption],
-                    totalSec = 600,
+                    totalSec = 30,
                 ) {
                     ContextCompat.startForegroundService(
                         ctx,

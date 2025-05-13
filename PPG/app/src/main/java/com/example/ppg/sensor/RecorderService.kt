@@ -1,17 +1,13 @@
 /*
- * RecorderService.kt – Compile errors fixed
- *
- * 수정 사항:
- * 1. PpgSet 클래스 잘못 import된 부분 수정
- * 2. DataPoint를 직접 사용하고 timestamp/getValue() 호출
- * 3. ValueKey.PpgSet 키 사용
+ * RecorderService.kt – Samsung Health Sensor SDK v1.3.0 (PPG 전용)
+ * ----------------------------------------------------------------
+ * ① PPG_CONTINUOUS 25 Hz 실시간 수집
+ * ② Logcat + JSON(/files/recordings/…) 저장
+ * ----------------------------------------------------------------
  */
 package com.example.ppg.sensor
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
@@ -20,100 +16,112 @@ import com.samsung.android.service.health.tracking.ConnectionListener
 import com.samsung.android.service.health.tracking.HealthTracker
 import com.samsung.android.service.health.tracking.HealthTrackerException
 import com.samsung.android.service.health.tracking.HealthTrackingService
-import com.samsung.android.service.health.tracking.data.DataPoint
-import com.samsung.android.service.health.tracking.data.HealthTrackerType
-import com.samsung.android.service.health.tracking.data.PpgType
-import com.samsung.android.service.health.tracking.data.ValueKey
+import com.samsung.android.service.health.tracking.data.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
-import java.util.Objects
+import kotlin.math.roundToInt
 
+/** Galaxy Watch foreground-service – PPG 전용 레코더 */
 class RecorderService : Service() {
-    // Coroutine scope
+    // ---------------- Coroutine ----------------
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    // Samsung SDK
+    // ---------------- Samsung SDK ----------------
     private lateinit var sdk: HealthTrackingService
-    private var tracker: HealthTracker? = null
+    private lateinit var ppgTracker: HealthTracker // PPG 전용
 
-    // Buffers
-    private val ts = mutableListOf<Long>()
-    private val g = mutableListOf<Int>()
-    private val r = mutableListOf<Int>()
-    private val ir = mutableListOf<Int>()
+    // ---------------- PPG buffers ----------------
+    private val ppgTs = mutableListOf<Long>()
+    private val ppgG = mutableListOf<Int>()
+    private val ppgR = mutableListOf<Int>()
+    private val ppgIr = mutableListOf<Int>()
 
-    // State
+    /* ---------- 주석: 다른 센서 버퍼 ----------
+    private val accTs = mutableListOf<Long>()
+    ...
+    -------------------------------------------- */
+
+    // ---------------- 상태 ----------------
     private var label = "unknown"
     private var startMs = 0L
-    private var shouldRecord = false
 
-    // Tracker listener
-    private val trackerListener =
+    @Volatile private var recording = false
+
+    /* ===================================================================
+     * PPG Tracker listener
+     * =================================================================== */
+    private val ppgListener =
         object : HealthTracker.TrackerEventListener {
-            private var cnt = 0
+            override fun onDataReceived(points: List<DataPoint>) {
+                points.forEach { dp ->
+                    ppgTs += dp.timestamp
 
-            override fun onDataReceived(data: List<DataPoint>) {
-                data.forEach { dp: DataPoint ->
-                    val timestamp = dp.timestamp
-                    Log.d("Recorder", "Timestamp: $timestamp")
-                    ts.add(timestamp)
-                    println(dp.toString())
-//                    dp.getValue<>()
-                    val greenArr = dp.getValue(ValueKey.PpgSet.PPG_GREEN) as? Objects
-                    val redArr = dp.getValue(ValueKey.PpgSet.PPG_RED) as? Objects
-                    val irArr = dp.getValue(ValueKey.PpgSet.PPG_IR) as? Objects
+                    fun Any?.toIntList(): List<Int> =
+                        when (this) {
+                            is Int -> listOf(this)
+                            is IntArray -> this.toList()
+                            else -> emptyList()
+                        }
 
-                    println("$greenArr")
-//                    Log.d("Recorder", "PPG_GREEN: ${greenArr?.contentToString()}")
-//                    Log.d("Recorder", "PPG_RED: ${redArr?.contentToString()}")
-//                    Log.d("Recorder", "PPG_IR: ${irArr?.contentToString()}")
-//
-//                    greenArr?.let { g.addAll(it.map { f -> f.toInt() }) }
-//                    redArr?.let { r.addAll(it.map { f -> f.toInt() }) }
-//                    irArr?.let { ir.addAll(it.map { f -> f.toInt() }) }
+                    val g = dp.getValue(ValueKey.PpgSet.PPG_GREEN).toIntList()
+                    val r = dp.getValue(ValueKey.PpgSet.PPG_RED).toIntList()
+                    val ir = dp.getValue(ValueKey.PpgSet.PPG_IR).toIntList()
 
-                    if (++cnt % 25 == 0) Log.d("Recorder", "Buffered $cnt samples")
+                    ppgG += g
+                    ppgR += r
+                    ppgIr += ir
+                    Log.d("PPG", "${dp.timestamp}|g=${g.size} r=${r.size} ir=${ir.size}")
                 }
             }
 
             override fun onFlushCompleted() {}
 
             override fun onError(error: HealthTracker.TrackerError) {
-                Log.e("Recorder", "PPG error: $error")
+                Log.e("Recorder", "PPG error=$error")
             }
         }
 
-    // Connection listener
+    /* ===================================================================
+     * SDK connection listener  (v1.3.0 API)
+     * =================================================================== */
     private val connListener =
         object : ConnectionListener {
             override fun onConnectionSuccess() {
                 Log.i("Recorder", "SDK connected")
-                tracker =
+
+                // PPG_CONTINUOUS 등록
+                ppgTracker =
                     sdk.getHealthTracker(
                         HealthTrackerType.PPG_CONTINUOUS,
                         setOf(PpgType.GREEN, PpgType.RED, PpgType.IR),
                     )
-                startTrackingIfReady()
+                ppgTracker.setEventListener(ppgListener)
+
+                startContinuous()
+            }
+
+            /** v1.3.0 은 errorCode(Int) 하나만 전달 */
+            override fun onConnectionFailed(e: HealthTrackerException) {
+                Log.e("Recorder", "SDK connection failed: ${e.errorCode}")
             }
 
             override fun onConnectionEnded() {
                 Log.i("Recorder", "SDK disconnected")
             }
-
-            override fun onConnectionFailed(e: HealthTrackerException) {
-                Log.e("Recorder", "Connect failed: ${e.errorCode}")
-            }
         }
 
-    companion object {
-        private const val CHANNEL_ID = "PPG"
-        private const val NOTI_ID = 1
-        const val ACTION_START = "com.example.ppg.START"
-        const val ACTION_STOP = "com.example.ppg.STOP"
+    // ---------------- tracker helpers ----------------
+    private fun startContinuous() {
+        if (!recording) return
+        runCatching { ppgTracker.javaClass.getMethod("start").invoke(ppgTracker) }
+        startForeground(NOTI_ID, notif("Recording $label…"))
     }
 
+    /* ===================================================================
+     * Service lifecycle
+     * =================================================================== */
     override fun onCreate() {
         super.onCreate()
         createChannel()
@@ -127,29 +135,30 @@ class RecorderService : Service() {
     }
 
     override fun onStartCommand(
-        intent: Intent?,
+        i: Intent?,
         flags: Int,
-        startId: Int,
+        id: Int,
     ): Int {
-        when (intent?.action) {
+        when (i?.action) {
             ACTION_START -> {
-                label = intent.getStringExtra("label") ?: "unknown"
+                label = i.getStringExtra("label") ?: "unknown"
                 startMs = System.currentTimeMillis()
-                shouldRecord = true
+                recording = true
                 startForeground(NOTI_ID, notif("Preparing…"))
                 scope.launch { initSdk() }
             }
             ACTION_STOP -> {
-                shouldRecord = false
+                recording = false
                 scope.launch { stopAndSave() }
             }
         }
         return START_STICKY
     }
 
+    // ---------------- SDK init ----------------
     private suspend fun initSdk() {
         if (::sdk.isInitialized) {
-            startTrackingIfReady()
+            startContinuous()
             return
         }
         withContext(Dispatchers.Main) {
@@ -158,70 +167,90 @@ class RecorderService : Service() {
         }
     }
 
-    private fun startTrackingIfReady() {
-        if (!shouldRecord || tracker == null) return
-        tracker!!.setEventListener(trackerListener)
-        try {
-            tracker!!.javaClass.getMethod("start").invoke(tracker)
-        } catch (_: NoSuchMethodException) {
-        }
-        startForeground(NOTI_ID, notif("Recording $label"))
-    }
-
+    /* ===================================================================
+     * STOP  →  JSON
+     * =================================================================== */
     private suspend fun stopAndSave() {
-        tracker?.unsetEventListener()
-        runCatching { tracker?.javaClass?.getMethod("stop")?.invoke(tracker) }
+        // 1) PPG tracker 종료
+        runCatching {
+            ppgTracker.unsetEventListener()
+            ppgTracker.javaClass.getMethod("stop").invoke(ppgTracker)
+        }
+
+        /* ---------- 주석: On-demand 측정 ----------
+        measureOD(HealthTrackerType.PPG_ON_DEMAND, ...)
+        ------------------------------------------- */
+
+        // 2) disconnect & 저장
         if (::sdk.isInitialized) sdk.disconnectService()
         stopForeground(STOP_FOREGROUND_REMOVE)
-        saveToJson()
+        saveJson()
         stopSelf()
     }
 
-    // Notification
+    /* ---------- 주석: On-demand 측정 함수 ----------
+    private suspend fun measureOD(...) { ... }
+    ----------------------------------------------- */
+
+    /* ===================================================================
+     * Notification helpers
+     * =================================================================== */
     private fun createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val ch = NotificationChannel(CHANNEL_ID, "PPG recorder", NotificationManager.IMPORTANCE_LOW)
-            getSystemService(NotificationManager::class.java)?.createNotificationChannel(ch)
+            val ch = NotificationChannel(CH, "Recorder", NotificationManager.IMPORTANCE_LOW)
+            getSystemService(NotificationManager::class.java).createNotificationChannel(ch)
         }
     }
 
-    private fun notif(text: String): Notification =
+    private fun notif(msg: String): Notification =
         (
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Notification.Builder(this, CHANNEL_ID)
+                Notification.Builder(this, CH)
             } else {
                 Notification.Builder(this)
             }
         ).setSmallIcon(android.R.drawable.ic_media_play)
-            .setContentTitle("PPG Recorder")
-            .setContentText(text)
+            .setContentTitle("Recorder")
+            .setContentText(msg)
             .build()
 
-    // File I/O
-    private suspend fun saveToJson() =
+    /* ===================================================================
+     * JSON 직렬화  (PPG 전용)
+     * =================================================================== */
+    private suspend fun saveJson() =
         withContext(Dispatchers.IO) {
-            val duration = (System.currentTimeMillis() - startMs) / 1000
+            val dur = ((System.currentTimeMillis() - startMs) / 1000.0).roundToInt()
             val root =
                 JSONObject().apply {
                     put("label", label)
                     put("start_ts", startMs)
-                    put("duration_s", duration)
-                    put("sampling", JSONObject().put("ppg", 25))
+                    put("duration_s", dur)
                     put(
                         "data",
                         JSONObject().apply {
-                            put("ts", JSONArray(ts))
-                            put("ppg_green", JSONArray(g))
-                            put("ppg_red", JSONArray(r))
-                            put("ppg_ir", JSONArray(ir))
+                            put(
+                                "ppg_continuous",
+                                JSONObject().apply {
+                                    put("ts", JSONArray(ppgTs))
+                                    put("green", JSONArray(ppgG))
+                                    put("red", JSONArray(ppgR))
+                                    put("ir", JSONArray(ppgIr))
+                                },
+                            )
                         },
                     )
                 }
-            File(filesDir, "recordings").apply { mkdirs() }.let { dir ->
-                val safe = label.replace("[\\/:*?\"<>| ]".toRegex(), "-")
-                val file = File(dir, "${startMs}_$safe.json")
-                file.writeText(root.toString())
-                Log.i("Recorder", "Saved to ${file.absolutePath}")
-            }
+
+            val dir = File(filesDir, "recordings").apply { mkdirs() }
+            val safe = label.replace("[\\/:*?\"<>| ]".toRegex(), "-")
+            File(dir, "${startMs}_$safe.json").writeText(root.toString())
         }
+
+    // ---------------- const ----------------
+    companion object {
+        private const val CH = "REC_CHANNEL"
+        private const val NOTI_ID = 1
+        const val ACTION_START = "com.example.ppg.START"
+        const val ACTION_STOP = "com.example.ppg.STOP"
+    }
 }
