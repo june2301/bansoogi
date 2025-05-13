@@ -6,8 +6,7 @@ import io.realm.kotlin.types.RealmInstant
 import java.time.LocalTime
 import java.time.ZoneId
 
-//const val MAX_INTERACTION_COUNT = 6
-const val MAX_INTERACTION_COUNT = 20 //
+const val MAX_INTERACTION_COUNT = 6
 
 fun isInteractionConditionMet(todayRecord: TodayRecordDto): Boolean {
     // 1. 현재 점수 확인
@@ -44,7 +43,7 @@ fun isInInteractionCooldown(interactionTime: RealmInstant?): Boolean {
     // 현재 시간에서 1시간(3600초) 이전의 시간 계산
     val cooldownStartTime = RealmInstant.from(
 //        nowRealmInstant.epochSeconds - 3600,
-        nowRealmInstant.epochSeconds - 0,//
+        nowRealmInstant.epochSeconds - 30,
         nowRealmInstant.nanosecondsOfSecond
     )
 
@@ -55,18 +54,15 @@ fun isInInteractionCooldown(interactionTime: RealmInstant?): Boolean {
 fun getRemainingCooldownMillis(interactionTime: RealmInstant?): Long {
     if (interactionTime == null) return 0
 
-//    val cooldownSeconds = 60 * 60L
-    val cooldownSeconds = 0L //
+    val cooldownSeconds = 60 * 60L
     val now = RealmInstant.now()
     val cooldownEnd = RealmInstant.from(
         interactionTime.epochSeconds + cooldownSeconds,
         interactionTime.nanosecondsOfSecond
     )
 
-//    val remainingSeconds = cooldownEnd.epochSeconds - now.epochSeconds
-//    val remainingNanos = cooldownEnd.nanosecondsOfSecond - now.nanosecondsOfSecond
-    val remainingSeconds = 0L //
-    val remainingNanos = 0L //
+    val remainingSeconds = cooldownEnd.epochSeconds - now.epochSeconds
+    val remainingNanos = cooldownEnd.nanosecondsOfSecond - now.nanosecondsOfSecond
 
     return (remainingSeconds * 1000) + (remainingNanos / 1_000_000)
         .coerceAtLeast(0)
