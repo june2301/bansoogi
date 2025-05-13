@@ -7,6 +7,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.ArrayDeque
 
 /**
  * Collects raw sensor events from [com.ddc.bansoogi.sensor.AndroidSensorManager] and pipelines them to
@@ -36,9 +37,36 @@ class ActivityStateProcessor(
             .onEach { onBody -> Log.d(TAG, "OffBody onBody=$onBody") }
             .launchIn(scope)
 
+        // Constants for SMA fallback
+        val windowSeconds = 5
+        val linAccHz = 50
+        val maxSamples = windowSeconds * linAccHz
+        val buffer = ArrayDeque<Float>(maxSamples * 3)
+        var fallbackState: ActivityState = ActivityState.IDLE
+
         // Linear acceleration
         sensorManager.linearAcceleration
-            .onEach { values -> Log.d(TAG, "LinAcc x=${values[0]} y=${values[1]} z=${values[2]}") }
+            .onEach { values ->
+                // Append newest x,y,z
+                buffer.add(values[0])
+                buffer.add(values[1])
+                buffer.add(values[2])
+                // Trim to last N samples (x,y,z → *3)
+                while (buffer.size > maxSamples * 3) {
+                    buffer.removeFirst()
+                }
+
+                // Compute SMA when window full
+                if (buffer.size == maxSamples * 3) {
+                    val sma = SmaFallbackClassifier.computeSma(buffer.toFloatArray())
+                    val newState = if (sma > 0.30f) ActivityState.ACTIVE else ActivityState.IDLE
+                    if (newState != fallbackState) {
+                        Log.d(TAG, "SMA fallback: $sma -> $newState")
+                        fallbackState = newState
+                        // TODO: integrate with system UserActivityState when available
+                    }
+                }
+            }
             .launchIn(scope)
 
         // Step detector → cadence 계산 예정
