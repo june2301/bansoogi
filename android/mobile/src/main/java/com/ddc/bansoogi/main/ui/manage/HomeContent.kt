@@ -22,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +46,11 @@ import com.ddc.bansoogi.common.notification.NotificationFactory
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.DayTimeModal
-import com.samsung.android.sdk.health.data.HealthDataStore
+import com.ddc.bansoogi.main.ui.handle.handleInteraction
+import com.ddc.bansoogi.main.ui.util.getRemainingCooldownMillis
+import com.ddc.bansoogi.main.ui.util.isInteractionConditionMet
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -58,11 +63,11 @@ fun HomeContent(
     onModalOpen: () -> Unit,
     onModalClose: () -> Unit,
 ) {
-    var progressValue by remember { mutableStateOf(todayRecordDto.energyPoint) }
+    val scope = rememberCoroutineScope()
     var showModal by remember { mutableStateOf(false) }
 
     // TODO: 알림 테스트용 - 나중에 삭제
-    var notified20 by remember { mutableStateOf(progressValue >= 20) }
+    var notified20 by remember { mutableStateOf(todayRecordDto.energyPoint >= 20) }
     val context = LocalContext.current
 
     Column(
@@ -89,12 +94,12 @@ fun HomeContent(
             )
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(progressValue / 100f)
+                    .fillMaxWidth(todayRecordDto.energyPoint / 100f)
                     .height(24.dp)
                     .background(Color.Green)
             )
             Text(
-                text = "$progressValue / 100",
+                text = "${todayRecordDto.energyPoint} / 100",
                 modifier = Modifier.align(Alignment.Center),
                 color = Color.Black,
                 textAlign = TextAlign.Center,
@@ -181,15 +186,29 @@ fun HomeContent(
         }
 
         val buttonShape = RoundedCornerShape(30.dp)
+        val isCoolDown = remember { mutableStateOf(true) }
+
+        LaunchedEffect(todayRecordDto.interactionLatestTime) {
+            val remainingTime = getRemainingCooldownMillis(todayRecordDto.interactionLatestTime)
+            if (remainingTime > 0) {
+                isCoolDown.value = true
+                delay(remainingTime)
+            }
+            isCoolDown.value = false
+        }
+
         Button(
             onClick = {
-                if (!isInSleepRange && progressValue < 100) {
-                    progressValue += 5
-                    todayRecordController.updateInteractionCnt(todayRecordDto.recordId)
-                    todayRecordController.updateEnergy(todayRecordDto.recordId, 5)
+                // TODO: 상호작용 애니메이션 출력
 
+                // 점수 업데이트
+                scope.launch {
+                    handleInteraction(todayRecordDto, isInSleepRange)
+                }
+
+                if (!isInSleepRange && todayRecordDto.energyPoint < 100) { // -> 함수 내부에 범위 체크
                     // TODO: 알림 테스트용 - 나중에 삭제
-                    if (progressValue >= 20 && !notified20) {
+                    if (todayRecordDto.energyPoint >= 20 && !notified20) {
                         notified20 = true
                         NotificationDispatcher.show(
                             context,
@@ -200,7 +219,7 @@ fun HomeContent(
 
                 }
             },
-            enabled = !isInSleepRange,
+            enabled = !isInSleepRange && !isCoolDown.value && isInteractionConditionMet(todayRecordDto),
             modifier = Modifier
                 .padding(vertical = 10.dp)
                 .height(60.dp)

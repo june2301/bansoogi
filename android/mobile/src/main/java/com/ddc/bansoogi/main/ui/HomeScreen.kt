@@ -17,13 +17,13 @@ import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.manage.EggManagerModal
 import com.ddc.bansoogi.main.ui.manage.HomeContent
+import com.ddc.bansoogi.main.ui.util.isInSleepRange
 import com.ddc.bansoogi.main.view.TodayRecordView
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 import io.realm.kotlin.types.RealmInstant
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
@@ -73,15 +73,8 @@ fun HomeScreen(
     LaunchedEffect(todayRecordDtoState.value, myInfoState.value) {
         val myInfo = myInfoState.value ?: return@LaunchedEffect
 
-        val now = LocalTime.now()
-
         try {
-            val sleepTime = LocalTime.parse(myInfo.sleepTime)
-            val wakeUpTime = LocalTime.parse(myInfo.wakeUpTime)
-
-            // 취침시간 ~ 기상시간 사이라면 : isInSleepRange = true
-            isInSleepRange.value = (now.isBefore(sleepTime) && now.isBefore(wakeUpTime))
-                    || (now.isAfter(sleepTime) && now.isAfter(wakeUpTime))
+            isInSleepRange.value = isInSleepRange(myInfo)
 
             val todayRecord = todayRecordDtoState.value ?: return@LaunchedEffect
 

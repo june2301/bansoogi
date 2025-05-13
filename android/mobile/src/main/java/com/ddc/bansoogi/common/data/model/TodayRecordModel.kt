@@ -1,9 +1,14 @@
 package com.ddc.bansoogi.common.data.model
 
+import com.ddc.bansoogi.calendar.data.model.toLocalDate
 import com.ddc.bansoogi.common.data.local.TodayRecordDataSource
+import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 class TodayRecordModel {
     private val dataSource = TodayRecordDataSource()
@@ -20,12 +25,22 @@ class TodayRecordModel {
         dataSource.renewTodayRecord()
     }
 
+    suspend fun interaction(recordId: ObjectId, addedEnergy: Int) {
+        updateInteractionCnt(recordId)
+        updateEnergy(recordId, addedEnergy)
+        updateInteractionTime(recordId);
+    }
+
     suspend fun updateInteractionCnt(recordId: ObjectId) {
         dataSource.updateInteractionCnt(recordId)
     }
 
     suspend fun updateEnergy(recordId: ObjectId, addedEnergy: Int) {
         dataSource.updateEnergy(recordId, addedEnergy)
+    }
+
+    suspend fun updateInteractionTime(recordId: ObjectId) {
+        dataSource.updateInteractionTime(recordId)
     }
 
     fun getTodayRecord(): Flow<TodayRecordDto?> {
@@ -45,6 +60,7 @@ class TodayRecordModel {
                     lunch = entity.lunch,
                     dinner = entity.dinner,
                     interactionCnt = entity.interactionCnt,
+                    interactionLatestTime = entity.interactionLatestTime,
                     isClosed = entity.isClosed,
                     createdAt = entity.createdAt,
                     updatedAt = entity.updatedAt
@@ -70,6 +86,7 @@ class TodayRecordModel {
                 lunch = entity.lunch,
                 dinner = entity.dinner,
                 interactionCnt = entity.interactionCnt,
+                interactionLatestTime = entity.interactionLatestTime,
                 isClosed = entity.isClosed,
                 createdAt = entity.createdAt,
                 updatedAt = entity.updatedAt

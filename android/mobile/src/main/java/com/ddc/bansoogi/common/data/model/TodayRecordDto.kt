@@ -2,6 +2,7 @@ package com.ddc.bansoogi.common.data.model
 
 import io.realm.kotlin.types.RealmInstant
 import org.mongodb.kbson.ObjectId
+import java.time.LocalDate
 
 data class TodayRecordDto(
     var recordId: ObjectId,
@@ -17,6 +18,7 @@ data class TodayRecordDto(
     var lunch: Boolean,
     var dinner: Boolean,
     var interactionCnt: Int,
+    var interactionLatestTime: RealmInstant?,
     var isClosed: Boolean,
     var createdAt: RealmInstant,
     var updatedAt: RealmInstant
