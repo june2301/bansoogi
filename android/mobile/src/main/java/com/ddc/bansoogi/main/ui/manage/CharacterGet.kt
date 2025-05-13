@@ -1,6 +1,5 @@
-package com.ddc.bansoogi.main.ui.egg
+package com.ddc.bansoogi.main.ui.manage
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +22,6 @@ import com.ddc.bansoogi.common.util.SpriteSheetAnimation
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun CharacterGetScreen(navController: NavController) {
