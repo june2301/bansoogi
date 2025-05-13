@@ -58,11 +58,7 @@ fun CollectionScreen() {
     val controller = remember { CollectionController(view) }
 
     LaunchedEffect(Unit) {
-        CollectionDataSource().insertDummyCharactersWithUnlock()
         controller.initialize()
-
-        val realm = RealmManager.realm
-        val allCharacters = realm.query<Character>().find()
     }
 
     val regularList = collectionDtoState.filter { it.id <= 30 }

@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.collection.data.entity.Character
@@ -51,7 +53,7 @@ fun CharacterGetScreen(navController: NavController) {
 
     LaunchedEffect(selectedCharacter) {
         if (selectedCharacter != null) {
-            delay(1300)
+            delay(1250)
             currentStage = 1
 
             val realm = RealmManager.realm
@@ -89,7 +91,8 @@ fun CharacterGetScreen(navController: NavController) {
         Image(
             painter = painterResource(id = R.drawable.background_kitchen),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
         )
 
         if (currentStage == 0) {
@@ -117,9 +120,10 @@ fun CharacterGetScreen(navController: NavController) {
                 Text(
                     text = "터치해서 컬렉션 확인",
                     color = Color.White,
+                    fontSize = 20.sp,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 32.dp)
+                        .padding(top = 20.dp)
                 )
             }
         }
