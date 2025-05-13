@@ -1,6 +1,9 @@
 package com.ddc.bansoogi.landing.view
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,11 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.common.notification.AlarmScheduler
+import com.ddc.bansoogi.common.notification.SyncHelper
 import com.ddc.bansoogi.landing.controller.LandingController
 import com.ddc.bansoogi.landing.ui.screen.BirthInputScreen
 import com.ddc.bansoogi.landing.ui.screen.LandingStartScreen
@@ -27,6 +33,7 @@ import com.ddc.bansoogi.landing.ui.screen.TimeSettingScreen
 import com.ddc.bansoogi.main.ui.MainActivity
 import com.ddc.bansoogi.myInfo.data.entity.User
 import com.ddc.bansoogi.myInfo.data.local.MyInfoDataSource
+import com.ddc.bansoogi.myInfo.data.mapper.MyInfoMapper.toDomain
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -122,6 +129,15 @@ class LandingActivity : ComponentActivity(), LandingView {
         val formatter = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
         val dateString = formatter.format(date)
 
+        val notificationPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+
         val user = User().apply {
             nickname = controller.profileModel.nickname
             birthDate = dateString
@@ -132,7 +148,7 @@ class LandingActivity : ComponentActivity(), LandingView {
             lunchTime = controller.timeSettingModel.lunchTime
             dinnerTime = controller.timeSettingModel.dinnerTime
             notificationDuration = controller.timeSettingModel.durationMinutes
-            notificationEnabled = false
+            notificationEnabled = notificationPermissionGranted
             bgSoundEnabled = true
             effectSoundEnabled = true
         }
@@ -142,6 +158,8 @@ class LandingActivity : ComponentActivity(), LandingView {
                 withContext(Dispatchers.IO) {
                     MyInfoDataSource().updateUser(user)
                 }
+                AlarmScheduler.scheduleAllDailyAlarms(this@LandingActivity, user.toDomain())
+                SyncHelper.syncNotificationToWatch(this@LandingActivity, user.toDomain())
                 moveToMainActivity()
             } catch (e: Exception) {
                 e.printStackTrace()
