@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.realm.kotlin)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize")
 }
 
@@ -69,6 +70,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.lifecycle.process)
 
     // Compose 디버그 툴링
     debugImplementation(libs.androidx.ui.tooling)
@@ -76,6 +78,9 @@ dependencies {
     // coil
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+
+    // JSON 파싱용
+    implementation(libs.kotlinx.serialization.json)
 
     // navigation
     implementation(libs.androidx.navigation.compose)

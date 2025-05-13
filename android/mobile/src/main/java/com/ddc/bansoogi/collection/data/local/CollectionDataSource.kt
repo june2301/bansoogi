@@ -214,12 +214,6 @@ class CollectionDataSource {
 //                acquisitionCount = 1
 //                createdAt = RealmInstant.now()
 //                updatedAt = RealmInstant.now()
-//            },
-//            UnlockedCharacter().apply {
-//                bansoogiId = 32
-//                acquisitionCount = 1
-//                createdAt = RealmInstant.now()
-//                updatedAt = RealmInstant.now()
 //            }
 //        )
         val unlockList: List<UnlockedCharacter> = emptyList()
