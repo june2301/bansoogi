@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,13 +49,11 @@ fun CharacterGetScreen(navController: NavController) {
         }
     }
 
-    // 애니메이션 단계 진행
     LaunchedEffect(selectedCharacter) {
         if (selectedCharacter != null) {
-            delay(2000) // 빛남+펑 sprite 이후
-            currentStage = 1 // 캐릭터 등장
+            delay(1300)
+            currentStage = 1
 
-            // 획득 처리
             val realm = RealmManager.realm
             val bansoogiId = selectedCharacter!!.bansoogiId
             realm.write {
@@ -82,32 +81,47 @@ fun CharacterGetScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .clickable(enabled = currentStage == 1) { navController.popBackStack() },
+            .clickable(enabled = currentStage == 1) {
+                navController.navigate("collection")
+            },
         contentAlignment = Alignment.Center
     ) {
-        // 배경
         Image(
-            painter = painterResource(id = R.drawable.background_kitchen_gif),
+            painter = painterResource(id = R.drawable.background_kitchen),
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )
 
         if (currentStage == 0) {
-            SpriteSheetAnimation(
-                context = context,
-                spriteSheetName = "bansoogi_explode.png",
-                jsonName = "bansoogi_explode.json",
-                modifier = Modifier.size(180.dp)
-            )
+            Box(modifier = Modifier.padding(top = 64.dp)) {
+                SpriteSheetAnimation(
+                    context = context,
+                    spriteSheetName = "bansoogi_explode.png",
+                    jsonName = "bansoogi_explode.json",
+                    modifier = Modifier.size(180.dp)
+                )
+            }
         }
 
         if (currentStage == 1 && selectedCharacter != null) {
-            SpriteSheetAnimation(
-                context = context,
-                spriteSheetName = "${selectedCharacter!!.gifUrl}.png",
-                jsonName = "${selectedCharacter!!.imageUrl}.json",
-                modifier = Modifier.size(128.dp)
-            )
+            Box(
+                modifier = Modifier.padding(top = 64.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                SpriteSheetAnimation(
+                    context = context,
+                    spriteSheetName = "${selectedCharacter!!.gifUrl}_sheet.png",
+                    jsonName = "${selectedCharacter!!.imageUrl}.json",
+                    modifier = Modifier.size(180.dp)
+                )
+                Text(
+                    text = "터치해서 컬렉션 확인",
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 32.dp)
+                )
+            }
         }
     }
 }
