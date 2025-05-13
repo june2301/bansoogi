@@ -1,6 +1,5 @@
 package com.ddc.bansoogi.calendar.data.model
 
-import com.ddc.bansoogi.common.data.entity.ActivityLog
 import com.ddc.bansoogi.common.data.model.ActivityLogDto
 
 data class DetailReportDto (
@@ -9,7 +8,8 @@ data class DetailReportDto (
     val finalEnergyPoint: Int,
 
     val bansoogiTitle: String,
-    val bansoogiResource: Int,
+    val bansoogiGifUrl: String,
+    val bansoogiImageUrl: String,
 
     val standupCount: Int,
     val standLog: List<ActivityLogDto>,

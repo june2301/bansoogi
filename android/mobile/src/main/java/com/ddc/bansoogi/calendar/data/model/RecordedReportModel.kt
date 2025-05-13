@@ -1,14 +1,12 @@
 package com.ddc.bansoogi.calendar.data.model
 
+import android.util.Log
 import com.ddc.bansoogi.calendar.data.entity.RecordedReport
-import com.ddc.bansoogi.calendar.data.local.Bansoogi
 import com.ddc.bansoogi.calendar.data.local.RecordedReportDataSource
+import com.ddc.bansoogi.collection.data.model.CollectionModel
 import com.ddc.bansoogi.common.data.model.ActivityLogModel
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import io.realm.kotlin.types.RealmInstant
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import org.mongodb.kbson.ObjectId
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -62,24 +60,23 @@ class RecordedReportModel {
         )
     }
 
-    fun getCalendarMarkers(): Flow<List<CalendarMarkerDto>> =
-        dataSource.getRecordedReportList().map { reportList ->
-            reportList.map { report ->
-                // 나중에 반숙이 클래스에 대한 data 함수들이 만들어진다면 그 함수들로 변경할 예정
-                val bansoogi = dataSource.getBansoogiById(report.bansoogiId)
+    fun getCalendarMarkers(): List<CalendarMarkerDto> {
+        return dataSource.getRecordedReportList().map { report ->
+            val bansoogi = CollectionModel().getBansoogiById(report.bansoogiId)
 
-                CalendarMarkerDto(
-                    date = LocalDate.parse(report.reportedDate),
-                    bansoogiAnimationId =  bansoogi?.gifUrl
-                )
-            }
+            CalendarMarkerDto(
+                date = LocalDate.parse(report.reportedDate),
+                bansoogiGifUrl =  bansoogi.gifUrl,
+                bansoogiImageUrl = bansoogi.imageUrl
+            )
         }
+    }
 
-    suspend fun getDetailReport(date: String): DetailReportDto? {
+    fun getDetailReport(date: String): DetailReportDto? {
         val report = dataSource.getRecordedReportByDate(date) ?: return null
 
         // 반숙이 데이터 호출도 나중에 변경 예정
-        val bansoogi = dataSource.getBansoogiById(report.bansoogiId)
+        val bansoogi = CollectionModel().getBansoogiById(report.bansoogiId)
 
         // 로그 호출
         val standLog = logModel.getLogsByTypeAndDate("STANDUP", date)
@@ -91,8 +88,9 @@ class RecordedReportModel {
 
             finalEnergyPoint = report.finalEnergyPoint,
 
-            bansoogiTitle = bansoogi?.title ?: "",
-            bansoogiResource = bansoogi?.gifUrl ?: 0,
+            bansoogiTitle = bansoogi.title,
+            bansoogiGifUrl = bansoogi.gifUrl,
+            bansoogiImageUrl = bansoogi.imageUrl,
 
             standupCount = report.standupCount,
             standLog = standLog,
