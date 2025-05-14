@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.collection.data.entity.Character
-import com.ddc.bansoogi.common.util.SpriteSheetAnimation
+import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import com.ddc.bansoogi.main.controller.CharacterGetController
 import kotlinx.coroutines.delay
 
