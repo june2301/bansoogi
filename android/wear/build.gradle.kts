@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.realm.kotlin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -79,4 +80,7 @@ dependencies {
 
     // 워치에 데이터 캐시 저장
     implementation(libs.androidx.datastore.preferences)
+
+    // JSON 파싱용
+    implementation(libs.kotlinx.serialization.json)
 }
