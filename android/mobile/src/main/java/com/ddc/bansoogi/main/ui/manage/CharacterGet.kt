@@ -17,15 +17,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.collection.data.entity.Character
-import com.ddc.bansoogi.collection.data.entity.UnlockedCharacter
-import com.ddc.bansoogi.collection.data.local.CollectionDataSource
-import com.ddc.bansoogi.collection.util.CharacterPicker
-import com.ddc.bansoogi.common.data.entity.TodayRecord
-import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.common.util.SpriteSheetAnimation
 import com.ddc.bansoogi.main.controller.CharacterGetController
-import io.realm.kotlin.ext.query
-import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.delay
 
 @Composable
