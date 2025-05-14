@@ -1,18 +1,16 @@
 package com.ddc.bansoogi.main.controller
 
 import com.ddc.bansoogi.collection.data.entity.Character
-import com.ddc.bansoogi.common.data.entity.TodayRecord
-import com.ddc.bansoogi.common.data.local.RealmManager
+import com.ddc.bansoogi.common.data.model.TodayRecordModel
 import com.ddc.bansoogi.main.data.model.CharacterGetModel
-import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 
 class CharacterGetController {
     private val model = CharacterGetModel()
+    private val todayRecordModel = TodayRecordModel()
 
     fun canDrawCharacter(): Boolean {
-        val realm = RealmManager.realm
-        val today = realm.query<TodayRecord>().find().lastOrNull()
+        val today = todayRecordModel.getTodayRecordSync()
         return (today?.energyPoint ?: 0) >= 80
     }
 
