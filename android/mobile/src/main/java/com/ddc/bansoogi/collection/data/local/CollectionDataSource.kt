@@ -23,7 +23,6 @@ class CollectionDataSource {
             .map { it.list }
 
     fun getImageResourceIdForBansoogiId(context: Context, bansoogiId: Int): Int {
-        val realm = RealmManager.realm
         val imageUrl = realm.query<Character>("bansoogiId == $0", bansoogiId)
             .first()
             .find()
@@ -33,8 +32,6 @@ class CollectionDataSource {
     }
 
     suspend fun insertDummyCharactersWithUnlock() {
-        val realm = RealmManager.realm
-
         val alreadyExists = realm.query<Character>().find().isNotEmpty()
         if (alreadyExists) return
 
@@ -203,6 +200,28 @@ class CollectionDataSource {
 
         realm.write {
             characterList.forEach { copyToRealm(it) }
+        }
+    }
+
+    suspend fun saveUnlockedCharacter(character: Character) {
+        val bansoogiId = character.bansoogiId
+        realm.write {
+            val existing = query<UnlockedCharacter>("bansoogiId == $0", bansoogiId).first().find()
+            if (existing != null) {
+                findLatest(existing)?.apply {
+                    acquisitionCount += 1
+                    updatedAt = RealmInstant.now()
+                }
+            } else {
+                copyToRealm(
+                    UnlockedCharacter().apply {
+                        this.bansoogiId = bansoogiId
+                        this.acquisitionCount = 1
+                        this.createdAt = RealmInstant.now()
+                        this.updatedAt = RealmInstant.now()
+                    }
+                )
+            }
         }
     }
 }

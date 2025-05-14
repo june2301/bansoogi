@@ -1,4 +1,4 @@
-package com.ddc.bansoogi.main.model
+package com.ddc.bansoogi.main.data.model
 
 import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.collection.data.local.CollectionDataSource
@@ -13,5 +13,9 @@ class CharacterGetModel {
         return dataSource.getAllBansoogi().map { list ->
             CharacterPicker.pickRandomBansoogi(list)
         }
+    }
+
+    suspend fun saveUnlockedCharacter(character: Character) {
+        dataSource.saveUnlockedCharacter(character)
     }
 }
