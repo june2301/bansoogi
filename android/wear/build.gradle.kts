@@ -79,4 +79,7 @@ dependencies {
 
     // 워치에 데이터 캐시 저장
     implementation(libs.androidx.datastore.preferences)
+
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
 }
