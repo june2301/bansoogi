@@ -1,10 +1,14 @@
 package com.ddc.bansoogi.presentation
 
+import android.content.Intent
 import android.Manifest
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.Gravity
 import android.widget.TextView
 import android.widget.Toast
@@ -28,7 +32,7 @@ class MainActivity : ComponentActivity() {
             if (!allGranted) {
                 showCustomToast()
             } else {
-                SensorForegroundService.ensureRunning(this)
+                maybeRequestIgnoreBatteryOptimization()
             }
         }
 
@@ -55,6 +59,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun maybeRequestIgnoreBatteryOptimization() {
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        if (pm.isIgnoringBatteryOptimizations(packageName)) {
+            SensorForegroundService.ensureRunning(this)
+        } else {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                .setData(Uri.parse("package:$packageName"))
+            startActivity(intent)
+            SensorForegroundService.ensureRunning(this)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -89,7 +104,7 @@ class MainActivity : ComponentActivity() {
         } else {
             val allGranted = requiredPermissions.all { checkSelfPermission(it) == android.content.pm.PackageManager.PERMISSION_GRANTED }
             if (allGranted) {
-                SensorForegroundService.ensureRunning(this)
+                maybeRequestIgnoreBatteryOptimization()
             }
         }
     }
@@ -103,7 +118,6 @@ class MainActivity : ComponentActivity() {
 fun BansoogiApp() {
     val navController = rememberNavController()
     WearNavGraph(navController = navController)
-
 }
 
 @Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)

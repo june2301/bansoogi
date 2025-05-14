@@ -102,7 +102,6 @@ class AndroidSensorManager(private val context: Context) {
         ) {
         override fun onSensorChanged(event: SensorEvent) {
             emit(event.values.clone())
-            Log.d(TAG, "LinearAcceleration: ${event.values.contentToString()}")
         }
     }
 
