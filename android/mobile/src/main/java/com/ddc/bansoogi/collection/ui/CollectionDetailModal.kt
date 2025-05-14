@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.request.ImageRequest
-import com.ddc.bansoogi.common.util.SpriteSheetAnimation
+import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import com.ddc.bansoogi.collection.data.model.CollectionDto
 import com.ddc.bansoogi.collection.util.saveDownloadableImage
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel

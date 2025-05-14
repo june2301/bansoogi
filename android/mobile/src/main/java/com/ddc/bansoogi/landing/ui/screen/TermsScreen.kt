@@ -1,5 +1,11 @@
 package com.ddc.bansoogi.landing.ui.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.ddc.bansoogi.landing.controller.LandingController
 import com.ddc.bansoogi.landing.ui.component.AgreementDialog
 import com.ddc.bansoogi.landing.ui.component.AgreementType
@@ -31,18 +39,54 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
 
     var currentDialogType by remember { mutableStateOf<AgreementType?>(null) }
 
+    val context = LocalContext.current
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            onNext()
+        } else {
+            Toast.makeText(
+                context,
+                "알림 권한이 거부되었습니다. 내 정보에서 수동으로 허용할 수 있습니다.",
+                Toast.LENGTH_LONG
+            ).show()
+            onNext()
+        }
+    }
+
+    fun requestPermissionThenNext(proceed: () -> Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                proceed()
+            }
+        } else {
+            proceed()
+        }
+    }
+
     Column {
         RoundedContainerBox {
             Column(
                 modifier = Modifier
                     .padding(16.dp)
             ) {
+                Spacer(modifier = Modifier.height(12.dp))
+
                 Box(
-                    modifier = Modifier.fillMaxWidth(), // 부모가 크기를 알아야 정렬 가능
+                    modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     DefaultTitleText("서비스 이용 약관")
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 CheckboxRow(
                     checked = serviceChecked,
@@ -75,7 +119,7 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
 //                    onLabelClick = { currentDialogType = it }
 //                )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
 
@@ -90,7 +134,7 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
             enabled = serviceChecked && privacyChecked,
             onClick = {
                 if (serviceChecked && privacyChecked) {
-                    onNext()
+                    requestPermissionThenNext(onNext)
                 }
             },
             modifier = Modifier

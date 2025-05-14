@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.realm.kotlin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -82,4 +83,8 @@ dependencies {
 
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
+
+    // JSON 파싱용
+    implementation(libs.kotlinx.serialization.json)
+
 }

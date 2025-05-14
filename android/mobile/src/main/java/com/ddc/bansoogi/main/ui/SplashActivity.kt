@@ -12,6 +12,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.landing.view.LandingActivity
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.collection.data.local.CollectionDataSource
 import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.myInfo.data.entity.User
 import io.realm.kotlin.ext.query
@@ -26,6 +27,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        RealmManager.realm
         setContentView(R.layout.activity_splash)
 
         val splashScreenDelayTime: Long = 1500
@@ -43,6 +45,10 @@ class SplashActivity : AppCompatActivity() {
             .build()
 
         imageLoader.enqueue(request)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            CollectionDataSource().insertDummyCharactersWithUnlock()
+        }
 
         Handler(Looper.getMainLooper()).postDelayed({
 

@@ -22,8 +22,19 @@ class CollectionDataSource {
             .asFlow()
             .map { it.list }
 
+    fun getBansoogiById(bansoogiId: Int): Character {
+        return realm.query<Character>("bansoogiId == $0", bansoogiId)
+            .first()
+            .find() ?: Character().apply {
+                title = "반숙이"
+                imageUrl = "bansoogi_default_profile"
+                silhouetteImageUrl = "unknown"
+                gifUrl = "bansoogi_basic"
+                description = "우리의 반숙이입니다."
+            }
+    }
+
     fun getImageResourceIdForBansoogiId(context: Context, bansoogiId: Int): Int {
-        val realm = RealmManager.realm
         val imageUrl = realm.query<Character>("bansoogiId == $0", bansoogiId)
             .first()
             .find()
@@ -33,8 +44,6 @@ class CollectionDataSource {
     }
 
     suspend fun insertDummyCharactersWithUnlock() {
-        val realm = RealmManager.realm
-
         val alreadyExists = realm.query<Character>().find().isNotEmpty()
         if (alreadyExists) return
 
@@ -201,26 +210,30 @@ class CollectionDataSource {
             }
         )
 
-        // MARK: 임시 데이터 추가
-//        val unlockList: List<UnlockedCharacter> = listOf(
-//            UnlockedCharacter().apply {
-//                bansoogiId = 2
-//                acquisitionCount = 3
-//                createdAt = RealmInstant.now()
-//                updatedAt = RealmInstant.now()
-//            },
-//            UnlockedCharacter().apply {
-//                bansoogiId = 7
-//                acquisitionCount = 1
-//                createdAt = RealmInstant.now()
-//                updatedAt = RealmInstant.now()
-//            }
-//        )
-        val unlockList: List<UnlockedCharacter> = emptyList()
-
         realm.write {
             characterList.forEach { copyToRealm(it) }
-            unlockList.forEach { copyToRealm(it) }
+        }
+    }
+
+    suspend fun saveUnlockedCharacter(character: Character) {
+        val bansoogiId = character.bansoogiId
+        realm.write {
+            val existing = query<UnlockedCharacter>("bansoogiId == $0", bansoogiId).first().find()
+            if (existing != null) {
+                findLatest(existing)?.apply {
+                    acquisitionCount += 1
+                    updatedAt = RealmInstant.now()
+                }
+            } else {
+                copyToRealm(
+                    UnlockedCharacter().apply {
+                        this.bansoogiId = bansoogiId
+                        this.acquisitionCount = 1
+                        this.createdAt = RealmInstant.now()
+                        this.updatedAt = RealmInstant.now()
+                    }
+                )
+            }
         }
     }
 }

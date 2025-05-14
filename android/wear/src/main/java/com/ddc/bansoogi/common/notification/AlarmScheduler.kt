@@ -81,7 +81,6 @@ object AlarmScheduler {
         }
     }
 
-    /** DataStore 에 저장된 다섯 개 시간을 한 번에 읽어와 모두 예약 */
     fun scheduleAllFromInfo(context: Context, info: MyInfoDto) {
         listOf(
             AlarmType.BREAKFAST to info.breakfastTime,
@@ -89,6 +88,42 @@ object AlarmScheduler {
             AlarmType.DINNER    to info.dinnerTime
         ).forEach { (type, t) ->
             scheduleDailyAlarm(context, type, t)
+        }
+    }
+
+    fun cancelDailyAlarm(context: Context, type: AlarmType) {
+        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(context, WatchDailyAlarmReceiver::class.java).apply {
+            putExtra("alarm_type", type.name)
+        }
+        val pending = PendingIntent.getBroadcast(
+            context,
+            type.requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmMgr.cancel(pending)
+        pending.cancel()
+    }
+
+    fun cancelMealAlarms(context: Context) {
+        listOf(
+            AlarmType.BREAKFAST,
+            AlarmType.LUNCH,
+            AlarmType.DINNER
+        ).forEach { cancelDailyAlarm(context, it) }
+    }
+
+    fun rescheduleMealAlarms(context: Context, info: MyInfoDto) {
+        cancelMealAlarms(context)
+        listOf(
+            AlarmType.BREAKFAST to info.breakfastTime,
+            AlarmType.LUNCH     to info.lunchTime,
+            AlarmType.DINNER    to info.dinnerTime
+        ).forEach { (type, time) ->
+            scheduleDailyAlarm(context, type, time)
         }
     }
 

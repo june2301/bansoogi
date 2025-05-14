@@ -1,7 +1,6 @@
 package com.ddc.bansoogi.common.mobile.communication.receiver
 
 import android.content.Context
-import android.util.Log
 import com.ddc.bansoogi.common.mobile.data.mapper.JsonMapper
 import com.ddc.bansoogi.myinfo.data.dto.MyInfoDto
 import com.ddc.bansoogi.myinfo.data.store.saveMyInfoCache

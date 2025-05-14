@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.main.ui
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,19 +12,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.manage.EggManagerModal
 import com.ddc.bansoogi.main.ui.manage.HomeContent
+import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.main.view.TodayRecordView
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 import io.realm.kotlin.types.RealmInstant
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
@@ -38,7 +41,9 @@ fun HomeScreen(
     healthData: CustomHealthData,
     onModalOpen: () -> Unit,
     onModalClose: () -> Unit,
+    navController: NavController
 ) {
+    val context = LocalContext.current
     var todayRecordDtoState = remember { mutableStateOf<TodayRecordDto?>(null) }
     var showEggManager = remember { mutableStateOf(false) }
     var isInSleepRange = remember { mutableStateOf(false) }
@@ -73,15 +78,8 @@ fun HomeScreen(
     LaunchedEffect(todayRecordDtoState.value, myInfoState.value) {
         val myInfo = myInfoState.value ?: return@LaunchedEffect
 
-        val now = LocalTime.now()
-
         try {
-            val sleepTime = LocalTime.parse(myInfo.sleepTime)
-            val wakeUpTime = LocalTime.parse(myInfo.wakeUpTime)
-
-            // 취침시간 ~ 기상시간 사이라면 : isInSleepRange = true
-            isInSleepRange.value = (now.isBefore(sleepTime) && now.isBefore(wakeUpTime))
-                    || (now.isAfter(sleepTime) && now.isAfter(wakeUpTime))
+            isInSleepRange.value = InteractionUtil.isInSleepRange(myInfo)
 
             val todayRecord = todayRecordDtoState.value ?: return@LaunchedEffect
 
@@ -108,6 +106,15 @@ fun HomeScreen(
                             0,
                             healthData.floorsClimbed.toInt()
                         )
+
+                        // CharacterGetScreen으로 이동 (단, 오늘 이미 본 적 없다면)
+                        val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
+                        val key = "egg_seen_${LocalDate.now()}"
+                        val alreadySeen = prefs.getBoolean(key, false)
+                        if (!alreadySeen) {
+                            prefs.edit().putBoolean(key, true).apply()
+                            navController.navigate("character_get")
+                        }
                     }
                 }
             } else {

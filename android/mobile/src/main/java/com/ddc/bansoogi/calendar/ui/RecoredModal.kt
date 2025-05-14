@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,7 +29,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -48,7 +49,7 @@ import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.calendar.data.model.DetailReportDto
 import com.ddc.bansoogi.common.data.model.ActivityLogDto
-import com.ddc.bansoogi.common.ui.component.BansoogiAnimation
+import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import com.ddc.bansoogi.main.ui.InfoRow
 import com.ddc.bansoogi.main.ui.SectionHeader
 import com.ddc.bansoogi.common.util.mapper.ActivityLogMapper.toKoreanBehaviorState
@@ -202,6 +203,8 @@ fun RecordContent(
     onDismissRequest: () -> Unit,
     report: DetailReportDto
 ) {
+    val context = LocalContext.current
+
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -264,12 +267,13 @@ fun RecordContent(
                                     .clip(RoundedCornerShape(12.dp))
                                     .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, RoundedCornerShape(12.dp))
                                 ) {
-                                    BansoogiAnimation(
-                                        resource = report.bansoogiResource,
-                                        description = "행동 기록 모달에 출력하는 반숙이 리소스",
+                                    SpriteSheetAnimation(
+                                        context = context,
+                                        spriteSheetName = "${report.bansoogiGifUrl}_sheet.png",
+                                        jsonName = "${report.bansoogiImageUrl}.json",
                                         modifier = Modifier
-                                            .size(100.dp)
-                                            .offset(x = 20.dp, y = (-8).dp) // 중앙이 안 맞아서 조절
+                                            .size(160.dp)
+                                            .scale(1.3f)
                                     )
                                 }
                             }
@@ -468,7 +472,8 @@ fun RecordedModalPreview() {
             finalEnergyPoint =90,
 
             bansoogiTitle = "임시 반숙이",
-            bansoogiResource = 1,
+            bansoogiGifUrl = "1",
+            bansoogiImageUrl = "1",
 
             standupCount = 1,
             standLog = emptyList(),
