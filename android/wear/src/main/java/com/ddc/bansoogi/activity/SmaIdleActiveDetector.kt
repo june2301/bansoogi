@@ -41,10 +41,15 @@ class SmaIdleActiveDetector(
             val lin = kotlin.math.abs(mag - 9.81f)
             buf.add(lin)
             while (buf.size > windowSize) buf.removeFirst()
+            val now = System.currentTimeMillis()
+            val cutoff = now - stepWindowMs
+            while (stepDeque.isNotEmpty() && stepDeque.first < cutoff) {
+                stepDeque.removeFirst()
+            }
             evaluate()
         }.launchIn(scope)
 
-        // 2) 스텝 이벤트 → 60s 창 관리
+        // 2) 스텝 이벤트 → 20s 창 관리
         stepTimestamps.onEach { ts ->
             stepDeque.add(ts)
             val cutoff = ts - stepWindowMs

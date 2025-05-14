@@ -4,7 +4,6 @@ import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import com.ddc.bansoogi.sensor.AndroidSensorManager
-import androidx.health.services.client.data.UserActivityState as HSState
 
 /* ─────────────── 최종 ActivityState 모델 ─────────────── */
 sealed class ActivityState {
