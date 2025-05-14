@@ -10,12 +10,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import androidx.health.services.client.HealthServices
-import androidx.health.services.client.PassiveMonitoringClient
-import androidx.health.services.client.PassiveListenerCallback
-import androidx.health.services.client.data.*
-import androidx.health.services.client.data.UserActivityState as HSState
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import kotlin.math.roundToInt
 
@@ -24,34 +18,6 @@ class AndroidSensorManager(private val context: Context) {
     private val sensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val TAG = "AndroidSensorManager"
-    private val ACCEL_TAG = "Accelerometer"
-
-    /* ──────────────── Health Services: User-Activity ──────────────── */
-    private val passiveClient: PassiveMonitoringClient by lazy {
-        HealthServices.getClient(context).passiveMonitoringClient
-    }
-
-    val userActivityState: Flow<HSState> by lazy {
-        callbackFlow {
-            val callback = object : PassiveListenerCallback {
-                override fun onUserActivityInfoReceived(info: UserActivityInfo) {
-                    trySend(info.userActivityState)
-                }
-                override fun onNewDataPointsReceived(dataPoints: DataPointContainer) = Unit
-                override fun onGoalCompleted(goal: PassiveGoal) = Unit
-            }
-            val config = PassiveListenerConfig
-                .builder()
-                .setShouldUserActivityInfoBeRequested(true)
-                .build()
-            passiveClient.setPassiveListenerCallback(config, callback)
-            awaitClose {
-                passiveClient.clearPassiveListenerCallbackAsync()
-            }
-        }
-            .distinctUntilChanged()
-            .catch { e -> Log.w(TAG, "UserActivity flow error", e) }
-    }
 
     // ────────────────────────────────────────────────────────────
     //  Generic base wrapper

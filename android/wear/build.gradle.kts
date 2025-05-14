@@ -82,5 +82,4 @@ dependencies {
 
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
-    implementation("androidx.health:health-services-client:1.0.0")
 }
