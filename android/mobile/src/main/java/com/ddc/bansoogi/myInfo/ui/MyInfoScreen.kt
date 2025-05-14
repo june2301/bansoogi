@@ -31,12 +31,14 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.ddc.bansoogi.collection.data.model.CollectionModel
 import com.ddc.bansoogi.common.util.openAppNotificationSettings
 
@@ -404,9 +406,13 @@ private fun NotificationToggleRow(
 
     val context = LocalContext.current
     val activity = remember { context.findActivity() }
+
+    val permissionGranted = ContextCompat.checkSelfPermission(
+        context, Manifest.permission.POST_NOTIFICATIONS
+    ) == PackageManager.PERMISSION_GRANTED
+
     var showSettingsDialog by remember { mutableStateOf(false) }
 
-    /* 권한 런처 */
     val permissionLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
@@ -434,17 +440,23 @@ private fun NotificationToggleRow(
             modifier = Modifier.padding(start = 8.dp)
         )
         Switch(
-            checked = checked,
+            checked = permissionGranted && checked,
             onCheckedChange = { wantOn ->
-                if (!wantOn) { onToggle(); return@Switch }
-                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                if (!wantOn) {
+                    onToggle(); return@Switch
+                }
+                if (permissionGranted) {
+                    onToggle()
+                } else {
+                    showSettingsDialog = false
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
             },
             modifier = Modifier.padding(end = 8.dp),
             colors = SwitchDefaults.colors(checkedTrackColor = GreenChecked)
         )
     }
 
-    /* 영구 거부 안내 다이얼로그 */
     if (showSettingsDialog) {
         AlertDialog(
             onDismissRequest = { showSettingsDialog = false },
@@ -462,6 +474,14 @@ private fun NotificationToggleRow(
             containerColor = Color(0xFFFFFFFF)
 
         )
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { showSettingsDialog = false }
+    }
+
+    LaunchedEffect(permissionGranted) {
+        if (permissionGranted && !checked) onToggle()
     }
 }
 

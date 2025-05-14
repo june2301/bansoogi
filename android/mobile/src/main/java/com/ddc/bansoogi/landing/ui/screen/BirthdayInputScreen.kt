@@ -93,7 +93,7 @@ fun BirthInputScreen(controller: LandingController, onNext: () -> Unit) {
             onClick = {
                 val calendar = Calendar.getInstance().apply {
                     set(Calendar.YEAR, selectedYear.value)
-                    set(Calendar.MONTH, selectedMonth.value)
+                    set(Calendar.MONTH, selectedMonth.value - 1)
                     set(Calendar.DAY_OF_MONTH, selectedDay.value)
                 }
                 controller.profileModel.birthDate = calendar.time

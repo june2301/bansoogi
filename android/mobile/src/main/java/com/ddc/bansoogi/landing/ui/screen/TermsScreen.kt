@@ -77,12 +77,16 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
                 modifier = Modifier
                     .padding(16.dp)
             ) {
+                Spacer(modifier = Modifier.height(12.dp))
+
                 Box(
-                    modifier = Modifier.fillMaxWidth(), // 부모가 크기를 알아야 정렬 가능
+                    modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     DefaultTitleText("서비스 이용 약관")
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 CheckboxRow(
                     checked = serviceChecked,
@@ -115,7 +119,7 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
 //                    onLabelClick = { currentDialogType = it }
 //                )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
 

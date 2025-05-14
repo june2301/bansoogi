@@ -85,7 +85,11 @@ object AlarmScheduler {
         )
     }
 
-    /** MyInfoDto 하나를 받아 5개 알람을 모두 예약 */
+    fun rescheduleAllDailyAlarms(context: Context, info: MyInfoDto) {
+        cancelAllDailyAlarms(context)
+        scheduleAllDailyAlarms(context, info)
+    }
+
     fun scheduleAllDailyAlarms(context: Context, info: MyInfoDto) {
         scheduleDailyAlarm(context, AlarmType.WAKE,      info.wakeUpTime)
         scheduleDailyAlarm(context, AlarmType.BREAKFAST, info.breakfastTime)
