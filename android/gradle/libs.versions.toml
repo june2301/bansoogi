@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.2"
+healthServicesClient = "1.1.0-beta02"
 kotlin = "2.0.21"
 kotlinx-serialization = "1.6.0"
 coreKtx = "1.16.0"
@@ -37,6 +38,7 @@ workRuntimeKtx = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-health-services-client = { module = "androidx.health:health-services-client", version.ref = "healthServicesClient" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

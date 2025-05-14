@@ -10,20 +10,49 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.ddc.bansoogi.activity.ActivityStateProcessor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
- * Foreground service that keeps [AndroidSensorManager] alive while the app is not in the foreground.
+ * Foreground service that keeps [AndroidSensorManager] alive while the app is not in the foreground,
+ * 그리고 ActivityStateProcessor를 실행하여 분류 결과를 로그로 찍습니다.
  */
 class SensorForegroundService : Service() {
 
     private val sensorManager by lazy { AndroidSensorManager(this) }
 
+    // 분류기와 서비스 전용 CoroutineScope
+    private lateinit var activityProcessor: ActivityStateProcessor
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     override fun onCreate() {
         super.onCreate()
+
+        // 1) Notification 띄워서 포그라운드로 전환
         startForeground(NOTIFICATION_ID, createNotification())
+
+        // 2) 센서 구독 시작
         sensorManager.startAll()
+
+        // 3) ActivityStateProcessor 초기화 및 실행
+        activityProcessor = ActivityStateProcessor(sensorManager, externalScope = serviceScope).also {
+            it.start()
+        }
+
+        // 4) 분류 결과를 로그로 출력
+        activityProcessor.state
+            .onEach { state ->
+                Log.d(TAG, "★ ActivityState → $state")
+            }
+            .launchIn(serviceScope)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -50,7 +79,12 @@ class SensorForegroundService : Service() {
     }
 
     override fun onDestroy() {
+        // 1) 센서 정리
         sensorManager.stopAll()
+        // 2) 분류기 정지
+        activityProcessor.stop()
+        // 3) 스코프 취소
+        serviceScope.cancel()
         super.onDestroy()
     }
 
@@ -79,6 +113,7 @@ class SensorForegroundService : Service() {
         private const val NOTIFICATION_ID = 1001
         private const val NOTIFICATION_CHANNEL_ID = "sensor_foreground"
         private const val RESTART_DELAY_MS = 1_000L
+        private const val TAG = "SensorForegroundSvc"
 
         fun ensureRunning(ctx: Context) {
             ContextCompat.startForegroundService(ctx, Intent(ctx, SensorForegroundService::class.java))

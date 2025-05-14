@@ -1,3 +1,7 @@
+/* ────────────────────────────────────────────────────────────────
+ * AndroidSensorManager.kt
+ *   – 모든 센서 + UserActivityState(Health Services) 을 Flow 로 제공
+ * ──────────────────────────────────────────────────────────────── */
 package com.ddc.bansoogi.sensor
 
 import android.content.Context
@@ -6,45 +10,128 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import androidx.health.services.client.HealthServices
+import androidx.health.services.client.PassiveMonitoringClient
+import androidx.health.services.client.PassiveListenerCallback
+import androidx.health.services.client.data.*
+import androidx.health.services.client.data.UserActivityState as HSState
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
+import kotlin.math.roundToInt
 
-/**
- * High-level façade that owns all Android-framework sensors used by the project.
- *
- * Only registration/un-registration + Kotlin `Flow` wiring is provided for now –
- * business-logic such as SMA, cadence, etc. lives in higher-level classes.
- */
 class AndroidSensorManager(private val context: Context) {
 
-    private val sensorManager: SensorManager =
+    private val sensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
     private val TAG = "AndroidSensorManager"
+    private val ACCEL_TAG = "Accelerometer"
 
-    // Internal wrappers – not exposed outside this class
-    private val offBodyWrapper by lazy { BooleanSensorWrapper(Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT) }
-    private val linAccWrapper by lazy { LinearAccelerationSensorWrapper() }
-    private val stepDetectorWrapper by lazy { StepDetectorSensorWrapper() }
-    private val pressureWrapper by lazy {
-        FloatArraySensorWrapper(
-            Sensor.TYPE_PRESSURE,
-            samplingHz = 1
-        )
+    /* ──────────────── Health Services: User-Activity ──────────────── */
+    private val passiveClient: PassiveMonitoringClient by lazy {
+        HealthServices.getClient(context).passiveMonitoringClient
     }
-    private val heartRateWrapper by lazy { HeartRateSensorWrapper() }
 
-    // Public read-only event streams
-    val offBody = offBodyWrapper.events
-    val linearAcceleration = linAccWrapper.events
-    val stepDetector = stepDetectorWrapper.events
-    val pressure = pressureWrapper.events
-    val heartRate = heartRateWrapper.events
+    val userActivityState: Flow<HSState> by lazy {
+        callbackFlow {
+            val callback = object : PassiveListenerCallback {
+                override fun onUserActivityInfoReceived(info: UserActivityInfo) {
+                    trySend(info.userActivityState)
+                }
+                override fun onNewDataPointsReceived(dataPoints: DataPointContainer) = Unit
+                override fun onGoalCompleted(goal: PassiveGoal) = Unit
+            }
+            val config = PassiveListenerConfig
+                .builder()
+                .setShouldUserActivityInfoBeRequested(true)
+                .build()
+            passiveClient.setPassiveListenerCallback(config, callback)
+            awaitClose {
+                passiveClient.clearPassiveListenerCallbackAsync()
+            }
+        }
+            .distinctUntilChanged()
+            .catch { e -> Log.w(TAG, "UserActivity flow error", e) }
+    }
+
+    // ────────────────────────────────────────────────────────────
+    //  Generic base wrapper
+    // ────────────────────────────────────────────────────────────
+    private abstract inner class BaseSensorWrapper<T : Any>(
+        private val sensorType: Int,
+        private val samplingUs: Int
+    ) : SensorEventListener {
+        private val sensor: Sensor? = sensorManager.getDefaultSensor(sensorType)
+        private val _events = MutableSharedFlow<T>(extraBufferCapacity = 64)
+        val events: SharedFlow<T> = _events.asSharedFlow()
+
+        fun start() {
+            sensor?.let { sensorManager.registerListener(this, it, samplingUs) }
+        }
+        fun stop() = sensorManager.unregisterListener(this)
+        protected fun emit(v: T) = _events.tryEmit(v)
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
+    }
+
+    // 실제 ACCELEROMETER 사용
+    private inner class AccelerometerSensorWrapper :
+        BaseSensorWrapper<FloatArray>(Sensor.TYPE_ACCELEROMETER, 1_000_000 / 50) {
+
+        override fun onSensorChanged(e: SensorEvent) {
+            val values = e.values.clone()
+//            Log.d(ACCEL_TAG, "Accel → x=${values[0]}, y=${values[1]}, z=${values[2]}")
+            emit(values)
+        }
+    }
+
+    private inner class StepDetectorSensorWrapper :
+        BaseSensorWrapper<Long>(Sensor.TYPE_STEP_DETECTOR, SensorManager.SENSOR_DELAY_NORMAL) {
+        override fun onSensorChanged(event: SensorEvent) {
+            val timestamp = System.currentTimeMillis()
+            emit(timestamp)
+            Log.d(TAG, "StepDetector event at $timestamp")
+        }
+
+    }
+
+    private inner class FloatArraySensorWrapper(type: Int, hz: Int) :
+        BaseSensorWrapper<FloatArray>(type, 1_000_000 / hz) {
+        override fun onSensorChanged(e: SensorEvent) {
+            emit(e.values.clone())
+        }
+    }
+
+    private inner class BooleanSensorWrapper(type: Int) :
+        BaseSensorWrapper<Boolean>(type, SensorManager.SENSOR_DELAY_NORMAL) {
+        override fun onSensorChanged(e: SensorEvent) {
+            emit(e.values[0].roundToInt() == 1)
+        }
+    }
+
+    private inner class HeartRateSensorWrapper :
+        BaseSensorWrapper<Float>(Sensor.TYPE_HEART_RATE, 1_000_000) {
+        override fun onSensorChanged(e: SensorEvent) {
+            e.values.firstOrNull()?.let { emit(it) }
+        }
+    }
+
+    // ────────────────────────────────────────────────────────────
+    //  public streams & control
+    // ────────────────────────────────────────────────────────────
+    private val offBodyWrapper      by lazy { BooleanSensorWrapper(Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT) }
+    private val accelWrapper        by lazy { AccelerometerSensorWrapper() }
+    private val stepDetectorWrapper by lazy { StepDetectorSensorWrapper() }
+    private val pressureWrapper     by lazy { FloatArraySensorWrapper(Sensor.TYPE_PRESSURE, 1) }
+    private val heartRateWrapper    by lazy { HeartRateSensorWrapper() }
+
+    val isOffBody: SharedFlow<Boolean>          = offBodyWrapper.events
+    val linearAcceleration: SharedFlow<FloatArray> = accelWrapper.events
+    val stepDetector: SharedFlow<Long>          = stepDetectorWrapper.events
+    val pressure: SharedFlow<FloatArray>        = pressureWrapper.events
+    val heartRate: SharedFlow<Float>            = heartRateWrapper.events
 
     fun startAll() {
         offBodyWrapper.start()
-        linAccWrapper.start()
+        accelWrapper.start()
         stepDetectorWrapper.start()
         pressureWrapper.start()
         heartRateWrapper.start()
@@ -52,107 +139,9 @@ class AndroidSensorManager(private val context: Context) {
 
     fun stopAll() {
         offBodyWrapper.stop()
-        linAccWrapper.stop()
+        accelWrapper.stop()
         stepDetectorWrapper.stop()
         pressureWrapper.stop()
         heartRateWrapper.stop()
-    }
-
-    // ========================================================================
-    //  Generic base wrapper
-    // ========================================================================
-
-    private abstract inner class BaseSensorWrapper<T : Any>(
-        private val sensorType: Int,
-        private val samplingUs: Int
-    ) : SensorEventListener {
-
-        private val sensor: Sensor? = sensorManager.getDefaultSensor(sensorType)
-        private val _events = MutableSharedFlow<T>(extraBufferCapacity = 64)
-        val events: SharedFlow<T> = _events.asSharedFlow()
-
-        fun start() {
-            sensor?.let {
-                sensorManager.registerListener(this, it, samplingUs)
-                Log.d(TAG, "Registered listener for sensorType=$sensorType (name=${it.name})")
-            } ?: Log.w(TAG, "Sensor type=$sensorType not available on device")
-        }
-
-        fun stop() {
-            sensorManager.unregisterListener(this)
-            Log.d(TAG, "Unregistered listener for sensorType=$sensorType")
-        }
-
-        protected fun emit(value: T) {
-            _events.tryEmit(value)
-        }
-
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
-    }
-
-    // ========================================================================
-    //  Concrete wrappers
-    // ========================================================================
-
-    /** TYPE_LINEAR_ACCELERATION @ 50 Hz */
-    private inner class LinearAccelerationSensorWrapper :
-        BaseSensorWrapper<FloatArray>(
-            Sensor.TYPE_LINEAR_ACCELERATION,
-            samplingUs = 1_000_000 / 50 // 50 Hz
-        ) {
-        override fun onSensorChanged(event: SensorEvent) {
-            emit(event.values.clone())
-        }
-    }
-
-    /** TYPE_STEP_DETECTOR – each event is just a timestamp (epoch ms) */
-    private inner class StepDetectorSensorWrapper :
-        BaseSensorWrapper<Long>(
-            Sensor.TYPE_STEP_DETECTOR,
-            samplingUs = SensorManager.SENSOR_DELAY_NORMAL
-        ) {
-        override fun onSensorChanged(event: SensorEvent) {
-            val timestamp = System.currentTimeMillis()
-            emit(timestamp)
-            Log.d(TAG, "StepDetector event at $timestamp")
-        }
-    }
-
-    /** Generic float[] sensor with low sample-rate (e.g. pressure 1 Hz) */
-    private inner class FloatArraySensorWrapper(
-        sensorType: Int,
-        samplingHz: Int
-    ) : BaseSensorWrapper<FloatArray>(
-        sensorType,
-        samplingUs = 1_000_000 / samplingHz
-    ) {
-        override fun onSensorChanged(event: SensorEvent) {
-            emit(event.values.clone())
-            Log.d(TAG, "FloatArraySensor(type=${event.sensor.type}): ${event.values.contentToString()}")
-        }
-    }
-
-    /** Off-body Boolean wrapper – 1 == on-body, 0 == off-body */
-    private inner class BooleanSensorWrapper(sensorType: Int) :
-        BaseSensorWrapper<Boolean>(sensorType, SensorManager.SENSOR_DELAY_NORMAL) {
-        override fun onSensorChanged(event: SensorEvent) {
-            val onBody = Math.round(event.values[0]) == 1
-            emit(onBody)
-            Log.d(TAG, "BooleanSensor(type=${event.sensor.type}): onBody=$onBody")
-        }
-    }
-
-    /** Heart-rate sensor wrapper (framework TYPE_HEART_RATE). Wear OS specific
-     *  Health-Services implementation will replace / extend this later. */
-    private inner class HeartRateSensorWrapper :
-        BaseSensorWrapper<Float>(
-            Sensor.TYPE_HEART_RATE,
-            samplingUs = 1_000_000 // 1 Hz
-        ) {
-        override fun onSensorChanged(event: SensorEvent) {
-            val hr = event.values.firstOrNull() ?: return
-            emit(hr)
-            Log.d(TAG, "HeartRate: $hr")
-        }
     }
 }

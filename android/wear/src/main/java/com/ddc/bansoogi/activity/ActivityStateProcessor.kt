@@ -1,104 +1,112 @@
 package com.ddc.bansoogi.activity
 
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import java.util.ArrayDeque
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+import com.ddc.bansoogi.sensor.AndroidSensorManager
+import androidx.health.services.client.data.UserActivityState as HSState
 
-/**
- * Collects raw sensor events from [com.ddc.bansoogi.sensor.AndroidSensorManager] and pipelines them to
- * higher-level classifiers (to be implemented). For now it simply logs events
- * so that we can verify the data→분류 흐름의 첫 구간이 살아 있는지 빠르게 확인한다.
- */
+/* ─────────────── 최종 ActivityState 모델 ─────────────── */
+sealed class ActivityState {
+    object OffBody                  : ActivityState()
+    object Sleeping                 : ActivityState()
+    object Idle                     : ActivityState()               // StaticClassifier 적용 전
+    data class Static(
+        val type: StaticType,
+        val phoneUsage: Boolean
+    )                              : ActivityState()
+    data class Dynamic(
+        val type: DynamicType
+    )                              : ActivityState()
+    object Unknown                  : ActivityState()
+}
+
+enum class StaticType { LYING, SITTING, STANDING }                 // (추후 구현)
+
+/* ─────────────── PHONE_USAGE DTO ─────────────── */
+data class PhoneUsageDto(val isUsing: Boolean)
+
+/* ─────────────── ActivityStateProcessor 본체 ─────────────── */
 class ActivityStateProcessor(
-    private val sensorManager: com.ddc.bansoogi.sensor.AndroidSensorManager,
+    private val sensorManager: AndroidSensorManager,
     externalScope: CoroutineScope? = null
 ) {
-
     private val scope = externalScope ?: CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
+    /* ① Off-body · Idle/Active 감지기 생성 */
+    private var isOnBody = true
+    private val idleActiveDetector = SmaIdleActiveDetector(
+        linAcc = sensorManager.linearAcceleration,
+        stepTimestamps = sensorManager.stepDetector,
+        externalScope = scope
+    )
+
+    /* ② Classifiers */
+    private val dynamicCls = DynamicClassifier(
+        stepTimestamps = sensorManager.stepDetector,
+        pressure       = sensorManager.pressure,
+        linearAcceleration = sensorManager.linearAcceleration,
+        heartRate      = sensorManager.heartRate,
+        externalScope  = scope
+    )
+    // private val staticCls = StaticClassifier(...)
+
+    /* ③ state flows */
+    private val _state = MutableStateFlow<ActivityState>(ActivityState.Unknown)
+    val state: StateFlow<ActivityState> = _state.asStateFlow()
+
+    /* ④ 시작/정지 */
     fun start() {
         sensorManager.startAll()
-        collectSensors()
+
+        collectOffBody()
+        collectIdleActive()     // Idle/Active 토글
+        collectDynamic()
     }
 
     fun stop() {
         sensorManager.stopAll()
+        dynamicCls.stop()
+        idleActiveDetector.stop()
         scope.cancel()
     }
 
-    private fun collectSensors() {
-        // Off-body
-        sensorManager.offBody
-            .onEach { onBody -> Log.d(TAG, "OffBody onBody=$onBody") }
-            .launchIn(scope)
+    /* ───────── Collectors ───────── */
 
-        // Constants for SMA fallback
-        val windowSeconds = 5
-        val linAccHz = 50
-        val maxSamples = windowSeconds * linAccHz
-        val buffer = ArrayDeque<Float>(maxSamples * 3)
-        var fallbackState: ActivityState = ActivityState.IDLE
+    private fun collectOffBody() = sensorManager.isOffBody
+        .onEach { isOnBody = it; recompute() }          // true=착용
+        .launchIn(scope)
 
-        // Linear acceleration
-        sensorManager.linearAcceleration
-            .onEach { values ->
-                // Append newest x,y,z
-                buffer.add(values[0])
-                buffer.add(values[1])
-                buffer.add(values[2])
-                // Trim to last N samples (x,y,z → *3)
-                while (buffer.size > maxSamples * 3) {
-                    buffer.removeFirst()
-                }
+    private var isActive = false
+    private fun collectIdleActive() = idleActiveDetector.state
+        .onEach { state ->
+            isActive = (state == SmaIdleActiveDetector.State.ACTIVE)
+            dynamicCls.setEnabled(isActive)              // ACTIVE 때만 DynamicOn
+            // staticCls.setEnabled(!isActive)
+            recompute()
+        }.launchIn(scope)
 
-                // Compute SMA when window full
-                if (buffer.size == maxSamples * 3) {
-                    val sma = SmaFallbackClassifier.computeSma(buffer.toFloatArray())
-                    val newState = if (sma > 0.30f) ActivityState.ACTIVE else ActivityState.IDLE
-                    if (newState != fallbackState) {
-                        Log.d(TAG, "SMA fallback: $sma -> $newState")
-                        fallbackState = newState
-                        // TODO: integrate with system UserActivityState when available
-                    }
-                }
+    private var latestDynamic: DynamicType? = null
+    private fun collectDynamic() = dynamicCls.state
+        .onEach { latestDynamic = it; recompute() }
+        .launchIn(scope)
+
+    /* ───────── 최종 상태 합성 ───────── */
+    private fun recompute() {
+        val newState: ActivityState = when {
+            !isOnBody                     -> ActivityState.OffBody
+            idleActiveDetector.state.value == SmaIdleActiveDetector.State.IDLE -> {
+                // StaticClassifier 완성 전까지 Idle
+                ActivityState.Idle
             }
-            .launchIn(scope)
-
-        // Step detector → cadence 계산 예정
-        sensorManager.stepDetector
-            .onEach { ts -> Log.d(TAG, "StepDetector t=$ts") }
-            .launchIn(scope)
-
-        // Pressure
-        sensorManager.pressure
-            .onEach { values -> Log.d(TAG, "Pressure hPa=${values.firstOrNull()} ") }
-            .launchIn(scope)
-
-        // Heart-rate
-        sensorManager.heartRate
-            .onEach { bpm -> Log.d(TAG, "HeartRate bpm=$bpm") }
-            .launchIn(scope)
-
-        // ───── Dynamic classifier ─────
-        val dynamicClassifier = DynamicClassifier(
-            stepTimestamps = sensorManager.stepDetector,
-            pressure = sensorManager.pressure,
-            linearAcceleration = sensorManager.linearAcceleration,
-            heartRate = sensorManager.heartRate,
-            externalScope = scope
-        )
-
-        dynamicClassifier.state
-            .onEach { dyn -> dyn?.let { Log.d(TAG, "Dynamic → $it") } }
-            .launchIn(scope)
+            latestDynamic != null         -> ActivityState.Dynamic(latestDynamic!!)
+            else                          -> ActivityState.Unknown
+        }
+        if (_state.value != newState) {
+            _state.value = newState
+            Log.d(TAG, "ActivityState → $newState")
+        }
     }
 
-    companion object {
-        private const val TAG = "ActivityProcessor"
-    }
+    private companion object { const val TAG = "ActivityProcessor" }
 }
