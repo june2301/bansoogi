@@ -18,13 +18,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.ddc.bansoogi.common.navigation.WearNavGraph
 import com.ddc.bansoogi.common.notification.NotificationHelper
+import com.ddc.bansoogi.sensor.SensorForegroundService
 
 class MainActivity : ComponentActivity() {
 
     private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            if (!granted) {
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+            val allGranted = result.all { it.value }
+            if (!allGranted) {
                 showCustomToast()
+            } else {
+                SensorForegroundService.ensureRunning(this)
             }
         }
 
@@ -68,14 +72,26 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun requestNotificationPermissionOnce() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        val needNotificationPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+
+        val requiredPermissions = mutableListOf(
+            Manifest.permission.BODY_SENSORS,
+            Manifest.permission.ACTIVITY_RECOGNITION
+        ).apply {
+            if (needNotificationPermission) add(Manifest.permission.POST_NOTIFICATIONS)
+            if (Build.VERSION.SDK_INT >= 34) add("android.permission.FOREGROUND_SERVICE_HEALTH")
+        }.toTypedArray()
 
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        if (prefs.getBoolean(KEY_ASKED_NOTI, false)) return
-        prefs.edit().putBoolean(KEY_ASKED_NOTI, true).apply()
-
-        // POST_NOTIFICATIONS 권한 요청
-        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        if (!prefs.getBoolean(KEY_ASKED_NOTI, false)) {
+            prefs.edit().putBoolean(KEY_ASKED_NOTI, true).apply()
+            requestPermissionLauncher.launch(requiredPermissions)
+        } else {
+            val allGranted = requiredPermissions.all { checkSelfPermission(it) == android.content.pm.PackageManager.PERMISSION_GRANTED }
+            if (allGranted) {
+                SensorForegroundService.ensureRunning(this)
+            }
+        }
     }
 
     companion object {

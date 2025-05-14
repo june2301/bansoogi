@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -19,6 +20,8 @@ class AndroidSensorManager(private val context: Context) {
 
     private val sensorManager: SensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+    private val TAG = "AndroidSensorManager"
 
     // Internal wrappers – not exposed outside this class
     private val offBodyWrapper by lazy { BooleanSensorWrapper(Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT) }
@@ -71,11 +74,13 @@ class AndroidSensorManager(private val context: Context) {
         fun start() {
             sensor?.let {
                 sensorManager.registerListener(this, it, samplingUs)
-            }
+                Log.d(TAG, "Registered listener for sensorType=$sensorType (name=${it.name})")
+            } ?: Log.w(TAG, "Sensor type=$sensorType not available on device")
         }
 
         fun stop() {
             sensorManager.unregisterListener(this)
+            Log.d(TAG, "Unregistered listener for sensorType=$sensorType")
         }
 
         protected fun emit(value: T) {
@@ -97,6 +102,7 @@ class AndroidSensorManager(private val context: Context) {
         ) {
         override fun onSensorChanged(event: SensorEvent) {
             emit(event.values.clone())
+            Log.d(TAG, "LinearAcceleration: ${event.values.contentToString()}")
         }
     }
 
@@ -107,7 +113,9 @@ class AndroidSensorManager(private val context: Context) {
             samplingUs = SensorManager.SENSOR_DELAY_NORMAL
         ) {
         override fun onSensorChanged(event: SensorEvent) {
-            emit(System.currentTimeMillis())
+            val timestamp = System.currentTimeMillis()
+            emit(timestamp)
+            Log.d(TAG, "StepDetector event at $timestamp")
         }
     }
 
@@ -121,6 +129,7 @@ class AndroidSensorManager(private val context: Context) {
     ) {
         override fun onSensorChanged(event: SensorEvent) {
             emit(event.values.clone())
+            Log.d(TAG, "FloatArraySensor(type=${event.sensor.type}): ${event.values.contentToString()}")
         }
     }
 
@@ -130,6 +139,7 @@ class AndroidSensorManager(private val context: Context) {
         override fun onSensorChanged(event: SensorEvent) {
             val onBody = Math.round(event.values[0]) == 1
             emit(onBody)
+            Log.d(TAG, "BooleanSensor(type=${event.sensor.type}): onBody=$onBody")
         }
     }
 
@@ -141,7 +151,9 @@ class AndroidSensorManager(private val context: Context) {
             samplingUs = 1_000_000 // 1 Hz
         ) {
         override fun onSensorChanged(event: SensorEvent) {
-            emit(event.values.firstOrNull() ?: return)
+            val hr = event.values.firstOrNull() ?: return
+            emit(hr)
+            Log.d(TAG, "HeartRate: $hr")
         }
     }
 }
