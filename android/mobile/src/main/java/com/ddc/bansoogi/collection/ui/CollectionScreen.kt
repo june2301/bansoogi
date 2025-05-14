@@ -8,9 +8,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -28,10 +25,6 @@ import com.ddc.bansoogi.collection.data.model.CollectionDto
 import com.ddc.bansoogi.collection.controller.CollectionController
 import com.ddc.bansoogi.collection.view.CollectionView
 import com.ddc.bansoogi.R
-import com.ddc.bansoogi.collection.data.entity.Character
-import com.ddc.bansoogi.collection.data.local.CollectionDataSource
-import com.ddc.bansoogi.common.data.local.RealmManager
-import io.realm.kotlin.ext.query
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Preview
@@ -58,11 +51,7 @@ fun CollectionScreen() {
     val controller = remember { CollectionController(view) }
 
     LaunchedEffect(Unit) {
-        CollectionDataSource().insertDummyCharactersWithUnlock()
         controller.initialize()
-
-        val realm = RealmManager.realm
-        val allCharacters = realm.query<Character>().find()
     }
 
     val regularList = collectionDtoState.filter { it.id <= 30 }
