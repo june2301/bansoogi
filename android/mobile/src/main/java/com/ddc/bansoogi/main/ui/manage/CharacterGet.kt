@@ -17,13 +17,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.collection.data.entity.Character
-import com.ddc.bansoogi.common.util.SpriteSheetAnimation
+import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import com.ddc.bansoogi.main.controller.CharacterGetController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 @Composable
 fun CharacterGetScreen(navController: NavController) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val controller = remember { CharacterGetController() }
 
     var currentStage by remember { mutableIntStateOf(0) }
@@ -32,19 +35,20 @@ fun CharacterGetScreen(navController: NavController) {
 
     // 에너지 체크
     LaunchedEffect(Unit) {
-        canDraw = controller.canDrawCharacter()
-        if (!canDraw) {
+        val result = withContext(Dispatchers.IO) {
+            controller.canDrawCharacter()
+        }
+        canDraw = result
+        if (!result) {
             navController.popBackStack()
         }
     }
 
     // 캐릭터 뽑기
     LaunchedEffect(canDraw) {
-        if (canDraw) {
-            controller.getRandomBansoogi().collect { character ->
-                selectedCharacter = character
-            }
-        }
+        if (!canDraw) return@LaunchedEffect
+        controller.getRandomBansoogi()
+            .collect { character -> selectedCharacter = character }
     }
 
     // 저장 처리
@@ -52,7 +56,9 @@ fun CharacterGetScreen(navController: NavController) {
         if (selectedCharacter != null) {
             delay(1250)
             currentStage = 1
-            controller.saveUnlockedCharacter(selectedCharacter!!)
+            withContext(Dispatchers.IO) {
+                controller.saveUnlockedCharacter(selectedCharacter!!)
+            }
         }
     }
 
