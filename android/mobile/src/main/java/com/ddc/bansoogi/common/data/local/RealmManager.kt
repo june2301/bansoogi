@@ -9,6 +9,7 @@ import com.ddc.bansoogi.person.data.entity.Person
 import com.ddc.bansoogi.myInfo.data.entity.User
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
+import java.io.File
 
 object RealmManager {
     private val config = RealmConfiguration.create(
@@ -23,7 +24,16 @@ object RealmManager {
         )
     )
 
-    val realm: Realm by lazy {
-        Realm.open(config)
+    @Volatile
+    private var _realm: Realm? = null
+
+    val realm: Realm
+        get() = _realm ?: synchronized(this) {
+            _realm ?: Realm.open(config).also { _realm = it }
+        }
+
+    @Synchronized
+    fun clearAll() {
+        realm.writeBlocking { deleteAll() }
     }
 }

@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -46,13 +50,18 @@ fun DurationPicker(
                 },
             contentAlignment = Alignment.Center
         ) {
-            Text("-", color = Color.White, fontWeight = FontWeight.Bold)
+            Icon(
+                imageVector = Icons.Filled.Remove,
+                contentDescription = "감소",
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
         }
 
         Box(
             modifier = Modifier
                 .width(48.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             DefaultBodyText(
                 "${durationState.value}"
@@ -70,7 +79,12 @@ fun DurationPicker(
                 },
             contentAlignment = Alignment.Center
         ) {
-            Text("+", color = Color.White, fontWeight = FontWeight.Bold)
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = "증가",
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }
