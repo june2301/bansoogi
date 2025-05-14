@@ -1,23 +1,21 @@
 package com.ddc.bansoogi.presentation
 
-import android.content.Intent
 import android.Manifest
-import android.graphics.Color
+import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.PowerManager
-import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.ddc.bansoogi.common.navigation.WearNavGraph
@@ -27,104 +25,104 @@ import com.ddc.bansoogi.sensor.SensorServiceWatcher
 
 class MainActivity : ComponentActivity() {
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-            val allGranted = result.all { it.value }
-            if (!allGranted) {
-                showCustomToast()
-            } else {
-                maybeRequestIgnoreBatteryOptimization()
-            }
+    // 1) 런타임 권한 요청 런처
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            startSensorsIfReady()
         }
-
-    private fun showCustomToast() {
-        val backgroundDrawable = GradientDrawable().apply {
-            shape = GradientDrawable.RECTANGLE
-            cornerRadius = 24f
-            setColor(Color.WHITE)
-        }
-
-        val textView = TextView(this).apply {
-            text = "앱 설정에서 알림 권한을 허용하시면\n워치 전용 알림을 받을 수 있습니다."
-            background = backgroundDrawable
-            setTextColor(Color.BLACK)
-            textSize = 12f
-            setPadding(32, 24, 32, 24)
-            gravity = Gravity.CENTER
-        }
-
-        Toast(this).apply {
-            duration = Toast.LENGTH_LONG
-            view = textView
-            show()
-        }
-    }
-
-    private fun maybeRequestIgnoreBatteryOptimization() {
-        val pm = getSystemService(POWER_SERVICE) as PowerManager
-        if (pm.isIgnoringBatteryOptimizations(packageName)) {
-            SensorForegroundService.ensureRunning(this)
-        } else {
-            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                .setData(Uri.parse("package:$packageName"))
-            startActivity(intent)
-            SensorForegroundService.ensureRunning(this)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-
         super.onCreate(savedInstanceState)
 
-        requestNotificationPermissionOnce()
+        setTheme(android.R.style.Theme_DeviceDefault)
+        setContent { BansoogiApp() }
+
+        // 알림 채널은 바로 등록
         NotificationHelper.registerChannels(this)
 
-        setTheme(android.R.style.Theme_DeviceDefault)
-
-        setContent {
-            BansoogiApp()
-        }
-        SensorServiceWatcher.schedule(this)
-        SensorServiceWatcher.runOnceNow(this) // Temporary debug call
+        // 권한 체크 → 서비스 기동
+        requestRuntimePermissions()
     }
 
-    private fun requestNotificationPermissionOnce() {
-        val needNotificationPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+    override fun onResume() {
+        super.onResume()
+        // 권한 변경 후에도 한 번 더 기동 시도
+        startSensorsIfReady()
+    }
 
-        val requiredPermissions = mutableListOf(
-            Manifest.permission.BODY_SENSORS,
-            Manifest.permission.ACTIVITY_RECOGNITION
-        ).apply {
-            if (needNotificationPermission) add(Manifest.permission.POST_NOTIFICATIONS)
-            if (Build.VERSION.SDK_INT >= 34) add("android.permission.FOREGROUND_SERVICE_HEALTH")
+    // 2) 필요한 런타임 권한 목록
+    private val requiredPermissions: Array<String> by lazy {
+        buildList {
+            add(Manifest.permission.BODY_SENSORS)
+            add(Manifest.permission.ACTIVITY_RECOGNITION)
+            if (Build.VERSION.SDK_INT >= 34) {
+                add(Manifest.permission.FOREGROUND_SERVICE_HEALTH)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }.toTypedArray()
+    }
 
-        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        if (!prefs.getBoolean(KEY_ASKED_NOTI, false)) {
-            prefs.edit().putBoolean(KEY_ASKED_NOTI, true).apply()
-            requestPermissionLauncher.launch(requiredPermissions)
+    // 3) 권한이 없으면 요청, 이미 있으면 바로 서비스 시작
+    private fun requestRuntimePermissions() {
+        val denied = requiredPermissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (denied.isNotEmpty()) {
+            permissionLauncher.launch(denied.toTypedArray())
         } else {
-            val allGranted = requiredPermissions.all { checkSelfPermission(it) == android.content.pm.PackageManager.PERMISSION_GRANTED }
-            if (allGranted) {
-                maybeRequestIgnoreBatteryOptimization()
+            startSensorsIfReady()
+        }
+    }
+
+    // 4) 권한만 충족되면 포그라운드 서비스 & 워커 스케줄
+    private fun startSensorsIfReady() {
+        val permissionsGranted = requiredPermissions.all {
+            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+        }
+        Log.d("MainActivity", "permissionsGranted=$permissionsGranted")
+
+        if (permissionsGranted) {
+            Log.d("MainActivity", ">> PERMISSIONS OK: starting sensors")
+            SensorForegroundService.ensureRunning(this)
+            SensorServiceWatcher.schedule(this)
+        } else {
+            Log.d("MainActivity", ">> permissions MISSING: showing rationale")
+            showRationaleToast()
+        }
+    }
+
+    // 5) 권한 거부 시 안내
+    private fun showRationaleToast() {
+        val tv = TextView(this).apply {
+            text = "앱 권한이 부족하여 센서 기능이 제한됩니다.\n" +
+                    "앱 설정에서 권한을 모두 허용해주세요."
+            setPadding(32, 24, 32, 24)
+            gravity = Gravity.CENTER
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 24f
+                setColor(0xFFFFFFFF.toInt())
             }
         }
-    }
-
-    companion object {
-        private const val KEY_ASKED_NOTI = "asked_notification_permission"
+        Toast(this).apply {
+            duration = Toast.LENGTH_LONG
+            view = tv
+            show()
+        }
     }
 }
 
 @Composable
 fun BansoogiApp() {
     val navController = rememberNavController()
-    WearNavGraph(navController = navController)
+    WearNavGraph(navController)
 }
 
 @Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
 @Composable
-fun DefaultPreview() {
+fun PreviewBansoogi() {
     BansoogiApp()
 }
