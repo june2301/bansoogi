@@ -23,6 +23,7 @@ import androidx.wear.tooling.preview.devices.WearDevices
 import com.ddc.bansoogi.common.navigation.WearNavGraph
 import com.ddc.bansoogi.common.notification.NotificationHelper
 import com.ddc.bansoogi.sensor.SensorForegroundService
+import com.ddc.bansoogi.sensor.SensorServiceWatcher
 
 class MainActivity : ComponentActivity() {
 
@@ -84,6 +85,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             BansoogiApp()
         }
+        SensorServiceWatcher.schedule(this)
+        SensorServiceWatcher.runOnceNow(this) // Temporary debug call
     }
 
     private fun requestNotificationPermissionOnce() {
