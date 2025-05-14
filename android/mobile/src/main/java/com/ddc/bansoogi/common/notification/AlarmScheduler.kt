@@ -93,4 +93,23 @@ object AlarmScheduler {
         scheduleDailyAlarm(context, AlarmType.DINNER,    info.dinnerTime)
         scheduleDailyAlarm(context, AlarmType.SLEEP,     info.sleepTime)
     }
+
+    fun cancelDailyAlarm(context: Context, type: AlarmType) {
+        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent   = Intent(context, DailyAlarmReceiver::class.java).apply {
+            putExtra("alarm_type", type.name)
+        }
+        val pending = PendingIntent.getBroadcast(
+            context,
+            type.requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        alarmMgr.cancel(pending)
+        pending.cancel()
+    }
+
+    fun cancelAllDailyAlarms(context: Context) {
+        AlarmType.values().forEach { cancelDailyAlarm(context, it) }
+    }
 }

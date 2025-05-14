@@ -23,13 +23,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
-import com.ddc.bansoogi.myInfo.view.MyInfoView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import com.ddc.bansoogi.collection.data.entity.Character
-import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.common.navigation.NavRoutes
-import io.realm.kotlin.ext.query
 
 import android.Manifest
 import android.app.Activity
@@ -39,6 +35,7 @@ import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.text.style.TextAlign
 import androidx.core.app.ActivityCompat
 import com.ddc.bansoogi.collection.data.model.CollectionModel
 import com.ddc.bansoogi.common.util.openAppNotificationSettings
@@ -50,6 +47,7 @@ private val GreenChecked = Color(0xFF99CC00)
 fun MyInfoScreen(navController: NavController) {
 
     val controller = remember { MyInfoController() }
+    val ctx = LocalContext.current
 
     val myInfo by controller.myInfoFlow()
         .collectAsState(initial = null)
@@ -60,7 +58,8 @@ fun MyInfoScreen(navController: NavController) {
             onEdit          = { navController.navigate(NavRoutes.MYINFOUPDATE) },
             onToggleNotification   = { controller.toggleNotification() },
             onToggleBgSound = { controller.toggleBgSound() },
-            onToggleEffect  = { controller.toggleEffect() }
+            onToggleEffect  = { controller.toggleEffect() },
+            onDeleteMemberData  = { controller.deleteMemberData(ctx) }
         )
     } ?: Box(
         modifier = Modifier.fillMaxSize(),
@@ -76,13 +75,15 @@ fun MyInfoContent(
     onEdit: () -> Unit,
     onToggleNotification: () -> Unit,
     onToggleBgSound: () -> Unit,
-    onToggleEffect: () -> Unit
+    onToggleEffect: () -> Unit,
+    onDeleteMemberData: () -> Unit
 ) {
     val context = LocalContext.current
     val collectionModel = remember { CollectionModel() }
     val imageResId = remember(myInfoDto.profileBansoogiId) {
         collectionModel.getImageResId(context, myInfoDto.profileBansoogiId)
     }
+    var showAlert by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -215,6 +216,7 @@ fun MyInfoContent(
 
         Spacer(modifier = Modifier.height(16.dp))
         Divider(thickness = 2.dp, color = Color(0xFF888888))
+        Spacer(modifier = Modifier.height(8.dp))
 
         NotificationToggleRow(
             checked = myInfoDto.notificationEnabled,
@@ -229,6 +231,99 @@ fun MyInfoContent(
             label = "효과음 설정",
             checked = myInfoDto.effectSoundEnabled,
             onToggle = onToggleEffect
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+        Divider(thickness = 2.dp, color = Color(0xFF888888))
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Bansoogi",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF555555),
+                modifier = Modifier.padding(start = 10.dp)
+            )
+            Text(
+                text = "버전 정보 : v1.0.1",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF555555),
+                modifier = Modifier.padding(end = 10.dp)
+            )
+        }
+
+        TextButton(
+            onClick = { showAlert = true },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text(
+                text = "회원 데이터 삭제",
+                fontSize = 16.sp,
+                color = Color(0xFF888888),
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+    }
+
+    if (showAlert) {
+        AlertDialog(
+            onDismissRequest = { showAlert = false },
+
+            shape           = RoundedCornerShape(28.dp),
+            containerColor  = Color.White,
+            tonalElevation  = 6.dp,
+
+            title = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "회원 데이터 삭제",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            },
+            text = {
+                Text(
+                    text = "데이터 삭제를 진행하실 경우,\n" +
+                            "Bansoogi 애플리케이션에서\n" +
+                            "현재까지 수집·기록된\n" +
+                            "모든 데이터가 삭제됩니다.",
+                    fontSize  = 18.sp,
+                    lineHeight= 24.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+
+            confirmButton = {
+                TextButton(onClick = {
+                    showAlert = false
+                    onDeleteMemberData()
+                }) {
+                    Text("확인", fontSize = 20.sp, color = Color(0xFF555555))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAlert = false }) {
+                    Text("취소", fontSize = 20.sp, color = Color(0xFF555555))
+                }
+            }
         )
     }
 }

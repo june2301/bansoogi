@@ -26,6 +26,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        RealmManager.realm
         setContentView(R.layout.activity_splash)
 
         val splashScreenDelayTime: Long = 1500
