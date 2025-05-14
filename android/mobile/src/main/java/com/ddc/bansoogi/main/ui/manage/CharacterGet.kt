@@ -23,6 +23,7 @@ import com.ddc.bansoogi.collection.util.CharacterPicker
 import com.ddc.bansoogi.common.data.entity.TodayRecord
 import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.common.util.SpriteSheetAnimation
+import com.ddc.bansoogi.main.controller.CharacterGetController
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.delay
@@ -30,52 +31,35 @@ import kotlinx.coroutines.delay
 @Composable
 fun CharacterGetScreen(navController: NavController) {
     val context = LocalContext.current
+    val controller = remember { CharacterGetController() }
 
-    var currentStage by remember { mutableIntStateOf(0) } // 0: 빛남+펑, 1: 캐릭터 등장
+    var currentStage by remember { mutableIntStateOf(0) }
     var selectedCharacter by remember { mutableStateOf<Character?>(null) }
     var canDraw by remember { mutableStateOf(true) }
 
+    // 에너지 체크
     LaunchedEffect(Unit) {
-        val realm = RealmManager.realm
-        val today = realm.query<TodayRecord>().find().lastOrNull()
-        canDraw = (today?.energyPoint ?: 0) >= 80
-
+        canDraw = controller.canDrawCharacter()
         if (!canDraw) {
-            navController.popBackStack() // 에너지 부족하면 바로 복귀
-            return@LaunchedEffect
-        }
-
-        val characters = CollectionDataSource().getAllBansoogi()
-        characters.collect { list ->
-            selectedCharacter = CharacterPicker.pickRandomBansoogi(list)
+            navController.popBackStack()
         }
     }
 
+    // 캐릭터 뽑기
+    LaunchedEffect(canDraw) {
+        if (canDraw) {
+            controller.getRandomBansoogi().collect { character ->
+                selectedCharacter = character
+            }
+        }
+    }
+
+    // 저장 처리
     LaunchedEffect(selectedCharacter) {
         if (selectedCharacter != null) {
             delay(1250)
             currentStage = 1
-
-            val realm = RealmManager.realm
-            val bansoogiId = selectedCharacter!!.bansoogiId
-            realm.write {
-                val existing = query<UnlockedCharacter>("bansoogiId == $0", bansoogiId).first().find()
-                if (existing != null) {
-                    findLatest(existing)?.apply {
-                        acquisitionCount += 1
-                        updatedAt = RealmInstant.now()
-                    }
-                } else {
-                    copyToRealm(
-                        UnlockedCharacter().apply {
-                            this.bansoogiId = bansoogiId
-                            this.acquisitionCount = 1
-                            this.createdAt = RealmInstant.now()
-                            this.updatedAt = RealmInstant.now()
-                        }
-                    )
-                }
-            }
+            controller.saveUnlockedCharacter(selectedCharacter!!)
         }
     }
 
