@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,7 +32,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
-import com.samsung.android.sdk.health.data.HealthDataStore
 
 @Composable
 fun ModalHeader(
@@ -95,7 +92,7 @@ fun SectionHeader(
 @Composable
 fun InfoRow(
     label: String,
-    value: Int,
+    value: Int?,
     unit: String,
     modifier: Modifier = Modifier,
     highlightText: String? = null,
@@ -124,13 +121,13 @@ fun InfoRow(
             }
 
             Text(
-                text = value.toString(),
+                text = value?.toString() ?: "",
                 fontSize = 16.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = unit,
+                text = value?.let { "${unit.toString()} " }?: "해당 값이 존재하지 않습니다.",
                 fontSize = 12.sp,
                 color = Color.DarkGray
             )
@@ -206,7 +203,7 @@ fun DayTimeModal(
                         InfoRow(
                             label = "누워있던 시간 :",
                             value = todayRecordDto.lyingTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -214,7 +211,7 @@ fun DayTimeModal(
                         InfoRow(
                             label = "앉아있던 시간 :",
                             value = todayRecordDto.sittingTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -222,7 +219,7 @@ fun DayTimeModal(
                         InfoRow(
                             label = "휴대폰 사용 시간 :",
                             value = todayRecordDto.phoneTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         Divider()
@@ -237,7 +234,7 @@ fun DayTimeModal(
                         InfoRow(
                             label = "기상 이벤트 :",
                             value = todayRecordDto.standUpCnt,
-                            unit = "회"
+                            unit = " 회"
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -245,7 +242,7 @@ fun DayTimeModal(
                         InfoRow(
                             label = "스트레칭 이벤트 :",
                             value = 1,
-                            unit = "회"
+                            unit = " 회"
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -253,7 +250,7 @@ fun DayTimeModal(
                         InfoRow(
                             label = "휴대폰 미사용 이벤트 :",
                             value = 0,
-                            unit = "회"
+                            unit = " 회"
                         )
 
                         Divider()
@@ -283,7 +280,15 @@ fun DayTimeModal(
 
                         InfoRow(
                             label = "수면 시간 :",
-                            value = healthData.sleepData.toInt(),
+                            value = healthData.sleepData,
+                            unit = " 분"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "운동 시간 :",
+                            value = healthData.exerciseTime,
                             unit = " 분"
                         )
                     }

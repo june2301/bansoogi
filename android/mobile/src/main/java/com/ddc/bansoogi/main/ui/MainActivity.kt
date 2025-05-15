@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var healthDataStore: HealthDataStore
     private lateinit var healthDataManager: RealTimeHealthDataManager
 
-    private var healthData by mutableStateOf(CustomHealthData(0L, 0, 0.0f, 0))
+    private var healthData by mutableStateOf(CustomHealthData(0L, 0, 0.0f, 0, 0))
 
     companion object {
         private const val UPDATE_INTERVAL = 10000L // 포그라운드: 10초
