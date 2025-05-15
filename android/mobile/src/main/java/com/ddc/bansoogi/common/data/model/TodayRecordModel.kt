@@ -1,6 +1,7 @@
 package com.ddc.bansoogi.common.data.model
 
 import com.ddc.bansoogi.calendar.data.model.toLocalDate
+import com.ddc.bansoogi.common.data.domain.MealType
 import com.ddc.bansoogi.common.data.local.TodayRecordDataSource
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
@@ -92,5 +93,9 @@ class TodayRecordModel {
                 updatedAt = entity.updatedAt
             )
         }
+    }
+
+    suspend fun markMealDone(recordId: ObjectId, mealType: MealType) {
+        dataSource.markMealDone(recordId, mealType)
     }
 }

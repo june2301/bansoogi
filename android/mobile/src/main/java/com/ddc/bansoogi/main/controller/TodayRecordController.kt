@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.main.controller
 
+import com.ddc.bansoogi.common.data.domain.MealType
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.data.model.TodayRecordModel
 import com.ddc.bansoogi.main.ui.handle.handleInteraction
@@ -47,6 +48,13 @@ class TodayRecordController(private val view: TodayRecordView) {
     fun onInteract(todayRecord: TodayRecordDto, isInSleepRange: Boolean) {
         coroutineScope.launch {
             handleInteraction(todayRecord, isInSleepRange)
+        }
+    }
+
+    fun onMeal(todayRecord: TodayRecordDto, mealType: MealType) {
+        coroutineScope.launch {
+            model.interaction(todayRecord.recordId, 10)
+            model.markMealDone(todayRecord.recordId, mealType)
         }
     }
 }

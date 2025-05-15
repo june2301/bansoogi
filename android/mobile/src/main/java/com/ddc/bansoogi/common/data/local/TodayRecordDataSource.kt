@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.common.data.local
 
+import com.ddc.bansoogi.common.data.domain.MealType
 import com.ddc.bansoogi.common.data.entity.TodayRecord
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -95,6 +96,21 @@ class TodayRecordDataSource {
                 ?.let { record ->
                     findLatest(record)?.apply {
                         interactionLatestTime = RealmInstant.now()
+                    }
+                }
+        }
+    }
+
+    suspend fun markMealDone(recordId: ObjectId, mealType: MealType) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.apply {
+                    when (mealType) {
+                        MealType.BREAKFAST -> breakfast = true
+                        MealType.LUNCH     -> lunch     = true
+                        MealType.DINNER    -> dinner    = true
                     }
                 }
         }

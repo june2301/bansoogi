@@ -5,8 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,16 +49,17 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.ui.RecordedModal
+import com.ddc.bansoogi.common.data.domain.MealType
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
-import com.ddc.bansoogi.common.notification.NotificationDispatcher
-import com.ddc.bansoogi.common.notification.NotificationFactory
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.DayTimeModal
 import com.ddc.bansoogi.main.ui.util.InteractionUtil
+import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.LocalTime
 
 @Composable
 fun HomeContent(
@@ -67,9 +73,47 @@ fun HomeContent(
     val scope = rememberCoroutineScope()
     var showModal by remember { mutableStateOf(false) }
 
-    // TODO: 알림 테스트용 - 나중에 삭제
-    var notified20 by remember { mutableStateOf(todayRecordDto.energyPoint >= 20) }
-    val context = LocalContext.current
+    val myInfoController = remember { MyInfoController() }
+    val myInfo by myInfoController.myInfoFlow().collectAsState(initial = null)
+
+    val currentTime = remember { mutableStateOf(LocalTime.now()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            currentTime.value = LocalTime.now()
+            delay(60_000L)
+        }
+    }
+
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    val mealTimesWithType = remember(myInfo) {
+        listOfNotNull(
+            myInfo?.breakfastTime?.let { MealType.BREAKFAST to it },
+            myInfo?.lunchTime    ?.let { MealType.LUNCH     to it },
+            myInfo?.dinnerTime   ?.let { MealType.DINNER    to it }
+        ).mapNotNull { (type, str) ->
+            runCatching { LocalTime.parse(str, formatter) }
+                .getOrNull()?.let { time -> type to time }
+        }
+    }
+
+    val currentMealType by remember(currentTime.value, mealTimesWithType) {
+        derivedStateOf {
+            mealTimesWithType.firstOrNull { (_, time) ->
+                val start = time.minusMinutes(30)
+                val end   = time.plusMinutes(30)
+                !currentTime.value.isBefore(start) && !currentTime.value.isAfter(end)
+            }?.first
+        }
+    }
+
+    val mealAlreadyDone = when (currentMealType) {
+        MealType.BREAKFAST -> todayRecordDto.breakfast
+        MealType.LUNCH     -> todayRecordDto.lunch
+        MealType.DINNER    -> todayRecordDto.dinner
+        null               -> true
+    }
+
+    val mealEnabled = (currentMealType != null) && !mealAlreadyDone
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -198,61 +242,79 @@ fun HomeContent(
             isCoolDown.value = false
         }
 
-        Button(
-            onClick = {
-                // TODO: 상호작용 애니메이션 출력
-
-                todayRecordController.onInteract(todayRecordDto, isInSleepRange)
-
-                if (!isInSleepRange && todayRecordDto.energyPoint < 100) { // -> 함수 내부에 범위 체크
-                    // TODO: 알림 테스트용 - 나중에 삭제
-                    if (todayRecordDto.energyPoint >= 20 && !notified20) {
-                        notified20 = true
-                        NotificationDispatcher.show(
-                            context,
-                            NotificationDispatcher.Id.PHONE,
-                            NotificationFactory.phoneUsage(context, 20)
-                        )
-                    }
-                }
-            },
+        Row(
             modifier = Modifier
-                .padding(vertical = 10.dp)
-                .height(60.dp)
-                .fillMaxWidth(0.45f)
-                .border(
-                    width = 4.dp,
-                    color = Color.DarkGray,
-                    shape = buttonShape
-                ),
-            shape = buttonShape,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color(0xFF2E616A)
-            )
+                .fillMaxWidth()
+                .padding(horizontal = 64.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                Text(
-                    text = "상호작용",
-                    color = Color(0xFF2E616A),
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+            val btnModifier = Modifier
+                .padding(vertical = 10.dp)
+                .width(120.dp)
+                .height(100.dp)
+                .border(4.dp, Color.DarkGray, buttonShape)
 
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.schedule_vector),
-                    contentDescription = "스케줄 아이콘",
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .size(20.dp),
-                    tint = if (isCoolDown.value) Color.Gray else Color(0xFF4CAF50)
+            Button(
+                onClick = {
+                    // TODO: 상호작용 애니메이션 출력
+                    todayRecordController.onInteract(todayRecordDto, isInSleepRange)
+                },
+                modifier = btnModifier,
+                shape = buttonShape,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color(0xFF2E616A)
                 )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_home),
+                        contentDescription = "상호작용 아이콘",
+                        modifier = Modifier.size(60.dp)
+                    )
+
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.schedule_vector),
+                        contentDescription = "스케줄 아이콘",
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .size(20.dp),
+                        tint = if (isCoolDown.value) Color.Gray else Color(0xFF4CAF50)
+                    )
+                }
+
             }
 
+            Button(
+                onClick = {
+                    currentMealType?.let { type ->
+                        todayRecordController.onMeal(todayRecordDto, type)
+                    }
+                },
+                enabled = mealEnabled,
+                modifier = btnModifier,
+                shape = buttonShape,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = if (mealEnabled) Color(0xFF2E616A) else Color.Gray
+                )
+            ) {
+                Box(
+                    Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_bread),
+                        contentDescription = "식사 아이콘",
+                        modifier = Modifier.size(120.dp)
+                    )
+                }
+            }
         }
         Spacer(modifier = Modifier.height(120.dp))
     }
