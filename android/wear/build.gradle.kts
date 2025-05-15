@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.ddc.bansoogi"
-        minSdk = 29
+        minSdk = 30
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -80,6 +80,9 @@ dependencies {
 
     // 워치에 데이터 캐시 저장
     implementation(libs.androidx.datastore.preferences)
+
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
 
     // JSON 파싱용
     implementation(libs.kotlinx.serialization.json)
