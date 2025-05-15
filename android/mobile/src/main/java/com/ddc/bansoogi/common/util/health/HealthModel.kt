@@ -1,6 +1,10 @@
 package com.ddc.bansoogi.common.util.health
 
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import com.samsung.android.sdk.health.data.HealthDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +39,6 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
 
         isCollecting = true
         scope.launch {
-
             while (isActive && isCollecting) {
                 try {
                     // 데이터 가져오기
@@ -47,6 +50,15 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
 
                     // 데이터 업데이트
                     _healthData.value = CustomHealthData(steps, stepGoal, floorsClimbed, sleepTime, exerciseTime)
+
+                    // TodayHealthData 갱신
+                    TodayHealthDataController().updateTodayHealthData("2025-05-15", stepGoal, steps.toInt(), floorsClimbed.toInt(), sleepTime, exerciseTime)
+                    // TodayRecord energyPoint 갱신.
+                    val todayHealthData = TodayHealthDataController().getTodayHealthData("2025-05-15")
+                    Log.d("TODAY_HEALTH_DATA", "id: ${todayHealthData?.id}, stepGoal: ${todayHealthData?.stepGoal}" +
+                            ", steps: ${todayHealthData?.steps}, floorsClimbed: ${todayHealthData?.floorsClimbed}" +
+                            ", sleepTime: ${todayHealthData?.sleepTime}, exerciseTime: ${todayHealthData?.exerciseTime}")
+                    _healthData.value
                 } catch (e: Exception) {
                     Log.e("HEALTH_DATA", "Error collecting data: ${e.message}", e)
                 }

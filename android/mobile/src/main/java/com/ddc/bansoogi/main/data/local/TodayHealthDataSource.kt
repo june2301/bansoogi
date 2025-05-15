@@ -7,20 +7,8 @@ import io.realm.kotlin.ext.query
 class TodayHealthDataSource {
     private val realm = RealmManager.realm
 
-
-    suspend fun createTodayHealthData(log: TodayHealthData) {
-        realm.write {
-            copyToRealm(log)
-        }
-    }
-
-    fun getTodayHealthDataByDate(date: String): TodayHealthData? {
-        return realm.query<TodayHealthData>("reportedDate == $0", date)
-            .find().firstOrNull()
-    }
-
-    suspend fun initialize() {
-        val hasTodayHealth = realm.query<TodayHealthData>().find().isNotEmpty()
+    suspend fun initialize(date: String) {
+        val hasTodayHealth = realm.query<TodayHealthData>("recordedDate == $0", date).find().isNotEmpty()
 
         if (hasTodayHealth) return
 
@@ -36,6 +24,43 @@ class TodayHealthDataSource {
 
         realm.write {
             dummyTodayHealth.forEach { copyToRealm(it) }
+        }
+    }
+
+    suspend fun createTodayHealthData(log: TodayHealthData) {
+        realm.write {
+            copyToRealm(log)
+        }
+    }
+
+    fun getTodayHealthDataByDate(date: String): TodayHealthData? {
+        return realm.query<TodayHealthData>("recordedDate == $0", date)
+            .find().firstOrNull()
+    }
+
+    suspend fun updateTodayHealthDataByDate(date: String, stepGoal: Int?, steps: Int?, floorsClimbed: Int?, sleepTime: Int?, exerciseTime: Int?) {
+        realm.write {
+            val existTodayHealth = query<TodayHealthData>("recordedDate == $0", date)
+                .first()
+                .find()
+            if (existTodayHealth!=null) {
+                findLatest(existTodayHealth)?.apply {
+                    this.stepGoal = stepGoal
+                    this.steps = steps
+                    this.floorsClimbed = floorsClimbed
+                    this.sleepTime = sleepTime
+                    this.exerciseTime = exerciseTime
+                }
+            } else {
+                copyToRealm(TodayHealthData().apply {
+                    this.recordedDate = date
+                    this.stepGoal = stepGoal
+                    this.steps = steps
+                    this.floorsClimbed = floorsClimbed
+                    this.sleepTime = sleepTime
+                    this.exerciseTime = exerciseTime
+                })
+            }
         }
     }
 }
