@@ -31,8 +31,10 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -412,17 +414,31 @@ private fun NotificationToggleRow(
     ) == PackageManager.PERMISSION_GRANTED
 
     var showSettingsDialog by remember { mutableStateOf(false) }
+    var navigateToAppSettingsRequested by remember { mutableStateOf(false) }
+
+    fun openExactAlarmSettings() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).also { intent ->
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+            }
+        }
+    }
 
     val permissionLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
+                openExactAlarmSettings()
                 onToggle()
             } else {
                 val rationale = ActivityCompat.shouldShowRequestPermissionRationale(
                     activity, Manifest.permission.POST_NOTIFICATIONS
                 )
                 if (!rationale) showSettingsDialog = true
-                else Toast.makeText(context, "알림 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(
+                    context,
+                    "알림 권한이 거부되었습니다.", Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -463,6 +479,7 @@ private fun NotificationToggleRow(
             confirmButton = {
                 TextButton(onClick = {
                     showSettingsDialog = false
+                    navigateToAppSettingsRequested = true
                     context.openAppNotificationSettings()
                 }) { Text("설정으로 이동") }
             },
@@ -480,8 +497,12 @@ private fun NotificationToggleRow(
         onDispose { showSettingsDialog = false }
     }
 
-    LaunchedEffect(permissionGranted) {
-        if (permissionGranted && !checked) onToggle()
+    LaunchedEffect(permissionGranted, navigateToAppSettingsRequested) {
+        if (permissionGranted && navigateToAppSettingsRequested) {
+            openExactAlarmSettings()
+            onToggle()
+            navigateToAppSettingsRequested = false
+        }
     }
 }
 
