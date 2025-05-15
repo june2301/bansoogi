@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -66,12 +67,19 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) {
+        onModalOpen()
         todayRecordController.initialize()
     }
 
     LaunchedEffect(Unit) {
         myInfoController.myInfoFlow().collect { dto ->
             myInfoState.value = dto
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            onModalClose()
         }
     }
 
@@ -136,14 +144,13 @@ fun HomeScreen(
             }
         )
     } else {
+        onModalOpen()
         todayRecordDtoState.value?.let { todayRecord ->
             HomeContent(
                 todayRecord,
                 todayRecordController,
                 isInSleepRange.value,
                 healthData,
-                onModalOpen = onModalOpen,
-                onModalClose = onModalClose
             )
         } ?: Box(
             modifier = Modifier.fillMaxSize(),

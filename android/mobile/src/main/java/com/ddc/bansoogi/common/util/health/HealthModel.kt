@@ -40,13 +40,13 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
                 try {
                     // 데이터 가져오기
                     val stepGoal = readLastStepGoal(healthDataStore)
-                    val todaySteps = readStepData(healthDataStore)
+                    val steps = readStepData(healthDataStore)
                     val floorsClimbed = readFloorsClimbed(healthDataStore)
-                    val sleepData = readSleepData(healthDataStore)
+                    val sleepTime = readSleepData(healthDataStore)
                     val exerciseTime = readExerciseData(healthDataStore)
 
                     // 데이터 업데이트
-                    _healthData.value = CustomHealthData(todaySteps, stepGoal, floorsClimbed, sleepData, exerciseTime)
+                    _healthData.value = CustomHealthData(steps, stepGoal, floorsClimbed, sleepTime, exerciseTime)
                 } catch (e: Exception) {
                     Log.e("HEALTH_DATA", "Error collecting data: ${e.message}", e)
                 }

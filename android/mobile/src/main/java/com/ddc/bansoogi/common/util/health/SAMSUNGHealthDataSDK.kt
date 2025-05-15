@@ -66,7 +66,6 @@ suspend fun readLastStepGoal(healthDataStore: HealthDataStore): Int {
     return stepGoal
 }
 
-
 @Throws(HealthDataException::class)
 suspend fun readFloorsClimbed(healthDataStore: HealthDataStore): Float {
     val startDate = LocalDate.now()
@@ -111,8 +110,6 @@ suspend fun readSleepData(healthDataStore: HealthDataStore): Int? {
 
         val totalMinutes = sleepDuration.toMinutes().toInt()
 
-        Log.d("SLEEP_DATA", "총 수면 시간(분): $totalMinutes")
-
         return totalMinutes
     } catch (e: Exception) {
         Log.e("SLEEP_DATA", "수면 데이터 조회 오류: ${e.message}", e)
@@ -141,8 +138,6 @@ suspend fun readExerciseData(healthDataStore: HealthDataStore): Int? {
         }
 
         val totalMinutes = exerciseDuration.toMinutes().toInt()
-
-        Log.d("EXERCISE_DATA", "총 운동 시간(분): $totalMinutes")
 
         return totalMinutes
     } catch (e: Exception) {
