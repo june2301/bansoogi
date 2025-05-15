@@ -90,11 +90,12 @@ suspend fun readFloorsClimbed(healthDataStore: HealthDataStore): Float {
 
 @Throws(HealthDataException::class)
 suspend fun readSleepData(healthDataStore: HealthDataStore): Int? {
-    val today = LocalDate.now()
+    val startDate = LocalDate.now()
+    val endDate = LocalDate.now().plusDays(1)
 
     val readSleepRequest = DataType.SleepType.TOTAL_DURATION
         .requestBuilder
-        .setLocalDateFilter(LocalDateFilter.of(today, today.plusDays(1)))
+        .setLocalDateFilter(LocalDateFilter.of(startDate, endDate))
         .build()
 
     try {
