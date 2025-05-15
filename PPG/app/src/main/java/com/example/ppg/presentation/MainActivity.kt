@@ -54,13 +54,13 @@ private fun WearApp() {
                 "서 있기 / standing",
                 "바른 자세로 앉기 / upright-sitting",
                 "반듯이 눕기 / supine-lying",
-                "뒤로 기대기 / reclined",
-                "앞으로 숙이기 / forward-lean",
-                "다리 꼬고 앉기 / cross-legged",
-                "배를 대고 누우기 / prone",
-                "반좌위 / Fowler’s",
-                "오른쪽 옆으로 누우기 / right-lat",
-                "왼쪽 옆으로 누우기 / left-lat",
+//                "뒤로 기대기 / reclined",
+//                "앞으로 숙이기 / forward-lean",
+//                "다리 꼬고 앉기 / cross-legged",
+//                "배를 대고 누우기 / prone",
+//                "반좌위 / Fowler’s",
+//                "오른쪽 옆으로 누우기 / right-lat",
+//                "왼쪽 옆으로 누우기 / left-lat",
             )
         var uiState by rememberSaveable { mutableStateOf(UiState.SELECT) }
         var lastStop by rememberSaveable { mutableStateOf("") }
@@ -218,7 +218,7 @@ private fun WearApp() {
             UiState.RECORD ->
                 RecordScreen(
                     label = postures[pickerState.selectedOption],
-                    totalSec = 30,
+                    totalSec = 180,
                 ) {
                     ContextCompat.startForegroundService(
                         ctx,

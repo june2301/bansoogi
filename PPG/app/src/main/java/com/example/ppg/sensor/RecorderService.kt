@@ -49,12 +49,16 @@ class RecorderService : Service() {
 
     @Volatile private var recording = false
 
+    @Volatile private var warmupCompleted = false
+
     /* ===================================================================
      * PPG Tracker listener
      * =================================================================== */
     private val ppgListener =
         object : HealthTracker.TrackerEventListener {
             override fun onDataReceived(points: List<DataPoint>) {
+                if (!recording || !warmupCompleted) return
+
                 points.forEach { dp ->
                     ppgTs += dp.timestamp
 
@@ -100,6 +104,19 @@ class RecorderService : Service() {
                 ppgTracker.setEventListener(ppgListener)
 
                 startContinuous()
+                scope.launch {
+                    Log.i("Recorder", "Starting warmup (5s)...")
+                    delay(5000)
+                    warmupCompleted = true
+                    startMs = System.currentTimeMillis()
+                    // 예열 중 들어온 데이터를 모두 버린다
+                    ppgTs.clear()
+                    ppgG.clear()
+                    ppgR.clear()
+                    ppgIr.clear()
+                    Log.i("Recorder", "Warmup complete, begin recording")
+                    // 알림 텍스트를 바꾸고 싶으면, 여기서 foreground notification 업데이트
+                }
             }
 
             /** v1.3.0 은 errorCode(Int) 하나만 전달 */
