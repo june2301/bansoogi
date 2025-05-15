@@ -96,24 +96,29 @@ fun HomeContent(
         }
     }
 
-    val currentMealType by remember(currentTime.value, mealTimesWithType) {
+    val currentMealTypes by remember(currentTime.value, mealTimesWithType) {
         derivedStateOf {
-            mealTimesWithType.firstOrNull { (_, time) ->
+            mealTimesWithType.filter { (_, time) ->
                 val start = time.minusMinutes(30)
                 val end   = time.plusMinutes(30)
                 !currentTime.value.isBefore(start) && !currentTime.value.isAfter(end)
-            }?.first
+            }.map { it.first }
         }
     }
 
-    val mealAlreadyDone = when (currentMealType) {
-        MealType.BREAKFAST -> todayRecordDto.breakfast
-        MealType.LUNCH     -> todayRecordDto.lunch
-        MealType.DINNER    -> todayRecordDto.dinner
-        null               -> true
+    val pendingMealTypes by remember(currentMealTypes, todayRecordDto) {
+        derivedStateOf {
+            currentMealTypes.filter { type ->
+                when (type) {
+                    MealType.BREAKFAST -> !todayRecordDto.breakfast
+                    MealType.LUNCH     -> !todayRecordDto.lunch
+                    MealType.DINNER    -> !todayRecordDto.dinner
+                }
+            }
+        }
     }
 
-    val mealEnabled = (currentMealType != null) && !mealAlreadyDone
+    val mealEnabled = pendingMealTypes.isNotEmpty()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -292,7 +297,7 @@ fun HomeContent(
 
             Button(
                 onClick = {
-                    currentMealType?.let { type ->
+                    pendingMealTypes.firstOrNull()?.let { type ->
                         todayRecordController.onMeal(todayRecordDto, type)
                     }
                 },
