@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -196,8 +197,6 @@ fun BansoogiContent(
             onFinished = onFinished
         )
 
-        VerticalSpacer()
-
         EnergyBar(
             progressValue = progressValue
         )
@@ -234,8 +233,7 @@ fun BansoogiAnimation(
         spriteSheetName = "${bansoogiRes}_sheet.png",
         jsonName = "${bansoogiRes}.json",
         modifier = Modifier
-            .size(160.dp)
-            .scale(1.3f)
+            .fillMaxSize(0.8f)
     )
 }
 
@@ -243,7 +241,8 @@ fun BansoogiAnimation(
 fun EnergyBar(progressValue: Int) {
     Box(
         modifier = Modifier
-            .fillMaxWidth(0.65f)
+            .fillMaxWidth(0.6f)
+            .offset(y = (-8).dp)
             .height(12.dp)
             .background(
                 color = Color.White,

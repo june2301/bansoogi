@@ -83,4 +83,5 @@ dependencies {
 
     // JSON 파싱용
     implementation(libs.kotlinx.serialization.json)
+
 }
