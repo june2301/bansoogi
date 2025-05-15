@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.ddc.bansoogi.main.controller.TodayHealthDataController
+import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.samsung.android.sdk.health.data.HealthDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,13 +53,30 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
                     _healthData.value = CustomHealthData(steps, stepGoal, floorsClimbed, sleepTime, exerciseTime)
 
                     // TodayHealthData 갱신
+                    // TODO: 날짜 오늘 날짜로 변경
                     TodayHealthDataController().updateTodayHealthData("2025-05-15", stepGoal, steps.toInt(), floorsClimbed.toInt(), sleepTime, exerciseTime)
-                    // TodayRecord energyPoint 갱신.
-                    val todayHealthData = TodayHealthDataController().getTodayHealthData("2025-05-15")
-                    Log.d("TODAY_HEALTH_DATA", "id: ${todayHealthData?.id}, stepGoal: ${todayHealthData?.stepGoal}" +
-                            ", steps: ${todayHealthData?.steps}, floorsClimbed: ${todayHealthData?.floorsClimbed}" +
-                            ", sleepTime: ${todayHealthData?.sleepTime}, exerciseTime: ${todayHealthData?.exerciseTime}")
-                    _healthData.value
+                    // TODO: TodayRecord energyPoint 갱신, 날짜 오늘 날짜로 변경
+                    val previousHealth = TodayHealthDataController().getTodayHealthData("2025-05-15")
+                    Log.d("TODAY_HEALTH_DATA", "id: ${previousHealth?.id}, stepGoal: ${previousHealth?.stepGoal}" +
+                            ", steps: ${previousHealth?.steps}, floorsClimbed: ${previousHealth?.floorsClimbed}" +
+                            ", sleepTime: ${previousHealth?.sleepTime}, exerciseTime: ${previousHealth?.exerciseTime}")
+
+                    // step
+                    if (_healthData.value.step > (previousHealth?.steps ?: 0)) {
+
+                    }
+                    // floorsClimbed
+                    if (_healthData.value.floorsClimbed > (previousHealth?.floorsClimbed ?: 0)) {
+
+                    }
+                    // sleepTime
+                    if ((_healthData.value.sleepData?:0) > (previousHealth?.sleepTime ?: 0)) {
+
+                    }
+                    // exerciseTime
+                    if ((_healthData.value.exerciseTime?:0) > (previousHealth?.exerciseTime ?: 0)) {
+
+                    }
                 } catch (e: Exception) {
                     Log.e("HEALTH_DATA", "Error collecting data: ${e.message}", e)
                 }
