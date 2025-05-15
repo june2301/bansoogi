@@ -161,8 +161,7 @@ fun MainScreen(
                             navController.navigate(route) {
                                 popUpTo(NavRoutes.HOME) {
                                     saveState = true
-                                    // HOME으로 이동할 경우, 백스택 완전히 비우기
-                                    inclusive = (route == NavRoutes.HOME)
+                                    inclusive = false
                                 }
                                 // 중복 방지
                                 launchSingleTop = true
