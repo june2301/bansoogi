@@ -7,8 +7,8 @@ class TodayHealthDataModel {
     private val dataSource = TodayHealthDataSource()
 
     // 더미데이터용 추후 삭제 예정
-    suspend fun initialize() {
-        dataSource.initialize()
+    suspend fun initialize(date: String) {
+        dataSource.initialize(date)
     }
 
     fun getTodayHealthData(date: String): TodayHealthDataDto? {
@@ -23,5 +23,9 @@ class TodayHealthDataModel {
             exerciseTime = data.exerciseTime,
             recordedDate = data.recordedDate,
         )
+    }
+
+    suspend fun updateTodayHealthData(date: String, stepGoal: Int?, steps: Int?, floorsClimbed: Int?, sleepTime: Int?, exerciseTime: Int?) {
+        dataSource.updateTodayHealthDataByDate(date, stepGoal, steps, floorsClimbed, sleepTime, exerciseTime)
     }
 }

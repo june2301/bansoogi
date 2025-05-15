@@ -103,8 +103,6 @@ class MainActivity : ComponentActivity() {
             healthDataManager.setUpdateInterval(UPDATE_INTERVAL)
             healthDataManager.refreshData() // 즉시 한 번 갱신
             healthDataManager.startCollecting() // 데이터 수집 시작
-
-
         }
     }
 

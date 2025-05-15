@@ -5,6 +5,7 @@ import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.collection.data.entity.UnlockedCharacter
 import com.ddc.bansoogi.common.data.entity.ActivityLog
 import com.ddc.bansoogi.common.data.entity.TodayRecord
+import com.ddc.bansoogi.main.data.entity.TodayHealthData
 import com.ddc.bansoogi.person.data.entity.Person
 import com.ddc.bansoogi.myInfo.data.entity.User
 import io.realm.kotlin.Realm
@@ -20,7 +21,8 @@ object RealmManager {
             TodayRecord::class,
             Character::class,
             UnlockedCharacter::class,
-            ActivityLog::class
+            ActivityLog::class,
+            TodayHealthData::class,
         )
     )
 
