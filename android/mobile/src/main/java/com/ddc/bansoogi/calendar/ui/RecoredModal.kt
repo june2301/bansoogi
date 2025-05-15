@@ -403,7 +403,7 @@ fun RecordContent(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InfoRow(
-                            label = "총 걸음수 :",
+                            label = "총 걸음 수 :",
                             value = report.walkCount,
                             unit = " 회"
                         )
