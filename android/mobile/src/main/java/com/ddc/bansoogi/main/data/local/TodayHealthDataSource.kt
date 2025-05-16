@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.main.data.local
 
+import android.util.Log
 import com.ddc.bansoogi.common.data.local.RealmManager
 import com.ddc.bansoogi.main.data.entity.TodayHealthData
 import io.realm.kotlin.ext.query
@@ -19,9 +20,11 @@ class TodayHealthDataSource {
                 floorsClimbed = 0
                 sleepTime = 0
                 exerciseTime = 0
+                recordedDate = date
             }
         )
 
+        Log.d("T_DATASOURCE", "실행 완료")
         realm.write {
             dummyTodayHealth.forEach { copyToRealm(it) }
         }
