@@ -90,6 +90,63 @@ fun SectionHeader(
 }
 
 @Composable
+fun InfoTimeRow(
+    label: String,
+    value: Int?,
+    unit: String,
+    modifier: Modifier = Modifier,
+    highlightText: String? = null,
+    highlightColor: Color = Color(0xFF4CAF50)
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            fontSize = 16.sp,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
+        )
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (highlightText != null) {
+                Text(
+                    text = highlightText,
+                    fontSize = 14.sp,
+                    color = highlightColor
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+            }
+
+            Text(
+                text = if ((value?:0) / 60 >0) { "${(value?:0) / 60}" } else "",
+                fontSize = 16.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = if ((value?:0) / 60 >0) { " 시간 " } else "",
+                fontSize = 12.sp,
+                color = Color.DarkGray
+            )
+            Text(
+                text = value?.let { "${it % 60}" } ?: "해당 값이 존재하지 않습니다.",
+                fontSize = 16.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = value?.let { "${unit.toString()} " }?: "",
+                fontSize = 12.sp,
+                color = Color.DarkGray
+            )
+        }
+    }
+}
+
+@Composable
 fun InfoRow(
     label: String,
     value: Int?,
@@ -263,7 +320,7 @@ fun DayTimeModal(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InfoRow(
-                            label = "총 걸음수 :",
+                            label = "총 걸음 수 :",
                             value = healthData.step.toInt(),
                             unit = " 회"
                         )
@@ -278,7 +335,7 @@ fun DayTimeModal(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        InfoRow(
+                        InfoTimeRow(
                             label = "수면 시간 :",
                             value = healthData.sleepData,
                             unit = " 분"
@@ -286,7 +343,7 @@ fun DayTimeModal(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        InfoRow(
+                        InfoTimeRow(
                             label = "운동 시간 :",
                             value = healthData.exerciseTime,
                             unit = " 분"

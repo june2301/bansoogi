@@ -11,6 +11,10 @@ class RecordedController {
         return model.getDetailReport(date)
     }
 
+    fun getLatestRecordedReport(): DetailReportDto {
+        return model.getLatestRecordedReport()
+    }
+
     suspend fun createRecordedReport(
         todayRecordDto: TodayRecordDto,
         bansoogiIdData: Int,

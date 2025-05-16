@@ -31,6 +31,10 @@ class TodayRecordModel {
         dataSource.updateInteractionCnt(recordId)
     }
 
+    suspend fun updateAllEnergy(recordId: ObjectId, energy: Int) {
+        dataSource.updateAllEnergy(recordId, energy)
+    }
+
     suspend fun updateEnergy(recordId: ObjectId, addedEnergy: Int) {
         dataSource.updateEnergy(recordId, addedEnergy)
     }

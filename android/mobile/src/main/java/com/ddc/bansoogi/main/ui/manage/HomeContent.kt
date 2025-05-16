@@ -67,8 +67,6 @@ fun HomeContent(
     todayRecordController: TodayRecordController,
     isInSleepRange: Boolean,
     healthData: CustomHealthData,
-    onModalOpen: () -> Unit,
-    onModalClose: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     var showModal by remember { mutableStateOf(false) }
@@ -189,7 +187,6 @@ fun HomeContent(
                         .height(60.dp)
                         .clickable {
                             showModal = true
-                            onModalOpen()
                         },
                     contentScale = ContentScale.Fit
                 )
@@ -330,18 +327,16 @@ fun HomeContent(
                 todayRecordDto = todayRecordDto,
                 onDismissRequest = {
                     showModal = false
-                    onModalClose() },
+                },
                 onNavigateToToday = {
                     // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
                     showModal = false
-                    onModalClose()
                 },
                 healthData = healthData,
             )
         }
         else {
             val formatDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            Log.d("date", formatDate)
             RecordedModal(
                 onDismissRequest = { showModal = false },
                 selectedDate = formatDate

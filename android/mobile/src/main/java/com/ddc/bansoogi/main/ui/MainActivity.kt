@@ -30,6 +30,7 @@ import com.ddc.bansoogi.common.ui.component.BansoogiNavigationBar
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.common.util.health.Permissions
 import com.ddc.bansoogi.common.util.health.RealTimeHealthDataManager
+import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import com.samsung.android.sdk.health.data.HealthDataService
 import com.samsung.android.sdk.health.data.HealthDataStore
 import kotlinx.coroutines.launch
@@ -52,12 +53,17 @@ class MainActivity : BaseActivity() {
 
         setupHealthPermissions()
 
+        // TODO: TEST 용
+        TodayHealthDataController().initialize("2025-05-16")
         setContent {
             MainScreen(
                 healthData,
                 onModalOpen = { startHealthDataUpdates() },
                 onModalClose = { stopHealthDataUpdates() }
             )
+        }
+        if (::healthDataManager.isInitialized) {
+            healthDataManager.refreshData() // 초기 데이터 즉시 로드
         }
     }
 
@@ -103,7 +109,7 @@ class MainActivity : BaseActivity() {
     fun startHealthDataUpdates() {
         if (::healthDataManager.isInitialized) {
             healthDataManager.setUpdateInterval(UPDATE_INTERVAL)
-            healthDataManager.refreshData() // 즉시 한 번 갱신
+//            healthDataManager.refreshData() // 즉시 한 번 갱신
             healthDataManager.startCollecting() // 데이터 수집 시작
         }
     }

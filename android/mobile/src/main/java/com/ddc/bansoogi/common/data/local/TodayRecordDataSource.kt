@@ -75,6 +75,19 @@ class TodayRecordDataSource {
         }
     }
 
+    suspend fun updateAllEnergy(recordId: ObjectId, energy: Int) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        energyPoint = minOf(energy, 100)
+                    }
+                }
+        }
+    }
+
     suspend fun updateEnergy(recordId: ObjectId, addedEnergy: Int) {
         realm.write {
             query<TodayRecord>("recordId == $0", recordId)
