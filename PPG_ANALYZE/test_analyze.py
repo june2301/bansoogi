@@ -82,7 +82,7 @@ def quick_classify(df):
     print(f"k-NN 5-fold accuracy: {np.mean(scores):.2f} ± {np.std(scores):.2f}")
 
 if __name__ == "__main__":
-    folder = "./recordings/subject03"
+    folder = "./recordings/subject01"
     df = build_feature_df(folder)
     print("추출된 윈도우 수:", len(df))
     quick_classify(df)

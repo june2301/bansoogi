@@ -96,7 +96,7 @@ def evaluate(df):
 # ——— 실행부 ———
 if __name__ == "__main__":
     os.makedirs("outputs", exist_ok=True)
-    for subj in ["subject01","subject02","subject03"]:
+    for subj in ["subject01","subject02","subject03", "subject04", "subject05", "subject06", "subject07"]:
         print(f"\n=== {subj} ===")
         df = build_df(subj)
         print(f"Extracted windows: {len(df)}")
