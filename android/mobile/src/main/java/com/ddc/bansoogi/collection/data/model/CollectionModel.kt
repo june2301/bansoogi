@@ -10,7 +10,16 @@ class CollectionModel {
     private val dataSource = CollectionDataSource()
 
     fun getBansoogiById(bansoogiId: Int): Character {
-         return dataSource.getBansoogiById(bansoogiId)
+        if (bansoogiId == 0) {
+            return Character().apply {
+                title = "알"
+                imageUrl = "egg_before_broken"
+                gifUrl = "egg_before_broken"
+                description = "오늘은 반숙이가 집에 갔어요."
+            }
+        }
+
+        return dataSource.getBansoogiById(bansoogiId)
     }
 
     fun getImageResId(context: Context, bansoogiId: Int): Int {
