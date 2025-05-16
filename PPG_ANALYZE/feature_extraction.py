@@ -10,7 +10,7 @@ from sklearn.model_selection import cross_val_score
 
 # ——— 설정 ———
 FS = 25.0        # 샘플링 주파수
-WIN_SEC = 7      # 윈도우 길이 (s)
+WIN_SEC = 10      # 윈도우 길이 (s)
 OVERLAP = 0.3    # 오버랩 비율
 SQI_THRESH = -5  # dB
 
