@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.ddc.bansoogi.common.data.model.TodayRecordModel
 import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.samsung.android.sdk.health.data.HealthDataStore
@@ -14,8 +15,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 
 /**
  * [RealTimeHealthDataManager]
@@ -53,29 +56,35 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
                     _healthData.value = CustomHealthData(steps, stepGoal, floorsClimbed, sleepTime, exerciseTime)
 
                     // TodayHealthData 갱신
-                    // TODO: 날짜 오늘 날짜로 변경
-                    TodayHealthDataController().updateTodayHealthData("2025-05-15", stepGoal, steps.toInt(), floorsClimbed.toInt(), sleepTime, exerciseTime)
                     // TODO: TodayRecord energyPoint 갱신, 날짜 오늘 날짜로 변경
-                    val previousHealth = TodayHealthDataController().getTodayHealthData("2025-05-15")
+                    val previousHealth = TodayHealthDataController().getTodayHealthData("2025-05-16")
                     Log.d("TODAY_HEALTH_DATA", "id: ${previousHealth?.id}, stepGoal: ${previousHealth?.stepGoal}" +
                             ", steps: ${previousHealth?.steps}, floorsClimbed: ${previousHealth?.floorsClimbed}" +
                             ", sleepTime: ${previousHealth?.sleepTime}, exerciseTime: ${previousHealth?.exerciseTime}")
+                    // TODO: 날짜 오늘 날짜로 변경
+                    TodayHealthDataController().updateTodayHealthData("2025-05-16", stepGoal, steps.toInt(), floorsClimbed.toInt(), sleepTime, exerciseTime)
 
+                    val todayRecordModel = TodayRecordModel()
+                    val todayRecord = todayRecordModel.getTodayRecordSync()
+                    var recordId:ObjectId = ObjectId()
+                    todayRecord?.let {
+                        // 여기서 todayRecord 데이터 사용
+                        recordId = it.recordId
+                    }
                     // step
                     if (_healthData.value.step > (previousHealth?.steps ?: 0)) {
-
+                        val addedEnergy = calculateStep(_healthData.value.step.toInt()) - calculateStep(previousHealth?.steps)
+                        todayRecordModel.updateEnergy(recordId, addedEnergy)
                     }
                     // floorsClimbed
                     if (_healthData.value.floorsClimbed > (previousHealth?.floorsClimbed ?: 0)) {
-
-                    }
-                    // sleepTime
-                    if ((_healthData.value.sleepData?:0) > (previousHealth?.sleepTime ?: 0)) {
-
+                        val addedEnergy = calculateFloorsClimbed(_healthData.value.step.toInt()) - calculateFloorsClimbed(previousHealth?.steps)
+                        todayRecordModel.updateEnergy(recordId, addedEnergy)
                     }
                     // exerciseTime
                     if ((_healthData.value.exerciseTime?:0) > (previousHealth?.exerciseTime ?: 0)) {
-
+                        val addedEnergy = calculateExercise(_healthData.value.step.toInt()) - calculateExercise(previousHealth?.steps)
+                        todayRecordModel.updateEnergy(recordId, addedEnergy)
                     }
                 } catch (e: Exception) {
                     Log.e("HEALTH_DATA", "Error collecting data: ${e.message}", e)
@@ -85,6 +94,24 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
                 delay(updateInterval)
             }
         }
+    }
+
+    fun calculateStep(step: Int?) : Int {
+        step?.let {
+            return (step / 1_000) * 5
+        } ?: return 0
+    }
+
+    fun calculateFloorsClimbed(floors: Int?) : Int {
+        floors?.let {
+            return (floors / 5) * 10
+        } ?: return 0
+    }
+
+    fun calculateExercise(exercise: Int?) : Int {
+        exercise?.let {
+            return (exercise / 15) * 30
+        } ?: return 0
     }
 
     // 데이터 수집 중지
