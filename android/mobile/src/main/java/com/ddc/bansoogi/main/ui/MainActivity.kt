@@ -53,6 +53,8 @@ class MainActivity : BaseActivity() {
 
         setupHealthPermissions()
 
+        // TODO: TEST 용
+        TodayHealthDataController().initialize("2025-05-16")
         setContent {
             MainScreen(
                 healthData,
@@ -107,7 +109,7 @@ class MainActivity : BaseActivity() {
     fun startHealthDataUpdates() {
         if (::healthDataManager.isInitialized) {
             healthDataManager.setUpdateInterval(UPDATE_INTERVAL)
-            healthDataManager.refreshData() // 즉시 한 번 갱신
+//            healthDataManager.refreshData() // 즉시 한 번 갱신
             healthDataManager.startCollecting() // 데이터 수집 시작
         }
     }
