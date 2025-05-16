@@ -15,7 +15,7 @@ class CollectionModel {
                 title = "알"
                 imageUrl = "egg_before_broken"
                 gifUrl = "egg_before_broken"
-                description = "오늘은 반숙이가 집에 갔어요."
+                description = "오늘은 반숙이가 돌아갔어요."
             }
         }
 
