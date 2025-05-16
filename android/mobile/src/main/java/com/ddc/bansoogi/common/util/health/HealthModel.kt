@@ -1,6 +1,9 @@
 package com.ddc.bansoogi.common.util.health
 
 import android.util.Log
+import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
+import com.ddc.bansoogi.common.data.model.TodayRecordModel
+import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import com.samsung.android.sdk.health.data.HealthDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
+import java.time.LocalDate
 
 /**
  * [RealTimeHealthDataManager]
@@ -35,7 +40,6 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
 
         isCollecting = true
         scope.launch {
-
             while (isActive && isCollecting) {
                 try {
                     // 데이터 가져오기
@@ -46,7 +50,28 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
                     val exerciseTime = readExerciseData(healthDataStore)
 
                     // 데이터 업데이트
+                    val today = LocalDate.now()
+                    val todayFormattedDate = CalendarUtils.toFormattedDateString(today, today.dayOfMonth)
                     _healthData.value = CustomHealthData(steps, stepGoal, floorsClimbed, sleepTime, exerciseTime)
+                    TodayHealthDataController().updateTodayHealthData(todayFormattedDate, stepGoal,
+                        steps.toInt(), floorsClimbed.toInt(), sleepTime, exerciseTime)
+
+                    val todayRecordModel = TodayRecordModel()
+                    val todayRecord = todayRecordModel.getTodayRecordSync()
+                    var recordId:ObjectId = ObjectId()
+                    var energyPoint = 0
+                    todayRecord?.let {
+                        // 여기서 todayRecord 데이터 사용
+                        recordId = it.recordId
+                        energyPoint = it.energyPoint
+                    }
+
+                    // addedEnergy 계산 후, energyPoint 갱신
+                    val energy = EnergyUtil.calculateEnergyOnce(_healthData.value)
+
+                    if (energy > energyPoint) {
+                        todayRecordModel.updateAllEnergy(recordId, energy)
+                    }
                 } catch (e: Exception) {
                     Log.e("HEALTH_DATA", "Error collecting data: ${e.message}", e)
                 }
