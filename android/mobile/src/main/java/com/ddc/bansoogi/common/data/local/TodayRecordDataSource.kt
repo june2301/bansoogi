@@ -1,6 +1,6 @@
 package com.ddc.bansoogi.common.data.local
 
-import com.ddc.bansoogi.common.data.domain.MealType
+import com.ddc.bansoogi.common.data.enum.MealType
 import com.ddc.bansoogi.common.data.entity.TodayRecord
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

@@ -1,15 +1,10 @@
 package com.ddc.bansoogi.common.data.model
 
-import com.ddc.bansoogi.calendar.data.model.toLocalDate
-import com.ddc.bansoogi.common.data.domain.MealType
+import com.ddc.bansoogi.common.data.enum.MealType
 import com.ddc.bansoogi.common.data.local.TodayRecordDataSource
-import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 
 class TodayRecordModel {
     private val dataSource = TodayRecordDataSource()

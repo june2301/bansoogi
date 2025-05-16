@@ -49,7 +49,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.ui.RecordedModal
-import com.ddc.bansoogi.common.data.domain.MealType
+import com.ddc.bansoogi.common.data.enum.MealType
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
@@ -298,7 +298,7 @@ fun HomeContent(
             Button(
                 onClick = {
                     pendingMealTypes.firstOrNull()?.let { type ->
-                        todayRecordController.onMeal(todayRecordDto, type)
+                        todayRecordController.checkMeal(todayRecordDto, type)
                     }
                 },
                 enabled = mealEnabled,
