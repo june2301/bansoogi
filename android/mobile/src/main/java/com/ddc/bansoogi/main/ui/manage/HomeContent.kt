@@ -256,7 +256,6 @@ fun HomeContent(
 
     if (showModal) {
         if (!isInSleepRange) {
-            Log.d("이거 되어야함", "ㅎㅎ")
             DayTimeModal(
                 todayRecordDto = todayRecordDto,
                 onDismissRequest = {
