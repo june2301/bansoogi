@@ -67,7 +67,6 @@ fun BansoogiNavigationBar(
                     modifier = Modifier
                         .size(56.dp)
                         .clip(CircleShape)
-//                        .
                         .background(if (isSelected) Color(0xFFFDE68A) else Color.Transparent)
                         .clickable { onNavigate(route) }
                         .padding(12.dp),
