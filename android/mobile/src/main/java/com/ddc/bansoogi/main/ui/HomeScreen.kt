@@ -101,10 +101,10 @@ fun HomeScreen(
                         todayRecordController.updateIsClosed()
                         recordController.createRecordedReport(
                             todayRecord,
-                            1,
+                            15,
                             healthData.step.toInt(),
                             0,
-                            0,
+                            healthData.exerciseTime?:0,
                             healthData.floorsClimbed.toInt()
                         )
 

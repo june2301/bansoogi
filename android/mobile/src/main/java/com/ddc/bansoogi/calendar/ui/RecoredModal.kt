@@ -337,7 +337,7 @@ fun RecordContent(
                         InfoRow(
                             label = "누워있던 시간 :",
                             value = report.lyingTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         VerticalSpacer()
@@ -345,7 +345,7 @@ fun RecordContent(
                         InfoRow(
                             label = "앉아있던 시간 :",
                             value = report.sittingTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         VerticalSpacer()
@@ -353,7 +353,7 @@ fun RecordContent(
                         InfoRow(
                             label = "휴대폰 사용 시간 :",
                             value = report.phoneTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         Divider()
@@ -368,7 +368,7 @@ fun RecordContent(
                         InfoRow(
                             label = "기상 이벤트 :",
                             value = report.standupCount,
-                            unit = "회"
+                            unit = " 회"
                         )
 
                         ActivityLogList(report.standLog)
@@ -378,7 +378,7 @@ fun RecordContent(
                         InfoRow(
                             label = "스트레칭 이벤트 :",
                             value = report.stretchCount,
-                            unit = "회"
+                            unit = " 회"
                         )
 
                         ActivityLogList(report.stretchLog)
@@ -388,10 +388,12 @@ fun RecordContent(
                         InfoRow(
                             label = "휴대폰 미사용 이벤트 :",
                             value = report.phoneOffCount,
-                            unit = "회"
+                            unit = " 회"
                         )
 
                         ActivityLogList(report.phoneOffLog)
+
+                        Divider()
 
                         // 건강 정보 섹션
                         SectionHeader(
@@ -416,11 +418,19 @@ fun RecordContent(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-//                        InfoRow(
-//                            label = "수면 시간 :",
-//                            value = report.sleepData.toInt(),
-//                            unit = " 분"
-//                        )
+                        InfoRow(
+                            label = "수면 시간 :",
+                            value = report.sleepTime,
+                            unit = " 분"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "운동 시간 :",
+                            value = report.exerciseTime,
+                            unit = " 분"
+                        )
                     }
                 }
             }

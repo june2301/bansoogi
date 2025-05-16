@@ -4,7 +4,6 @@ import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 import io.realm.kotlin.types.RealmInstant
 import java.time.LocalTime
-import java.time.ZoneId
 
 const val MAX_INTERACTION_COUNT = 6
 
@@ -20,8 +19,7 @@ object InteractionUtil {
     }
 
     fun isInSleepRange(myInfo: MyInfoDto?): Boolean {
-        val koreaZoneId = ZoneId.of("Asia/Seoul")
-        val nowTime = LocalTime.now(koreaZoneId)
+        val nowTime = LocalTime.now()
 
         val sleepTime = LocalTime.parse(myInfo?.sleepTime)
         val wakeUpTime = LocalTime.parse(myInfo?.wakeUpTime)
