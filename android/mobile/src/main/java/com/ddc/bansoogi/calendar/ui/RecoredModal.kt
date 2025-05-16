@@ -67,8 +67,7 @@ fun RecordedModal(
         report = controller.getDetailReport(selectedDate)
 
         if (report == null) {
-            onDismissRequest()
-            return@LaunchedEffect
+            report = controller.getLatestRecordedReport()
         }
     }
 

@@ -323,6 +323,7 @@ fun HomeContent(
 
     if (showModal) {
         if (!isInSleepRange) {
+            Log.d("이거 되어야함", "ㅎㅎ")
             DayTimeModal(
                 todayRecordDto = todayRecordDto,
                 onDismissRequest = {
@@ -337,7 +338,6 @@ fun HomeContent(
         }
         else {
             val formatDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            Log.d("date", formatDate)
             RecordedModal(
                 onDismissRequest = { showModal = false },
                 selectedDate = formatDate
