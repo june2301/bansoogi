@@ -23,6 +23,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
 import com.ddc.bansoogi.common.navigation.AppNavGraph
 import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.activity.BaseActivity
@@ -34,6 +35,7 @@ import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import com.samsung.android.sdk.health.data.HealthDataService
 import com.samsung.android.sdk.health.data.HealthDataStore
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class MainActivity : BaseActivity() {
     val activityContext = this
@@ -53,8 +55,9 @@ class MainActivity : BaseActivity() {
 
         setupHealthPermissions()
 
-        // TODO: TEST 용
-        TodayHealthDataController().initialize("2025-05-16")
+        val today = LocalDate.now()
+        val todayFormatted = CalendarUtils.toFormattedDateString(today, today.dayOfMonth)
+        TodayHealthDataController().initialize(todayFormatted)
         setContent {
             MainScreen(
                 healthData,
