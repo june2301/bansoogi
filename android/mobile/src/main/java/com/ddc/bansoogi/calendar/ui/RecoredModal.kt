@@ -469,7 +469,7 @@ fun RecordedModalPreview() {
         onDismissRequest = { },
         report = DetailReportDto (
             date = "2025-05-01",
-            finalEnergyPoint =90,
+            finalEnergyPoint = 90,
 
             bansoogiTitle = "임시 반숙이",
             bansoogiGifUrl = "1",

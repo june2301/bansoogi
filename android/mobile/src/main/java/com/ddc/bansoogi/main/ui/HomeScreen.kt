@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
+import com.ddc.bansoogi.main.controller.CharacterGetController
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.manage.EggManagerModal
 import com.ddc.bansoogi.main.ui.manage.HomeContent
@@ -111,7 +112,7 @@ fun HomeScreen(
                         val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
                         val key = "egg_seen_${LocalDate.now()}"
                         val alreadySeen = prefs.getBoolean(key, false)
-                        if (!alreadySeen) {
+                        if (!alreadySeen && CharacterGetController().canDrawCharacter()) {
                             prefs.edit().putBoolean(key, true).apply()
                             navController.navigate("character_get")
                         }
