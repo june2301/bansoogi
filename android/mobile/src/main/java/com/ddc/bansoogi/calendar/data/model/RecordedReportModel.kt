@@ -32,10 +32,16 @@ class RecordedReportModel {
     ) {
         val date = todayRecordDto.createdAt.toLocalDate()
 
+        val actualBansoogiId = if (todayRecordDto.energyPoint >= 80) {
+            bansoogiIdData
+        } else {
+            0
+        }
+
         dataSource.createRecordedReport(
             RecordedReport().apply {
                 finalEnergyPoint = todayRecordDto.energyPoint
-                bansoogiId = bansoogiIdData
+                bansoogiId = actualBansoogiId
 
                 standupCount = todayRecordDto.standUpCnt
                 stretchCount = todayRecordDto.stretchCnt

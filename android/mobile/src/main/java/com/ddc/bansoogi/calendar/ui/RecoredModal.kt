@@ -92,7 +92,7 @@ fun ModalHeader(
         modifier = Modifier.fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.egg_before_broken),
+            painter = painterResource(id = R.drawable.egg_before_broken_gif),
             contentDescription = "아이콘",
             modifier = Modifier.size(32.dp)
         )
@@ -120,7 +120,7 @@ fun SectionHeader(
         modifier = Modifier.fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.egg_before_broken),
+            painter = painterResource(id = R.drawable.egg_before_broken_gif),
             contentDescription = "달걀",
             modifier = Modifier.size(32.dp)
         )

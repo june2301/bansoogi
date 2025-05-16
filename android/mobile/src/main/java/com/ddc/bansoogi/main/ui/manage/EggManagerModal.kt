@@ -71,7 +71,7 @@ fun EggManagerModal(
                     val preloadRequests = listOf(
                         R.drawable.background_fan_1,
                         R.drawable.background_fan_2,
-                        R.drawable.egg_before_broken,
+                        R.drawable.egg_before_broken_gif,
                         R.drawable.egg_breaking,
                         R.drawable.bansoogi_basic
                     )
