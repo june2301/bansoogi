@@ -7,6 +7,7 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import com.ddc.bansoogi.R
 
 abstract class BaseImmersiveActivity : AppCompatActivity() {
 
@@ -14,6 +15,7 @@ abstract class BaseImmersiveActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        setContentView(R.layout.activity_splash)
 
         // Immersive 모드 적용
         applyImmersiveMode()

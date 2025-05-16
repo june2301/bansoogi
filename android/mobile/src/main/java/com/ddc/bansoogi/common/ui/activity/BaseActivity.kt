@@ -13,7 +13,6 @@ abstract class BaseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        applyImmersiveMode()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
