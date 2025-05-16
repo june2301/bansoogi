@@ -1,5 +1,7 @@
 package com.ddc.bansoogi.main.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +25,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ddc.bansoogi.common.foreground.ForegroundService
+import com.ddc.bansoogi.common.foreground.ForegroundUtil
 import com.ddc.bansoogi.common.navigation.AppNavGraph
 import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.CommonNavigationBar
@@ -57,6 +61,15 @@ class MainActivity : ComponentActivity() {
                 onModalOpen = { startHealthDataUpdates() },
                 onModalClose = { stopHealthDataUpdates() }
             )
+        }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!ForegroundUtil.isServiceRunning()) {
+            ForegroundUtil.startForegroundService(activityContext)
         }
     }
 
