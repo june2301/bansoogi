@@ -31,6 +31,7 @@ import com.ddc.bansoogi.landing.ui.component.CheckboxRow
 import com.ddc.bansoogi.landing.ui.component.text.DefaultTitleText
 import com.ddc.bansoogi.landing.ui.component.NextButton
 import com.ddc.bansoogi.landing.ui.component.RoundedContainerBox
+import com.ddc.bansoogi.phoneUsage.PhoneUsagePermissionUtil
 
 @Composable
 fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
@@ -142,6 +143,12 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
             enabled = serviceChecked && privacyChecked,
             onClick = {
                 if (serviceChecked && privacyChecked) {
+                    if (!PhoneUsagePermissionUtil.hasUsageStatsPermission(context)) {
+                        Toast.makeText(context, "핸드폰 사용량 권한을 먼저 허용해 주세요.", Toast.LENGTH_SHORT).show()
+                        PhoneUsagePermissionUtil.requestUsageStatsPermission(context)
+                        return@NextButton
+                    }
+
                     requestPermissionThenNext(onNext)
                 }
             },
