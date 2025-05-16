@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,15 +39,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.common.data.enum.MealType
+import com.ddc.bansoogi.common.mobile.communication.sender.MobileMyInfoSender
 import com.ddc.bansoogi.common.mobile.communication.sender.MobileTodayRecordSender
 import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.BackgroundImage
 import com.ddc.bansoogi.common.ui.SpriteSheetAnimation
 import com.ddc.bansoogi.common.ui.VerticalSpacer
+import com.ddc.bansoogi.myinfo.data.dto.MyInfoDto
+import com.ddc.bansoogi.myinfo.state.MyInfoStateHolder
+import com.ddc.bansoogi.today.data.dto.ReportDto
 import com.ddc.bansoogi.today.data.store.getCachedReport
 import com.ddc.bansoogi.today.state.TodayRecordStateHolder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -60,7 +68,67 @@ fun MainScreen(navController: NavHostController) {
 
         // 모바일로 데이터 송신 요청을 전송
         MobileTodayRecordSender.sendEnergyRequest(context)
+        MobileTodayRecordSender.send(context)
+        MobileMyInfoSender.send(context)
     }
+
+    val report = TodayRecordStateHolder.reportDto ?: ReportDto.default()
+    val myInfo = MyInfoStateHolder.myInfoDto ?: MyInfoDto.default()
+
+    val currentTimeState = remember { mutableStateOf(LocalTime.now()) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            val nowMillis = System.currentTimeMillis()
+            val delayMillis = 60_000L - (nowMillis % 60_000L)
+            delay(delayMillis)
+            currentTimeState.value = LocalTime.now()
+        }
+    }
+
+    val currentTime = currentTimeState.value
+
+    val fmt = DateTimeFormatter.ofPattern("HH:mm")
+    val mealTimesWithType = remember(myInfo) {
+        listOfNotNull(
+            myInfo.breakfastTime.takeIf { it.isNotBlank() }?.let {
+                MealType.BREAKFAST to LocalTime.parse(it, fmt)
+            },
+            myInfo.lunchTime.takeIf { it.isNotBlank() }?.let {
+                MealType.LUNCH to LocalTime.parse(it, fmt)
+            },
+            myInfo.dinnerTime.takeIf { it.isNotBlank() }?.let {
+                MealType.DINNER to LocalTime.parse(it, fmt)
+            }
+        )
+    }
+
+    val currentMealTypes by remember(currentTime, mealTimesWithType) {
+        derivedStateOf {
+            mealTimesWithType.filter { (_, t) ->
+                val start = t.minusMinutes(30)
+                val end   = t.plusMinutes(30)
+                !currentTime.isBefore(start) && !currentTime.isAfter(end)
+            }.map { it.first }
+        }
+    }
+
+    val pendingMealTypes by remember(currentMealTypes, report) {
+        derivedStateOf {
+            currentMealTypes.filter { type ->
+                when (type) {
+                    MealType.BREAKFAST -> report.breakfast == false
+                    MealType.LUNCH     -> report.lunch     == false
+                    MealType.DINNER    -> report.dinner    == false
+                }
+            }
+        }
+    }
+
+    val isMealEnabled = pendingMealTypes.isNotEmpty()
+    val currentMealType = pendingMealTypes
+        .sortedBy { listOf(MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER).indexOf(it) }
+        .firstOrNull()
 
     var progressValue = TodayRecordStateHolder.reportDto?.energyPoint ?: 0
 
@@ -84,6 +152,12 @@ fun MainScreen(navController: NavHostController) {
 
         SideButtons(
             navController = navController,
+            hasMeal       = isMealEnabled,
+            onMealClick   = {
+                currentMealType?.let { type ->
+                    MobileTodayRecordSender.sendMealTrigger(context, type.name)
+                }
+            },
             onInteractionBtnClick = {
                 // 1. 반숙이 상호작용 움직임 출력 -> 변수 변경
                 triggerInteraction = true
@@ -106,6 +180,8 @@ fun MainScreen(navController: NavHostController) {
 @Composable
 fun SideButtons(
     navController: NavHostController,
+    hasMeal: Boolean,
+    onMealClick: () -> Unit,
     onInteractionBtnClick: () -> Unit
 ) {
     Row(
@@ -119,10 +195,10 @@ fun SideButtons(
             IconCircleButton(
                 iconResource = R.drawable.cookie,
                 size = 20.dp,
-                description = "밥 먹기 버튼"
-            ) {
-                // TODO: 밥 먹기 클릭 이벤트
-            }
+                description = "식사 버튼",
+                enabled      = hasMeal,
+                onBtnClick   = onMealClick
+            )
 
             VerticalSpacer()
 
@@ -150,6 +226,7 @@ fun IconCircleButton(
     iconResource: Int,
     size: Dp,
     description: String,
+    enabled: Boolean = true,
     onBtnClick: () -> Unit) {
     // 셀 클릭 시, 회색 창 제거
     val interactionSource = remember { MutableInteractionSource() }
@@ -159,10 +236,11 @@ fun IconCircleButton(
             .width(36.dp)
             .height(36.dp)
             .background(
-                color = Color.White,
+                color = if (enabled) Color.White else Color.LightGray,
                 shape = RoundedCornerShape(50)
             )
             .clickable(
+                enabled = enabled,
                 interactionSource = interactionSource,
                 indication = null, // 리플 효과(회색 창) 제거
                 onClick = onBtnClick
@@ -175,7 +253,8 @@ fun IconCircleButton(
             modifier = Modifier
                 .width(size)
                 .height(size),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Fit,
+            alpha = if (enabled) 1f else 0.4f
         )
     }
 }

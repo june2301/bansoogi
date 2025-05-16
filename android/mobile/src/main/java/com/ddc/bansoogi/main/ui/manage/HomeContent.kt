@@ -313,7 +313,8 @@ fun HomeContent(
                     Image(
                         painter = painterResource(id = R.drawable.ic_bread),
                         contentDescription = "식사 아이콘",
-                        modifier = Modifier.size(120.dp)
+                        modifier = Modifier.size(120.dp),
+                        alpha = if (mealEnabled) 1f else 0.4f
                     )
                 }
             }
