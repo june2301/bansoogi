@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 
 class TodayRecordController(private val view: TodayRecordView) {
     private val model = TodayRecordModel()
@@ -48,6 +49,21 @@ class TodayRecordController(private val view: TodayRecordView) {
     fun onInteract(todayRecord: TodayRecordDto, isInSleepRange: Boolean) {
         coroutineScope.launch {
             handleInteraction(todayRecord, isInSleepRange)
+        }
+    }
+
+    fun getTodayRecordSync(): TodayRecordDto? {
+        return model.getTodayRecordSync()
+    }
+
+    fun isViewed(): Boolean {
+        return model.isViewed()
+    }
+
+    fun updateIsViewed(recordId: ObjectId, viewed: Boolean) {
+        coroutineScope.launch {
+            model.updateIsViewed(recordId, viewed)
+            refreshTodayRecord()
         }
     }
 

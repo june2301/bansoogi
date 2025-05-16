@@ -23,15 +23,25 @@ class CollectionDataSource {
             .map { it.list }
 
     fun getBansoogiById(bansoogiId: Int): Character {
-        return realm.query<Character>("bansoogiId == $0", bansoogiId)
-            .first()
-            .find() ?: Character().apply {
+        return if (bansoogiId == 0) {
+            Character().apply {
+                title = "알"
+                imageUrl = "egg_before_broken"
+                gifUrl = "egg_before_broken"
+                silhouetteImageUrl = "unknown"
+                description = "오늘은 반숙이가 돌아갔어요."
+            }
+        } else {
+            realm.query<Character>("bansoogiId == $0", bansoogiId)
+                .first()
+                .find() ?: Character().apply {
                 title = "반숙이"
                 imageUrl = "bansoogi_default_profile"
                 silhouetteImageUrl = "unknown"
                 gifUrl = "bansoogi_basic"
                 description = "우리의 반숙이입니다."
             }
+        }
     }
 
     fun getImageResourceIdForBansoogiId(context: Context, bansoogiId: Int): Int {

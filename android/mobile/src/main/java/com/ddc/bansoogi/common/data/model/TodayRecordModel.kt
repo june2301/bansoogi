@@ -39,6 +39,14 @@ class TodayRecordModel {
         dataSource.updateInteractionTime(recordId)
     }
 
+    suspend fun updateIsViewed(recordId: ObjectId, viewed: Boolean) {
+        dataSource.updateIsViewed(recordId, viewed)
+    }
+
+    fun isViewed(): Boolean {
+        return dataSource.isViewed()
+    }
+
     fun getTodayRecord(): Flow<TodayRecordDto?> {
         return dataSource.getTodayRecord().map { entity ->
             entity?.let {
@@ -57,6 +65,7 @@ class TodayRecordModel {
                     dinner = entity.dinner,
                     interactionCnt = entity.interactionCnt,
                     interactionLatestTime = entity.interactionLatestTime,
+                    isViewed = entity.isViewed,
                     isClosed = entity.isClosed,
                     createdAt = entity.createdAt,
                     updatedAt = entity.updatedAt
@@ -83,6 +92,7 @@ class TodayRecordModel {
                 dinner = entity.dinner,
                 interactionCnt = entity.interactionCnt,
                 interactionLatestTime = entity.interactionLatestTime,
+                isViewed = entity.isViewed,
                 isClosed = entity.isClosed,
                 createdAt = entity.createdAt,
                 updatedAt = entity.updatedAt

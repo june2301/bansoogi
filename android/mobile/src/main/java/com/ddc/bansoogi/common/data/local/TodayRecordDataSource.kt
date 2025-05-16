@@ -101,6 +101,19 @@ class TodayRecordDataSource {
         }
     }
 
+    suspend fun updateIsViewed(recordId: ObjectId, viewed: Boolean) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        isViewed = viewed
+                    }
+                }
+        }
+    }
+
     suspend fun markMealDone(recordId: ObjectId, mealType: MealType) {
         realm.write {
             query<TodayRecord>("recordId == $0", recordId)
@@ -109,10 +122,17 @@ class TodayRecordDataSource {
                 ?.apply {
                     when (mealType) {
                         MealType.BREAKFAST -> breakfast = true
-                        MealType.LUNCH     -> lunch     = true
-                        MealType.DINNER    -> dinner    = true
+                        MealType.LUNCH     -> lunch = true
+                        MealType.DINNER    -> dinner = true
                     }
                 }
         }
+    }
+
+    fun isViewed(): Boolean {
+        return realm.query<TodayRecord>()
+            .first()
+            .find()
+            ?.isViewed ?: false
     }
 }
