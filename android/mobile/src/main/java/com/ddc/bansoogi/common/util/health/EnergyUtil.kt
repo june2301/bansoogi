@@ -1,9 +1,8 @@
 package com.ddc.bansoogi.common.util.health
 
-import android.util.Log
 import com.ddc.bansoogi.common.data.model.TodayRecordModel
 
-class EnergyUtil {
+object EnergyUtil {
     // 처음 Energy 점수 계산
     fun calculateEnergyOnce(healthData: CustomHealthData): Int {
         var addedEnergy = 0
@@ -45,7 +44,4 @@ class EnergyUtil {
             return (exercise / 15) * 30
         } ?: return 0
     }
-
-    companion object
-
 }
