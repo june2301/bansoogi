@@ -63,10 +63,10 @@ class RealTimeHealthDataManager(private val healthDataStore: HealthDataStore) {
                     }
 
                     // addedEnergy 계산 후, energyPoint 갱신
-                    val addedEnergy = EnergyUtil().calculateEnergyOnce(_healthData.value)
+                    val energy = EnergyUtil().calculateEnergyOnce(_healthData.value)
 
-                    if (addedEnergy > energyPoint) {
-                        todayRecordModel.updateEnergy(recordId, addedEnergy)
+                    if (energy > energyPoint) {
+                        todayRecordModel.updateAllEnergy(recordId, energy)
                     }
                 } catch (e: Exception) {
                     Log.e("HEALTH_DATA", "Error collecting data: ${e.message}", e)

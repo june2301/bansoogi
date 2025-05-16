@@ -54,7 +54,7 @@ fun EggBeforeBroken(nickname: String, eggState: MutableState<Int>) {
             )
         }
         Image(
-            painter = painterResource(id = R.drawable.egg_before_broken),
+            painter = painterResource(id = R.drawable.egg_before_broken_gif),
             contentDescription = "깨지기 전 달걀",
             modifier = Modifier
                 .width(320.dp)

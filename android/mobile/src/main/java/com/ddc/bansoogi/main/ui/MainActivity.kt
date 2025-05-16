@@ -53,14 +53,15 @@ class MainActivity : BaseActivity() {
 
         setupHealthPermissions()
 
-        // TODO: TEST 용
-        TodayHealthDataController().initialize("2025-05-16")
         setContent {
             MainScreen(
                 healthData,
                 onModalOpen = { startHealthDataUpdates() },
                 onModalClose = { stopHealthDataUpdates() }
             )
+        }
+        if (::healthDataManager.isInitialized) {
+            healthDataManager.refreshData() // 초기 데이터 즉시 로드
         }
     }
 
@@ -106,7 +107,7 @@ class MainActivity : BaseActivity() {
     fun startHealthDataUpdates() {
         if (::healthDataManager.isInitialized) {
             healthDataManager.setUpdateInterval(UPDATE_INTERVAL)
-//            healthDataManager.refreshData() // 즉시 한 번 갱신
+            healthDataManager.refreshData() // 즉시 한 번 갱신
             healthDataManager.startCollecting() // 데이터 수집 시작
         }
     }

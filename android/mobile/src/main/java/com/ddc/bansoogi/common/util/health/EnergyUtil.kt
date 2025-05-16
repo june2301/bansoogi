@@ -23,11 +23,8 @@ class EnergyUtil {
         addedEnergy += (todayRecordDto?.interactionCnt?.times(5) ?: 0)
 
         addedEnergy += calculateStep(healthData.step.toInt())
-        Log.d("STEP", addedEnergy.toString())
         addedEnergy += calculateFloorsClimbed(healthData.floorsClimbed.toInt())
-        Log.d("floorsClimbed", addedEnergy.toString())
         addedEnergy += calculateExercise(healthData.exerciseTime)
-        Log.d("exerciseTime", addedEnergy.toString())
         return addedEnergy
     }
 
