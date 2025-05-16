@@ -6,7 +6,7 @@ import io.realm.kotlin.types.RealmInstant
 import java.time.LocalTime
 import java.time.ZoneId
 
-const val MAX_INTERACTION_COUNT = 20
+const val MAX_INTERACTION_COUNT = 6
 
 object InteractionUtil {
     fun isInteractionConditionMet(todayRecord: TodayRecordDto): Boolean {
@@ -55,7 +55,7 @@ object InteractionUtil {
     fun getRemainingCooldownMillis(interactionTime: RealmInstant?): Long {
         if (interactionTime == null) return 0
 
-    val cooldownSeconds = 60 * 60L
+        val cooldownSeconds = 60 * 60L
         val now = RealmInstant.now()
         val cooldownEnd = RealmInstant.from(
             interactionTime.epochSeconds + cooldownSeconds,

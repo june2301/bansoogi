@@ -6,7 +6,7 @@ import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
 import kotlinx.coroutines.flow.firstOrNull
 
-private const val ADD_INTERACTION_ENERGY = 5
+private const val ADD_INTERACTION_ENERGY = 90 //
 
 suspend fun handleInteraction() {
     val myInfo = MyInfoModel().getMyInfoSync()

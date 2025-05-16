@@ -19,6 +19,7 @@ data class TodayRecordDto(
     var dinner: Boolean,
     var interactionCnt: Int,
     var interactionLatestTime: RealmInstant?,
+    var isViewed: Boolean,
     var isClosed: Boolean,
     var createdAt: RealmInstant,
     var updatedAt: RealmInstant

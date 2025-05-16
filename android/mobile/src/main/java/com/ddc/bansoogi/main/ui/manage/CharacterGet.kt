@@ -17,21 +17,33 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.collection.data.entity.Character
+import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import com.ddc.bansoogi.main.controller.CharacterGetController
+import com.ddc.bansoogi.main.controller.TodayRecordController
+import com.ddc.bansoogi.main.view.TodayRecordView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import org.mongodb.kbson.ObjectId
 
 @Composable
 fun CharacterGetScreen(navController: NavController) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val controller = remember { CharacterGetController() }
+    val todayRecordController = remember {
+        TodayRecordController(object : TodayRecordView {
+            override fun displayTodayRecord(todayRecord: TodayRecordDto) {}
+            override fun showEmptyState() {}
+        })
+    }
 
     var currentStage by remember { mutableIntStateOf(0) }
     var selectedCharacter by remember { mutableStateOf<Character?>(null) }
     var canDraw by remember { mutableStateOf(true) }
+    var isViewedAlready by remember { mutableStateOf(true) }
+    var todayRecordId by remember { mutableStateOf<ObjectId?>(null) }
+    var isAnimationStarted by remember { mutableStateOf(false) }
 
     // 에너지 체크
     LaunchedEffect(Unit) {
@@ -44,6 +56,13 @@ fun CharacterGetScreen(navController: NavController) {
         }
     }
 
+    // isViewed 상태 조회
+    LaunchedEffect(Unit) {
+        val todayRecord = todayRecordController.getTodayRecordSync()
+        isViewedAlready = todayRecord?.isViewed ?: true
+        todayRecordId = todayRecord?.recordId
+    }
+
     // 캐릭터 뽑기
     LaunchedEffect(canDraw) {
         if (!canDraw) return@LaunchedEffect
@@ -52,8 +71,8 @@ fun CharacterGetScreen(navController: NavController) {
     }
 
     // 저장 처리
-    LaunchedEffect(selectedCharacter) {
-        if (selectedCharacter != null) {
+    LaunchedEffect(isAnimationStarted) {
+        if (isAnimationStarted && selectedCharacter != null) {
             delay(1250)
             currentStage = 1
             withContext(Dispatchers.IO) {
@@ -66,9 +85,20 @@ fun CharacterGetScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .clickable(enabled = currentStage == 1) {
-                navController.navigate("collection")
-            },
+            .clickable {
+                when {
+                    !isViewedAlready && !isAnimationStarted -> {
+                        isAnimationStarted = true
+                    }
+                    currentStage == 1 -> {
+                        if (!isViewedAlready) {
+                            todayRecordController.updateIsViewed(todayRecordId!!, true)
+                        }
+                        navController.navigate("collection")
+                    }
+                }
+            }
+        ,
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -78,35 +108,123 @@ fun CharacterGetScreen(navController: NavController) {
             contentScale = ContentScale.Crop
         )
 
-        if (currentStage == 0) {
-            Box(modifier = Modifier.padding(top = 64.dp)) {
-                SpriteSheetAnimation(
-                    context = context,
-                    spriteSheetName = "bansoogi_explode.png",
-                    jsonName = "bansoogi_explode.json",
-                    modifier = Modifier.size(180.dp)
-                )
+//        // 터치 전
+//        if (!isViewedAlready && !isAnimationStarted) {
+//            Box(
+//                modifier = Modifier.padding(top = 64.dp),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Column(
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    SpriteSheetAnimation(
+//                        context = context,
+//                        spriteSheetName = "bansoogi_basic_sheet.png",
+//                        jsonName = "bansoogi_default_profile.json",
+//                        modifier = Modifier.size(180.dp)
+//                    )
+//
+//                    Spacer(modifier = Modifier.height(32.dp))
+//
+//                    Text(
+//                        text = "터치해서 반숙이 만나기",
+//                        color = Color.White,
+//                        fontSize = 20.sp
+//                    )
+//                }
+//            }
+//        }
+//
+//        // 터치 후 애니메이션 재생
+//        if (!isViewedAlready && isAnimationStarted && currentStage == 0) {
+//            Box(modifier = Modifier.padding(top = 64.dp)) {
+//                SpriteSheetAnimation(
+//                    context = context,
+//                    spriteSheetName = "bansoogi_explode.png",
+//                    jsonName = "bansoogi_explode.json",
+//                    modifier = Modifier.size(180.dp)
+//                )
+//            }
+//        }
+//
+//        // 수령 완료 후 화면
+//        if (currentStage == 1 && selectedCharacter != null) {
+//            Box(
+//                modifier = Modifier.padding(top = 64.dp),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Column(
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    SpriteSheetAnimation(
+//                        context = context,
+//                        spriteSheetName = "${selectedCharacter!!.gifUrl}_sheet.png",
+//                        jsonName = "${selectedCharacter!!.imageUrl}.json",
+//                        modifier = Modifier.size(180.dp)
+//                    )
+//
+//                    Spacer(modifier = Modifier.height(32.dp))
+//
+//                    Text(
+//                        text = "터치해서 컬렉션 확인",
+//                        color = Color.White,
+//                        fontSize = 20.sp
+//                    )
+//                }
+//            }ㅏㅓ
+//        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(top = 64.dp)
+        ) {
+            when {
+                !isViewedAlready && !isAnimationStarted -> {
+                    SpriteSheetAnimation(
+                        context = context,
+                        spriteSheetName = "bansoogi_basic_sheet.png",
+                        jsonName = "bansoogi_default_profile.json",
+                        modifier = Modifier.size(180.dp)
+                    )
+                }
+                !isViewedAlready && currentStage == 0 -> {
+                    SpriteSheetAnimation(
+                        context = context,
+                        spriteSheetName = "bansoogi_explode.png",
+                        jsonName = "bansoogi_explode.json",
+                        modifier = Modifier.size(180.dp)
+                    )
+                }
+                currentStage == 1 && selectedCharacter != null -> {
+                    SpriteSheetAnimation(
+                        context = context,
+                        spriteSheetName = "${selectedCharacter!!.gifUrl}_sheet.png",
+                        jsonName = "${selectedCharacter!!.imageUrl}.json",
+                        modifier = Modifier.size(180.dp)
+                    )
+                }
             }
         }
 
-        if (currentStage == 1 && selectedCharacter != null) {
-            Box(
-                modifier = Modifier.padding(top = 64.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                SpriteSheetAnimation(
-                    context = context,
-                    spriteSheetName = "${selectedCharacter!!.gifUrl}_sheet.png",
-                    jsonName = "${selectedCharacter!!.imageUrl}.json",
-                    modifier = Modifier.size(180.dp)
+        when {
+            !isViewedAlready && !isAnimationStarted -> {
+                Text(
+                    text = "터치해서 반숙이 변신",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 48.dp)
                 )
+            }
+            currentStage == 1 -> {
                 Text(
                     text = "터치해서 컬렉션 확인",
                     color = Color.White,
                     fontSize = 20.sp,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(top = 20.dp)
+                        .padding(bottom = 48.dp)
                 )
             }
         }

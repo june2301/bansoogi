@@ -99,4 +99,24 @@ class TodayRecordDataSource {
                 }
         }
     }
+
+    suspend fun updateIsViewed(recordId: ObjectId, viewed: Boolean) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        isViewed = viewed
+                    }
+                }
+        }
+    }
+
+    fun isViewed(): Boolean {
+        return realm.query<TodayRecord>()
+            .first()
+            .find()
+            ?.isViewed ?: false
+    }
 }
