@@ -50,7 +50,7 @@ class TriggerHandlers(
             val model = TodayRecordModel()
             val today = model.getTodayRecordSync() ?: return@launch
 
-            model.interaction(today.recordId, 10)
+            model.updateEnergy(today.recordId, 10)
             model.markMealDone(today.recordId, mealType)
 
             RequestHandler(context, scope).handleTodayRecordRequest()
