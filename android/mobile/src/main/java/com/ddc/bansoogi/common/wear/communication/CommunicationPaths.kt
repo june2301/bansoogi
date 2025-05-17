@@ -23,5 +23,7 @@ object CommunicationPaths {
         const val NOTIFICATION_CHANGE_TRIGGER = "${PREFIX}/trigger/change/notification" // 알림 설정 변경
         const val BG_SOUND_CHANGE_TRIGGER = "${PREFIX}/trigger/change/bg_sound" // 배경음 설정 변경
         const val EFFECT_SOUND_CHANGE_TRIGGER = "${PREFIX}/trigger/change/effect_sound" // 효과음 설정 변경
+
+        const val MEAL_CHECK_TRIGGER = "${PREFIX}/trigger/meal_check" // 식사 이벤트 수행
     }
 }

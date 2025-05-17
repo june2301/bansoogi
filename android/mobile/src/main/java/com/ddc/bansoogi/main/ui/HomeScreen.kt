@@ -63,7 +63,7 @@ fun HomeScreen(
             override fun showEmptyState() {
                 todayRecordDtoState.value = null
             }
-        })
+        }, context = context)
     }
 
     LaunchedEffect(Unit) {

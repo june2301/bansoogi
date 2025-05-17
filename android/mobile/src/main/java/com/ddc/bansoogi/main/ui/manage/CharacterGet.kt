@@ -35,7 +35,7 @@ fun CharacterGetScreen(navController: NavController) {
         TodayRecordController(object : TodayRecordView {
             override fun displayTodayRecord(todayRecord: TodayRecordDto) {}
             override fun showEmptyState() {}
-        })
+        }, context = context)
     }
 
     var currentStage by remember { mutableIntStateOf(0) }
