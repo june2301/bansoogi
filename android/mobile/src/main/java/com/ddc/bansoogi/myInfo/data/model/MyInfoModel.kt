@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.myInfo.data.model
 
+import com.ddc.bansoogi.common.foreground.NotificationDurationStateHolder
 import com.ddc.bansoogi.myInfo.data.entity.User
 import com.ddc.bansoogi.myInfo.data.local.MyInfoDataSource
 import com.ddc.bansoogi.myInfo.data.mapper.MyInfoMapper.toDomain
@@ -38,6 +39,9 @@ class MyInfoModel {
             effectSoundEnabled   = input.effectSoundEnabled
         }
         dataSource.updateUser(entity)
+
+        NotificationDurationStateHolder.update(input.notificationDuration)
+
         return input
     }
 
