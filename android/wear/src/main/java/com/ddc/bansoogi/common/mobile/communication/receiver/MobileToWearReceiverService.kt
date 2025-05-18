@@ -31,6 +31,8 @@ class MobileToWearReceiverService : WearableListenerService() {
             CommunicationPaths.MobileToWear.TODAY_RECORD_DATA -> requestHandler.handleTodayRecordData(messageEvent.data)
             CommunicationPaths.MobileToWear.MY_INFO_DATA -> requestHandler.handleMyInfoData(messageEvent.data)
 
+            CommunicationPaths.MobileToWear.BANSOOGI_STATE_DATA -> requestHandler.handleBansoogiStateData(messageEvent.data)
+
             else -> Log.w("WatchReceiver", "알 수 없는 경로: ${messageEvent.path}")
         }
     }

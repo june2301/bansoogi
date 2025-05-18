@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -27,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -46,6 +44,9 @@ import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.BackgroundImage
 import com.ddc.bansoogi.common.ui.SpriteSheetAnimation
 import com.ddc.bansoogi.common.ui.VerticalSpacer
+import com.ddc.bansoogi.main.ui.util.BansoogiState
+import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
+import com.ddc.bansoogi.main.ui.util.getConfig
 import com.ddc.bansoogi.myinfo.data.dto.MyInfoDto
 import com.ddc.bansoogi.myinfo.state.MyInfoStateHolder
 import com.ddc.bansoogi.today.data.dto.ReportDto
@@ -148,6 +149,7 @@ fun MainScreen(navController: NavHostController) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+
         BackgroundImage()
 
         SideButtons(
@@ -271,7 +273,7 @@ fun BansoogiContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        BansoogiAnimation(
+        BansoogiAnimationContent(
             triggerInteraction = triggerInteraction,
             onFinished = onFinished
         )
@@ -283,18 +285,18 @@ fun BansoogiContent(
 }
 
 @Composable
-fun BansoogiAnimation(
+fun BansoogiAnimationContent(
     triggerInteraction: Boolean,
     onFinished: () -> Unit
 ) {
     if (triggerInteraction) {
         BansoogiAnimation(
-            bansoogiRes = "bansoogi_smile",
+            state = BansoogiState.SMILE,
             onFinished = onFinished
         )
     } else {
         BansoogiAnimation(
-            bansoogiRes = "bansoogi_basic",
+            state = BansoogiStateHolder.state,
             onFinished = { }
         )
     }
@@ -302,15 +304,16 @@ fun BansoogiAnimation(
 
 @Composable
 fun BansoogiAnimation(
-    bansoogiRes: String,
+    state: BansoogiState,
     onFinished: () -> Unit
 ) {
     val context = LocalContext.current
+    var config = state.getConfig()
 
     SpriteSheetAnimation(
         context = context,
-        spriteSheetName = "${bansoogiRes}_sheet.png",
-        jsonName = "${bansoogiRes}.json",
+        spriteSheetName = "${config.sprite}_sheet.png",
+        jsonName = "${config.json}.json",
         modifier = Modifier
             .fillMaxSize(0.8f)
     )

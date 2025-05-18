@@ -37,12 +37,8 @@ class ForegroundService: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         // 여기에 실시간 처리 or 반복 작업 시작 로직 작성
 
-
-        Log.d("UUUU", "감지감지")
-
         // 핸드폰 사용 감지
         PhoneUsageMonitor.monitorContinuousPhoneUsage(applicationContext, serviceScope)
-
 
         return START_STICKY
     }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import android.content.Context
+import com.ddc.bansoogi.common.wear.communication.receiver.RequestHandler
 import com.ddc.bansoogi.common.wear.data.mapper.WearDtoMapper
 import org.mongodb.kbson.ObjectId
 
@@ -56,6 +57,8 @@ class TodayRecordController(
         coroutineScope.launch {
             handleInteraction(todayRecord, isInSleepRange)
         }
+
+        RequestHandler(context, coroutineScope).handleTodayRecordRequest()
     }
 
     fun getTodayRecordSync(): TodayRecordDto? {

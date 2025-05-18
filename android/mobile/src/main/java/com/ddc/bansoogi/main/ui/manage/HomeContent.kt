@@ -54,6 +54,8 @@ import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.DayTimeModal
+import com.ddc.bansoogi.main.ui.util.BansoogiState
+import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import kotlinx.coroutines.delay
@@ -117,6 +119,17 @@ fun HomeContent(
     }
 
     val mealEnabled = pendingMealTypes.isNotEmpty()
+
+    // 상호 작용 애니메이션
+    var triggerInteraction by remember { mutableStateOf(false) }
+
+    LaunchedEffect(triggerInteraction) {
+        if (triggerInteraction) {
+            // 5초 후에 showInteraction을 false로 설정하고 onFinished 콜백 호출
+            delay(5000)
+            triggerInteraction = false
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -207,29 +220,17 @@ fun HomeContent(
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            val context = LocalContext.current
-            val imageLoader = remember {
-                ImageLoader.Builder(context)
-                    .components {
-                        add(GifDecoder.Factory())
-                        add(ImageDecoderDecoder.Factory())
-                    }
-                    .build()
+            if (triggerInteraction) {
+                BansoogiAnimation(
+                    state = BansoogiState.SMILE,
+                    onFinished = { }
+                )
+            } else {
+                BansoogiAnimation(
+                    state = BansoogiStateHolder.state,
+                    onFinished = { }
+                )
             }
-
-            Image(
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(context)
-                        .data(R.drawable.bansoogi_basic)
-                        .build(),
-                    imageLoader = imageLoader
-                ),
-                contentDescription = "반숙이",
-                modifier = Modifier
-                    .width(420.dp)
-                    .height(540.dp),
-                contentScale = ContentScale.Fit
-            )
         }
 
         val buttonShape = RoundedCornerShape(30.dp)
@@ -259,7 +260,7 @@ fun HomeContent(
 
             Button(
                 onClick = {
-                    // TODO: 상호작용 애니메이션 출력
+                    triggerInteraction = true
                     todayRecordController.onInteract(todayRecordDto, isInSleepRange)
                 },
                 modifier = btnModifier,
