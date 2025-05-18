@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.android.horologist:horologist-annotations:0.6.17" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.google.android.horologist" artifactId="horologist-annotations" version="0.6.17" baseVersion="0.6.17" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.horologist/horologist-annotations/0.6.17/b9648bf9682ee70253c20f8868a46f39589547ad/horologist-annotations-0.6.17.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.horologist/horologist-annotations/0.6.17/18caee98edb667737b035ea154e8d4edf57858f3/horologist-annotations-0.6.17-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.horologist/horologist-annotations/0.6.17/2d38833549fb883be3e531a875fe1a6a0be69a99/horologist-annotations-0.6.17-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

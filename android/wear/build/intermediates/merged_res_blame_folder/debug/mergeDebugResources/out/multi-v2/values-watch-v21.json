@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.ddc.bansoogi.wear-mergeDebugResources-99:/values-watch-v21/values-watch-v21.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\lasni\\.gradle\\caches\\8.11.1\\transforms\\4f2cf01e70192e778f80e728863ddeeb\\transformed\\appcompat-1.6.1\\res\\values-watch-v21\\values-watch-v21.xml",
+                    "from": {
+                        "startLines": "2,6,10",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,271,499",
+                        "endLines": "5,9,13",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "266,494,724"
+                    }
+                }
+            ]
+        }
+    ]
+}

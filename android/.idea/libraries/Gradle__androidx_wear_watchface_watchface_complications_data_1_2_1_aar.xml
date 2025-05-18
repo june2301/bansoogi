@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.wear.watchface:watchface-complications-data:1.2.1@aar" external-system-id="GRADLE">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/c863bc5a39a2b2e17f7c61cb1917f514/transformed/watchface-complications-data-1.2.1/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/c863bc5a39a2b2e17f7c61cb1917f514/transformed/watchface-complications-data-1.2.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/c863bc5a39a2b2e17f7c61cb1917f514/transformed/watchface-complications-data-1.2.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/c863bc5a39a2b2e17f7c61cb1917f514/transformed/watchface-complications-data-1.2.1/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.wear.watchface/watchface-complications-data/1.2.1/6ba053b828a73858537944ee7bcb6d96de56759f/watchface-complications-data-1.2.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
