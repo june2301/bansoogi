@@ -4,6 +4,8 @@ import android.util.Log
 import com.ddc.bansoogi.calendar.data.entity.RecordedReport
 import com.ddc.bansoogi.common.data.local.RealmManager
 import io.realm.kotlin.ext.query
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class RecordedReportDataSource {
     private val realm = RealmManager.realm
@@ -22,6 +24,15 @@ class RecordedReportDataSource {
     fun getRecordedReportByDate(date: String): RecordedReport? {
         return realm.query<RecordedReport>("reportedDate == $0", date)
             .find().firstOrNull()
+    }
+
+    // 날짜 순 정렬해서 가장 첫 번째 반환
+    fun getLatestRecordedReport(): RecordedReport {
+        val reports = getRecordedReportList().sortedByDescending {
+            LocalDate.parse(it.reportedDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        }
+
+        return reports.first()
     }
 
     // 더미데이터

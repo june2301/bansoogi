@@ -24,14 +24,14 @@ class CollectionDataSource {
 
     fun getBansoogiById(bansoogiId: Int): Character {
         return realm.query<Character>("bansoogiId == $0", bansoogiId)
-            .first()
-            .find() ?: Character().apply {
+                .first()
+                .find() ?: Character().apply {
                 title = "반숙이"
                 imageUrl = "bansoogi_default_profile"
                 silhouetteImageUrl = "unknown"
                 gifUrl = "bansoogi_basic"
                 description = "우리의 반숙이입니다."
-            }
+        }
     }
 
     fun getImageResourceIdForBansoogiId(context: Context, bansoogiId: Int): Int {

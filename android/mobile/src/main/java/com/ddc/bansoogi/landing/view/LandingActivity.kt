@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.common.notification.AlarmScheduler
 import com.ddc.bansoogi.common.notification.SyncHelper
+import com.ddc.bansoogi.common.ui.activity.BaseActivity
 import com.ddc.bansoogi.landing.controller.LandingController
 import com.ddc.bansoogi.landing.ui.screen.BirthInputScreen
 import com.ddc.bansoogi.landing.ui.screen.LandingStartScreen
@@ -41,7 +41,7 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class LandingActivity : ComponentActivity(), LandingView {
+class LandingActivity : BaseActivity(), LandingView {
 
     private lateinit var controller: LandingController
     private lateinit var navController: NavHostController

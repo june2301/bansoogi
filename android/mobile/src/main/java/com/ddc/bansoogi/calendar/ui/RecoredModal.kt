@@ -67,8 +67,7 @@ fun RecordedModal(
         report = controller.getDetailReport(selectedDate)
 
         if (report == null) {
-            onDismissRequest()
-            return@LaunchedEffect
+            report = controller.getLatestRecordedReport()
         }
     }
 
@@ -92,7 +91,7 @@ fun ModalHeader(
         modifier = Modifier.fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.egg_before_broken),
+            painter = painterResource(id = R.drawable.egg_before_broken_gif),
             contentDescription = "아이콘",
             modifier = Modifier.size(32.dp)
         )
@@ -120,7 +119,7 @@ fun SectionHeader(
         modifier = Modifier.fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.egg_before_broken),
+            painter = painterResource(id = R.drawable.egg_before_broken_gif),
             contentDescription = "달걀",
             modifier = Modifier.size(32.dp)
         )
@@ -403,7 +402,7 @@ fun RecordContent(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InfoRow(
-                            label = "총 걸음수 :",
+                            label = "총 걸음 수 :",
                             value = report.walkCount,
                             unit = " 회"
                         )
@@ -479,7 +478,7 @@ fun RecordedModalPreview() {
         onDismissRequest = { },
         report = DetailReportDto (
             date = "2025-05-01",
-            finalEnergyPoint =90,
+            finalEnergyPoint = 90,
 
             bansoogiTitle = "임시 반숙이",
             bansoogiGifUrl = "1",

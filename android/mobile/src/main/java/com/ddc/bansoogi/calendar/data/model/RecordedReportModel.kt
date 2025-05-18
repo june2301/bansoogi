@@ -32,10 +32,16 @@ class RecordedReportModel {
     ) {
         val date = todayRecordDto.createdAt.toLocalDate()
 
+        val actualBansoogiId = if (todayRecordDto.energyPoint >= 80) {
+            bansoogiIdData
+        } else {
+            0
+        }
+
         dataSource.createRecordedReport(
             RecordedReport().apply {
                 finalEnergyPoint = todayRecordDto.energyPoint
-                bansoogiId = bansoogiIdData
+                bansoogiId = actualBansoogiId
 
                 standupCount = todayRecordDto.standUpCnt
                 stretchCount = todayRecordDto.stretchCnt
@@ -75,13 +81,56 @@ class RecordedReportModel {
     fun getDetailReport(date: String): DetailReportDto? {
         val report = dataSource.getRecordedReportByDate(date) ?: return null
 
-        // 반숙이 데이터 호출도 나중에 변경 예정
         val bansoogi = CollectionModel().getBansoogiById(report.bansoogiId)
 
         // 로그 호출
         val standLog = logModel.getLogsByTypeAndDate("STANDUP", date)
         val stretchLog = logModel.getLogsByTypeAndDate("STRETCH", date)
         val phoneOffLog = logModel.getLogsByTypeAndDate("PHONE_OFF", date)
+
+        return DetailReportDto(
+            date = report.reportedDate,
+
+            finalEnergyPoint = report.finalEnergyPoint,
+
+            bansoogiTitle = bansoogi.title,
+            bansoogiGifUrl = bansoogi.gifUrl,
+            bansoogiImageUrl = bansoogi.imageUrl,
+
+            standupCount = report.standupCount,
+            standLog = standLog,
+
+            stretchCount = report.stretchCount,
+            stretchLog = stretchLog,
+
+            phoneOffCount = report.phoneOffCount,
+            phoneOffLog = phoneOffLog,
+
+            lyingTime = report.lyingTime,
+            sittingTime = report.sittingTime,
+            phoneTime = report.phoneTime,
+            sleepTime = report.sleepTime,
+
+            walkCount = report.walkCount,
+            runTime = report.runTime,
+            exerciseTime =  report.exerciseTime,
+            stairsClimbed = report.stairsClimbed,
+
+            breakfast = report.breakfast,
+            lunch = report.lunch,
+            dinner = report.dinner
+        )
+    }
+
+    fun getLatestRecordedReport(): DetailReportDto {
+        val report = dataSource.getLatestRecordedReport()
+
+        val bansoogi = CollectionModel().getBansoogiById(report.bansoogiId)
+
+        // 로그 호출
+        val standLog = logModel.getLogsByTypeAndDate("STANDUP", report.reportedDate)
+        val stretchLog = logModel.getLogsByTypeAndDate("STRETCH", report.reportedDate)
+        val phoneOffLog = logModel.getLogsByTypeAndDate("PHONE_OFF", report.reportedDate)
 
         return DetailReportDto(
             date = report.reportedDate,

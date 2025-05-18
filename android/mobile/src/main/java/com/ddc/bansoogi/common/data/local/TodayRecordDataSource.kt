@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.common.data.local
 
+import com.ddc.bansoogi.common.data.enum.MealType
 import com.ddc.bansoogi.common.data.entity.TodayRecord
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -74,6 +75,19 @@ class TodayRecordDataSource {
         }
     }
 
+    suspend fun updateAllEnergy(recordId: ObjectId, energy: Int) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        energyPoint = minOf(energy, 100)
+                    }
+                }
+        }
+    }
+
     suspend fun updateEnergy(recordId: ObjectId, addedEnergy: Int) {
         realm.write {
             query<TodayRecord>("recordId == $0", recordId)
@@ -98,5 +112,40 @@ class TodayRecordDataSource {
                     }
                 }
         }
+    }
+
+    suspend fun updateIsViewed(recordId: ObjectId, viewed: Boolean) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        isViewed = viewed
+                    }
+                }
+        }
+    }
+
+    suspend fun markMealDone(recordId: ObjectId, mealType: MealType) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.apply {
+                    when (mealType) {
+                        MealType.BREAKFAST -> breakfast = true
+                        MealType.LUNCH     -> lunch = true
+                        MealType.DINNER    -> dinner = true
+                    }
+                }
+        }
+    }
+
+    fun isViewed(): Boolean {
+        return realm.query<TodayRecord>()
+            .first()
+            .find()
+            ?.isViewed ?: false
     }
 }

@@ -3,7 +3,6 @@ package com.ddc.bansoogi.main.ui
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -11,12 +10,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import com.ddc.bansoogi.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.lifecycleScope
@@ -24,17 +23,22 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ddc.bansoogi.common.foreground.ForegroundUtil
+import com.ddc.bansoogi.R
+import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
 import com.ddc.bansoogi.common.navigation.AppNavGraph
 import com.ddc.bansoogi.common.navigation.NavRoutes
-import com.ddc.bansoogi.common.ui.CommonNavigationBar
+import com.ddc.bansoogi.common.ui.activity.BaseActivity
+import com.ddc.bansoogi.common.ui.component.BansoogiNavigationBar
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.common.util.health.Permissions
 import com.ddc.bansoogi.common.util.health.RealTimeHealthDataManager
+import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import com.samsung.android.sdk.health.data.HealthDataService
 import com.samsung.android.sdk.health.data.HealthDataStore
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity() {
     val activityContext = this
     private lateinit var healthDataStore: HealthDataStore
     private lateinit var healthDataManager: RealTimeHealthDataManager
@@ -52,12 +56,18 @@ class MainActivity : ComponentActivity() {
 
         setupHealthPermissions()
 
+        val today = LocalDate.now()
+        val todayFormatted = CalendarUtils.toFormattedDateString(today, today.dayOfMonth)
+        TodayHealthDataController().initialize(todayFormatted)
         setContent {
             MainScreen(
                 healthData,
                 onModalOpen = { startHealthDataUpdates() },
                 onModalClose = { stopHealthDataUpdates() }
             )
+        }
+        if (::healthDataManager.isInitialized) {
+            healthDataManager.refreshData() // 초기 데이터 즉시 로드
         }
     }
 
@@ -106,11 +116,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     // 모달이 열릴 때 호출될 메서드
     fun startHealthDataUpdates() {
         if (::healthDataManager.isInitialized) {
             healthDataManager.setUpdateInterval(UPDATE_INTERVAL)
-            healthDataManager.refreshData() // 즉시 한 번 갱신
+//            healthDataManager.refreshData() // 즉시 한 번 갱신
             healthDataManager.startCollecting() // 데이터 수집 시작
         }
     }
@@ -135,7 +146,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(
     healthData: CustomHealthData,
-    onModalOpen:  () -> Unit,
+    onModalOpen: () -> Unit,
     onModalClose: () -> Unit
 ) {
     val navController = rememberNavController()
@@ -160,17 +171,16 @@ fun MainScreen(
         )
 
         Scaffold(
-            containerColor = androidx.compose.ui.graphics.Color.Transparent,
+            containerColor = Color.Transparent,
             bottomBar = {
-                CommonNavigationBar(
+                BansoogiNavigationBar(
                     currentRoute = currentRoute,
                     onNavigate = { route ->
                         if (route != currentRoute) {
                             navController.navigate(route) {
                                 popUpTo(NavRoutes.HOME) {
                                     saveState = true
-                                    // HOME으로 이동할 경우, 백스택 완전히 비우기
-                                    inclusive = (route == NavRoutes.HOME)
+                                    inclusive = false
                                 }
                                 // 중복 방지
                                 launchSingleTop = true

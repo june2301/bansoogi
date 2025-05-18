@@ -24,4 +24,12 @@ object MobileTodayRecordSender {
             CommunicationPaths.WearToMobile.INTERACTION_TRIGGER
         )
     }
+
+    fun sendMealTrigger(context: Context, mealType: String) {
+        WearToMobileMessageSender.sendData(
+            context,
+            mealType,
+            CommunicationPaths.WearToMobile.MEAL_CHECK_TRIGGER
+        )
+    }
 }

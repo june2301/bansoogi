@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -17,6 +18,7 @@ import androidx.navigation.NavController
 import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
+import com.ddc.bansoogi.main.controller.CharacterGetController
 import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.manage.EggManagerModal
 import com.ddc.bansoogi.main.ui.manage.HomeContent
@@ -61,16 +63,23 @@ fun HomeScreen(
             override fun showEmptyState() {
                 todayRecordDtoState.value = null
             }
-        })
+        }, context = context)
     }
 
     LaunchedEffect(Unit) {
+        onModalOpen()
         todayRecordController.initialize()
     }
 
     LaunchedEffect(Unit) {
         myInfoController.myInfoFlow().collect { dto ->
             myInfoState.value = dto
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            onModalClose()
         }
     }
 
@@ -111,7 +120,7 @@ fun HomeScreen(
                         val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
                         val key = "egg_seen_${LocalDate.now()}"
                         val alreadySeen = prefs.getBoolean(key, false)
-                        if (!alreadySeen) {
+                        if (!alreadySeen && CharacterGetController().canDrawCharacter()) {
                             prefs.edit().putBoolean(key, true).apply()
                             navController.navigate("character_get")
                         }
@@ -135,14 +144,13 @@ fun HomeScreen(
             }
         )
     } else {
+        onModalOpen()
         todayRecordDtoState.value?.let { todayRecord ->
             HomeContent(
                 todayRecord,
                 todayRecordController,
                 isInSleepRange.value,
                 healthData,
-                onModalOpen = onModalOpen,
-                onModalClose = onModalClose
             )
         } ?: Box(
             modifier = Modifier.fillMaxSize(),

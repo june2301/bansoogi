@@ -66,7 +66,6 @@ suspend fun readLastStepGoal(healthDataStore: HealthDataStore): Int {
     return stepGoal
 }
 
-
 @Throws(HealthDataException::class)
 suspend fun readFloorsClimbed(healthDataStore: HealthDataStore): Float {
     val startDate = LocalDate.now()
@@ -90,11 +89,12 @@ suspend fun readFloorsClimbed(healthDataStore: HealthDataStore): Float {
 
 @Throws(HealthDataException::class)
 suspend fun readSleepData(healthDataStore: HealthDataStore): Int? {
-    val today = LocalDate.now()
+    val startDate = LocalDate.now()
+    val endDate = LocalDate.now().plusDays(1)
 
     val readSleepRequest = DataType.SleepType.TOTAL_DURATION
         .requestBuilder
-        .setLocalDateFilter(LocalDateFilter.of(today, today.plusDays(1)))
+        .setLocalDateFilter(LocalDateFilter.of(startDate, endDate))
         .build()
 
     try {
@@ -109,8 +109,6 @@ suspend fun readSleepData(healthDataStore: HealthDataStore): Int? {
         }
 
         val totalMinutes = sleepDuration.toMinutes().toInt()
-
-        Log.d("SLEEP_DATA", "총 수면 시간(분): $totalMinutes")
 
         return totalMinutes
     } catch (e: Exception) {
@@ -140,8 +138,6 @@ suspend fun readExerciseData(healthDataStore: HealthDataStore): Int? {
         }
 
         val totalMinutes = exerciseDuration.toMinutes().toInt()
-
-        Log.d("EXERCISE_DATA", "총 운동 시간(분): $totalMinutes")
 
         return totalMinutes
     } catch (e: Exception) {
