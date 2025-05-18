@@ -64,7 +64,7 @@ object PhoneUsageAnalyzer {
         // 이벤트 존재 X 경우
 
         // 반숙이 앱 사용 중이면 false
-        if (UsageStateHolder.lastTrackedPackageName == "com.ddc.bansoogi") {
+        if (UsageStateHolder.lastTrackedPackageName == BANSOOGI_PACKAGE) {
             return false
         }
 

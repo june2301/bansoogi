@@ -31,18 +31,16 @@ fun SpriteSheetAnimation(
     modifier: Modifier = Modifier
 ) {
     // 1. JSON 로드 및 파싱
-    val json = remember {
-        Json { ignoreUnknownKeys = true }
-    }
-    val frames = remember {
+    val frames = remember(spriteSheetName, jsonName) {
         val jsonText = context.assets.open(jsonName).bufferedReader().use { it.readText() }
-        json.decodeFromString<AsepriteJson>(jsonText).frames.values.map {
-            Pair(it.frame, it.duration)
-        }
+        Json { ignoreUnknownKeys = true }
+            .decodeFromString<AsepriteJson>(jsonText).frames.values.map {
+                Pair(it.frame, it.duration)
+            }
     }
 
     // 2. sprite sheet bitmap 로드
-    val fullBitmap = remember {
+    val fullBitmap = remember(spriteSheetName) {
         context.assets.open(spriteSheetName).use {
             BitmapFactory.decodeStream(it)
         }
