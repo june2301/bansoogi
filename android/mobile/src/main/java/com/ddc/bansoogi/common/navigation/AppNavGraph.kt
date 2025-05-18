@@ -23,7 +23,8 @@ fun AppNavGraph(
     modifier: Modifier = Modifier,
     healthData: CustomHealthData,
     onModalOpen: () -> Unit,
-    onModalClose: () -> Unit
+    onModalClose: () -> Unit,
+    isFirstUser: Boolean
 ) {
     NavHost(
         navController = navController,
@@ -41,7 +42,7 @@ fun AppNavGraph(
                 healthData,
                 onModalOpen = onModalOpen,
                 onModalClose = onModalClose,
-                navController = navController,
+                navController = navController
             )
         }
 

@@ -40,6 +40,7 @@ import java.time.LocalDate
 
 class MainActivity : BaseActivity() {
     val activityContext = this
+    private var isFirstUser = false
     private lateinit var healthDataStore: HealthDataStore
     private lateinit var healthDataManager: RealTimeHealthDataManager
 
@@ -53,6 +54,8 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         healthDataStore = HealthDataService.getStore(activityContext)
+        val prefs = getSharedPreferences("bansoogi_prefs", MODE_PRIVATE)
+        isFirstUser = prefs.getBoolean("isFirstUser", false)
 
         setupHealthPermissions()
 
@@ -63,7 +66,8 @@ class MainActivity : BaseActivity() {
             MainScreen(
                 healthData,
                 onModalOpen = { startHealthDataUpdates() },
-                onModalClose = { stopHealthDataUpdates() }
+                onModalClose = { stopHealthDataUpdates() },
+                isFirstUser = isFirstUser
             )
         }
         if (::healthDataManager.isInitialized) {
@@ -147,7 +151,9 @@ class MainActivity : BaseActivity() {
 fun MainScreen(
     healthData: CustomHealthData,
     onModalOpen: () -> Unit,
-    onModalClose: () -> Unit
+    onModalClose: () -> Unit,
+    isFirstUser: Boolean
+
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -197,7 +203,8 @@ fun MainScreen(
                 modifier = Modifier.padding(paddingValues),
                 healthData = healthData,
                 onModalOpen = onModalOpen,
-                onModalClose = onModalClose
+                onModalClose = onModalClose,
+                isFirstUser = isFirstUser
             )
         }
     }

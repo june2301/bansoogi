@@ -32,6 +32,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
+import androidx.core.content.edit
 
 fun RealmInstant.toLocalDate(): LocalDate {
     val instant = Instant.ofEpochSecond(this.epochSeconds, this.nanosecondsOfSecond.toLong())
@@ -65,6 +66,14 @@ fun HomeScreen(
             }
         }, context = context)
     }
+
+    LaunchedEffect(Unit) {
+        val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
+        if (prefs.getBoolean("isFirstUser", false)) {
+            showEggManager.value = true
+        }
+    }
+
 
     LaunchedEffect(Unit) {
         onModalOpen()
@@ -121,7 +130,7 @@ fun HomeScreen(
                         val key = "egg_seen_${LocalDate.now()}"
                         val alreadySeen = prefs.getBoolean(key, false)
                         if (!alreadySeen && CharacterGetController().canDrawCharacter()) {
-                            prefs.edit().putBoolean(key, true).apply()
+                            prefs.edit() { putBoolean(key, true) }
                             navController.navigate("character_get")
                         }
                     }
@@ -139,6 +148,11 @@ fun HomeScreen(
         EggManagerModal(
             myInfo = myInfoState.value,
             onDismiss = {
+                val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
+                if (prefs.getBoolean("isFirstUser", false)) {
+                    prefs.edit() { putBoolean("isFirstUser", false) }
+                }
+
                 showEggManager.value = false
                 todayRecordController.renewTodayRecord()
             }

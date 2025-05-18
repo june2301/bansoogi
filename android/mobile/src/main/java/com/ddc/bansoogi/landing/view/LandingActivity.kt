@@ -195,7 +195,12 @@ class LandingActivity : BaseActivity(), LandingView {
 
         navController.popBackStack("start", inclusive = false)
         //여기서 데이터 처리해주면 됨.
+        val prefs = getSharedPreferences("bansoogi_prefs", MODE_PRIVATE)
+        prefs.edit().putBoolean("isFirstUser", true).apply()
+
         val intent = Intent(this@LandingActivity, MainActivity::class.java)
+        startActivity(intent)
+        finish()
         // TODO: 데이터 한번에 처리
 // 모든 데이터 수집 후 MainActivity로 전달
 //                        val intent = Intent(this@LandingActivity, MainActivity::class.java).apply {

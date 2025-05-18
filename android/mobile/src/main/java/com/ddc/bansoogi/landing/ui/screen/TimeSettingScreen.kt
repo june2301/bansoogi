@@ -138,7 +138,7 @@ fun TimeSettingScreen(controller: LandingController, onFinish: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
-                    SubTitleText("상태 지속 시간")
+                    SubTitleText("활동 알림 주기")
                     Spacer(Modifier.weight(1f))
                     DurationPicker(durationState = durationTimeState)
                 }
