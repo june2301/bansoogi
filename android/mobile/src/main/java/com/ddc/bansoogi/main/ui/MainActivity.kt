@@ -22,6 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ddc.bansoogi.common.foreground.ForegroundUtil
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
 import com.ddc.bansoogi.common.navigation.AppNavGraph
@@ -67,6 +68,14 @@ class MainActivity : BaseActivity() {
         }
         if (::healthDataManager.isInitialized) {
             healthDataManager.refreshData() // 초기 데이터 즉시 로드
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!ForegroundUtil.isServiceRunning()) {
+            ForegroundUtil.startForegroundService(activityContext)
         }
     }
 
@@ -123,7 +132,6 @@ class MainActivity : BaseActivity() {
             healthDataManager.stopCollecting() // 데이터 수집 중지
         }
     }
-
 
     override fun onDestroy() {
         // 액티비티 종료 시 수집 중지
