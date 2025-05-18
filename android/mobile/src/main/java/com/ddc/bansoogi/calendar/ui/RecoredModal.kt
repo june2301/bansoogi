@@ -373,7 +373,7 @@ fun RecordContent(
 
                         ActivityLogList(report.standLog)
 
-                       VerticalSpacer()
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "스트레칭 이벤트 :",
