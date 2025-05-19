@@ -1,16 +1,13 @@
 package com.ddc.bansoogi.common.notification
 
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.core.net.toUri
 import com.ddc.bansoogi.R
 
 object NotificationFactory {
     private fun baseBuilder(context: Context, channelId: String) =
         NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.cookie)
+            .setSmallIcon(R.drawable.ic_watch_home)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
