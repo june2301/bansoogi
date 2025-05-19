@@ -19,12 +19,20 @@ class PostureClassifier(
     // per-subject means & scale factors
     private val subjectMeans = FloatArray(FEATURE_DIM)
     private val scaleFactor = FloatArray(FEATURE_DIM) { 1f }
+    private var rawGreenMu    = 0f
+    private var rawGreenSigma = 1f
+
+    // quantile clipping bounds per feature
+    private val clipBounds = Array<Pair<Float,Float>>(FEATURE_DIM) {  // default full range
+        Float.NEGATIVE_INFINITY to Float.POSITIVE_INFINITY
+    }
 
     init {
         loadCalibration()         // load per-subject means from calib.json
         computeScaleFactors()     // build multiplicative offsets
+        Log.i(TAG, "⚙️ PostureClassifier initialized")
     }
-
+    
     /**
      * Load calibration (subject) means from calib.json → "calib_means"
      */
@@ -33,14 +41,38 @@ class PostureClassifier(
             val file = File(ctx.filesDir, "calib.json")
             if (!file.exists()) return
             val root = JSONObject(file.readText())
-            val calibObj = root.optJSONObject("calib_means") ?: return
-            FEAT_NAMES.forEachIndexed { i, key ->
-                subjectMeans[i] = calibObj.optDouble(key, 0.0).toFloat()
+
+            // 1) per-subject feature means
+            root.optJSONObject("calib_means")?.let { calibObj ->
+                FEAT_NAMES.forEachIndexed { i, key ->
+                    subjectMeans[i] = calibObj.optDouble(key, 0.0).toFloat()
+                }
             }
-        } catch (_: Exception) {
-            // ignore
+
+            // 2) raw green μ/σ
+            root.optJSONObject("stats_raw")
+                ?.optJSONObject("green")
+                ?.let { g ->
+                    rawGreenMu    = g.optDouble("mu", 0.0).toFloat()
+                    rawGreenSigma = g.optDouble("sigma", 1.0).toFloat()
+                }
+
+            // 3) quantile clip bounds
+            root.optJSONObject("clip_bounds")?.let { clipObj ->
+                FEAT_NAMES.forEachIndexed { i, key ->
+                    clipObj.optJSONArray(key)?.let { arr ->
+                        val lo = arr.optDouble(0, Double.NEGATIVE_INFINITY).toFloat()
+                        val hi = arr.optDouble(1, Double.POSITIVE_INFINITY).toFloat()
+                        clipBounds[i] = lo to hi
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "loadCalibration failed", e)
         }
+        Log.i(TAG, "🔧 loadCalibration ▶ subjectMeans=${subjectMeans.joinToString()} rawGreenMu/S=$rawGreenMu/$rawGreenSigma")
     }
+
 
     /**
      * Compute scale = global_mean / subject_mean for features we know
@@ -51,6 +83,7 @@ class PostureClassifier(
             val sm = subjectMeans[i]
             scaleFactor[i] = if (gm > 0f && sm > 0f) gm / sm else 1f
         }
+        Log.i(TAG, "🔧 computeScaleFactors ▶ GLOBAL_MEANS=${GLOBAL_MEANS.joinToString()} subjectMeans=${subjectMeans.joinToString()} scaleFactor=${scaleFactor.joinToString()}")
     }
 
     /**
@@ -58,11 +91,25 @@ class PostureClassifier(
      */
     fun classify(feats: FloatArray): Int {
         require(feats.size == FEATURE_DIM)
-        Log.d(TAG, "raw feats: ${feats.joinToString(", ")}")
+        Log.d(TAG, "1️⃣ raw feats ▶ ${feats.joinToString()}")
+
+        // --- 1) quantile clipping ---
+        for (i in feats.indices) {
+            val (lo, hi) = clipBounds[i]
+            feats[i] = feats[i].coerceIn(lo, hi)
+        }
+
+        Log.d(TAG, "clamped feats: ${feats.joinToString(", ")}")
+
+        // --- 2) subject scaling ---
         val corrected = FloatArray(FEATURE_DIM) { feats[it] * scaleFactor[it] }
-        Log.d(TAG, "corrected feats: ${corrected.joinToString(", ")}")
+        Log.d(TAG, "3️⃣ scaled feats ▶ ${corrected.joinToString()}")
+
+        // --- 3) TFLite inference ---
         for (i in 0 until FEATURE_DIM) input[0][i] = corrected[i]
+        Log.v(TAG, "4️⃣ model input ▶ ${input[0].joinToString()}")
         tflite.run(input, output)
+        Log.d(TAG, "5️⃣ raw output ▶ ${output[0].joinToString()}  argmax=${output[0].argMax()}")
         return output[0].argMax()
     }
 

@@ -106,8 +106,13 @@ class CalibRuleService : Service() {
         override fun onDataReceived(points: List<DataPoint>) {
             if (!recording || !warmupDone) return
             points.forEach { dp ->
-                val g = (dp.getValue(ValueKey.PpgSet.PPG_GREEN) as? Int ?: 0) / 4096f
-                rawBuf.addLast(g); if (rawBuf.size > FS*WIN_SEC) rawBuf.removeFirst()
+                /* ① Number 캐스팅으로 0 값 문제 해결 */
+                val gRaw = (dp.getValue(ValueKey.PpgSet.PPG_GREEN) as? Number)?.toLong() ?: 0L
+                val g = gRaw.toFloat() / 4096f
+
+                /* ② 원형 버퍼: size > 250 이면 맨 앞 제거 (추론은 size==250일 때마다) */
+                rawBuf.addLast(g)
+                if (rawBuf.size > FS * WIN_SEC) rawBuf.removeFirst()
                 if (++frameCnt < FS*INFER_EVERY) return@forEach; frameCnt = 0
                 if (rawBuf.size == FS*WIN_SEC) handleWindow(extractFeatures(rawBuf.toFloatArray()))
             }
@@ -151,7 +156,8 @@ class CalibRuleService : Service() {
         val stats = root.optJSONObject("stats") ?: return "upright‑sitting"
         fun z(value: Float, key: String): Float {
             val s = stats.optJSONObject(key) ?: return 0f
-            val mu = s.optDouble("mu",0.0).toFloat(); val sd = s.optDouble("sigma",1.0).toFloat()
+            val mu = s.optDouble("mu", 0.0).toFloat()
+            val sd = s.optDouble("sigma", 1.0).toFloat()
             return if (sd != 0f) (value-mu)/sd else 0f
         }
         val hrZ = z(f[2], "hr_mean"); val pnnZ = z(f[0], "pnn50"); val kurZ = z(f[8], "kurtosis")
@@ -222,21 +228,40 @@ class CalibRuleService : Service() {
                 }
             }
             root.put("calib_means", calibMeansObj)
-        }
 
-        // default thresholds
-        root.put("thresholds", JSONObject().apply {
-            put("supine",
-                JSONObject()
-                    .put("hr_z_max",    -0.8)
-                    .put("pnn50_z_min",  0.8)
-            )
-            put("standing",
-                JSONObject()
-                    .put("hr_z_min",      0.8)
-                    .put("kurtosis_z_min",0.5)
-            )
-        })
+            // default thresholds
+            root.put("thresholds", JSONObject().apply {
+                put(
+                    "supine",
+                    JSONObject()
+                        .put("hr_z_max", -0.8)
+                        .put("pnn50_z_min", 0.8)
+                )
+                put(
+                    "standing",
+                    JSONObject()
+                        .put("hr_z_min", 0.8)
+                        .put("kurtosis_z_min", 0.5)
+                )
+            })
+            // ★ per-feature clip bounds (mean ±3σ)
+            val clipObj = JSONObject().apply {
+                val featNames = listOf(
+                    "pnn50", "rr_mean", "hr_mean", "rmssd", "n_peaks",
+                    "crest_t", "dwell_t", "pwtf", "kurtosis", "skew"
+                )
+                featNames.forEachIndexed { i, key ->
+                    val m = mu[i]
+                    val s = sd[i]
+                    // 음수방지: 하한은 0 이상으로
+                    put(key, JSONArray().apply {
+                        put((m - 3 * s).coerceAtLeast(0.0f).toDouble())
+                        put((m + 3 * s).toDouble())
+                    })
+                }
+            }
+            root.put("clip_bounds", clipObj)
+        }
 
         file.writeText(root.toString())
     }
