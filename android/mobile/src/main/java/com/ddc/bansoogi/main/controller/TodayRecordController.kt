@@ -17,6 +17,7 @@ import com.ddc.bansoogi.common.util.health.EnergyUtil
 import com.ddc.bansoogi.common.wear.data.mapper.WearDtoMapper
 import com.ddc.bansoogi.main.data.model.TodayHealthDataDto
 import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
+import com.ddc.bansoogi.main.ui.handle.handleMeal
 import java.time.LocalDate
 import org.mongodb.kbson.ObjectId
 
@@ -61,9 +62,9 @@ class TodayRecordController(
     fun onInteract(todayRecord: TodayRecordDto, isInSleepRange: Boolean) {
         coroutineScope.launch {
             handleInteraction(todayRecord, isInSleepRange)
-        }
 
-        RequestHandler(context, coroutineScope).handleTodayRecordRequest()
+            RequestHandler(context, coroutineScope).handleTodayRecordRequest()
+        }
     }
 
     fun getTodayRecordSync(): TodayRecordDto? {
@@ -83,28 +84,10 @@ class TodayRecordController(
 
     fun checkMeal(todayRecord: TodayRecordDto, mealType: MealType) {
         coroutineScope.launch {
-            model.markMealDone(todayRecord.recordId, mealType)
+            handleMeal(todayRecord, mealType)
 
-            val dateStr = CalendarUtils.toFormattedDateString(
-                LocalDate.now(), LocalDate.now().dayOfMonth
-            )
-            val healthDto: TodayHealthDataDto? =
-                TodayHealthDataController().getTodayHealthData(dateStr)
-            val healthData = CustomHealthData(
-                step           = healthDto?.steps?.toLong() ?: 0L,
-                stepGoal       = healthDto?.stepGoal          ?: 0,
-                floorsClimbed  = healthDto?.floorsClimbed?.toFloat() ?: 0f,
-                sleepData      = healthDto?.sleepTime,
-                exerciseTime   = healthDto?.exerciseTime
-            )
+            RequestHandler(context, this).handleTodayRecordRequest()
 
-            val newEnergy = EnergyUtil.calculateEnergyOnce(healthData)
-            model.updateAllEnergy(todayRecord.recordId, newEnergy)
-
-            model.getTodayRecordSync()?.let { dto ->
-                WearTodayRecordSender.send(context, WearDtoMapper.toWearReport(dto))
-                WearTodayRecordSender.sendEnergy(context, WearDtoMapper.toEnergy(dto))
-            }
             refreshTodayRecord()
         }
     }

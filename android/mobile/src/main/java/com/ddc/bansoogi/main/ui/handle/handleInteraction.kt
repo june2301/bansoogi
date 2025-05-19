@@ -2,11 +2,10 @@ package com.ddc.bansoogi.main.ui.handle
 
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.data.model.TodayRecordModel
+import com.ddc.bansoogi.common.util.health.EnergyManager
 import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
 import kotlinx.coroutines.flow.firstOrNull
-
-private const val ADD_INTERACTION_ENERGY = 5
 
 suspend fun handleInteraction() {
     val myInfo = MyInfoModel().getMyInfoSync()
@@ -22,5 +21,8 @@ suspend fun handleInteraction(todayRecord: TodayRecordDto, isInSleepRange: Boole
         || !InteractionUtil.isInteractionConditionMet(todayRecord)
         || InteractionUtil.isInInteractionCooldown(todayRecord.interactionLatestTime)) return
 
-    TodayRecordModel().interaction(todayRecord.recordId, ADD_INTERACTION_ENERGY)
+    TodayRecordModel().updateInteractionCnt(todayRecord.recordId)
+    TodayRecordModel().updateInteractionTime(todayRecord.recordId)
+
+    EnergyManager().energyRecalcAndSave()
 }
