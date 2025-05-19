@@ -33,8 +33,18 @@ object PhoneUsageAnalyzer {
 
             // ACTIVITY_RESUMED : 사용자가 Activity를 실제로 보고 있는 상태일 때 발생
             // ACTIVITY_PAUSED : 사용자가 Activity를 더 이상 보고 있지 않게 될 때 발생
-            if (currentEvent.eventType == UsageEvents.Event.ACTIVITY_RESUMED
-                || currentEvent.eventType == UsageEvents.Event.ACTIVITY_PAUSED
+//            if (currentEvent.eventType == UsageEvents.Event.ACTIVITY_RESUMED
+//                || currentEvent.eventType == UsageEvents.Event.ACTIVITY_PAUSED
+//            ) {
+//                lastEventType = currentEvent.eventType
+//                lastPackage = currentEvent.packageName
+//            }
+
+            if (
+                currentEvent.eventType == UsageEvents.Event.ACTIVITY_RESUMED ||
+                currentEvent.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND ||
+                currentEvent.eventType == UsageEvents.Event.ACTIVITY_PAUSED ||
+                currentEvent.eventType == UsageEvents.Event.MOVE_TO_BACKGROUND
             ) {
                 lastEventType = currentEvent.eventType
                 lastPackage = currentEvent.packageName
@@ -52,11 +62,13 @@ object PhoneUsageAnalyzer {
             }
 
             // 최근 이벤트 ACTIVITY_RESUMED, 이벤트 발생 시점이 5초 이내 -> 새로운 앱 시작 추정
-            if (lastEventType == UsageEvents.Event.ACTIVITY_RESUMED) {
+            if (lastEventType == UsageEvents.Event.ACTIVITY_RESUMED
+                || currentEvent.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
                 return true
             }
             // 최근 이벤트 ACTIVITY_PAUSED, 이벤트 발생 시점이 5초 이내 -> 앱을 종료 추정
-            else if (lastEventType == UsageEvents.Event.ACTIVITY_PAUSED) {
+            else if (lastEventType == UsageEvents.Event.ACTIVITY_PAUSED
+                || currentEvent.eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
                 return false
             }
         }
@@ -70,6 +82,7 @@ object PhoneUsageAnalyzer {
 
         // 가장 마지막 발생 이벤트 확인
         return UsageStateHolder.lastTrackEventType == UsageEvents.Event.ACTIVITY_RESUMED
+                || currentEvent.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND
     }
 
     // 해당 시간 사이의 이벤트
