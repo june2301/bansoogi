@@ -398,30 +398,6 @@
   "spriteSourceSize": { "x": 0, "y": 0, "w": 128, "h": 128 },
   "sourceSize": { "w": 128, "h": 128 },
   "duration": 200
- },
- "bansoogi_eat 50.aseprite": {
-  "frame": { "x": 6400, "y": 0, "w": 128, "h": 128 },
-  "rotated": false,
-  "trimmed": false,
-  "spriteSourceSize": { "x": 0, "y": 0, "w": 128, "h": 128 },
-  "sourceSize": { "w": 128, "h": 128 },
-  "duration": 200
- },
- "bansoogi_eat 51.aseprite": {
-  "frame": { "x": 6528, "y": 0, "w": 128, "h": 128 },
-  "rotated": false,
-  "trimmed": false,
-  "spriteSourceSize": { "x": 0, "y": 0, "w": 128, "h": 128 },
-  "sourceSize": { "w": 128, "h": 128 },
-  "duration": 200
- },
- "bansoogi_eat 52.aseprite": {
-  "frame": { "x": 6656, "y": 0, "w": 128, "h": 128 },
-  "rotated": false,
-  "trimmed": false,
-  "spriteSourceSize": { "x": 0, "y": 0, "w": 128, "h": 128 },
-  "sourceSize": { "w": 128, "h": 128 },
-  "duration": 200
  }
 },
  "meta": {

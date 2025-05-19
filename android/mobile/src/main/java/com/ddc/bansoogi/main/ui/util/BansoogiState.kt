@@ -19,7 +19,7 @@ enum class BansoogiState(val configValue: String) {
 }
 
 object BansoogiStateHolder {
-    var state by mutableStateOf(BansoogiState.WALK)
+    var state by mutableStateOf(BansoogiState.BASIC)
 
     fun update(context: Context, newState: BansoogiState) {
         if (state != newState) {
