@@ -194,7 +194,7 @@ fun MyInfoContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "상태 지속 시간",
+                text = "활동 알림 주기",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 8.dp)

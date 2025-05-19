@@ -319,7 +319,7 @@ fun MyInfoUpdateScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("상태 지속 시간", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text("활동 알림 주기", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.weight(1f))
 
                 DurationPicker(
