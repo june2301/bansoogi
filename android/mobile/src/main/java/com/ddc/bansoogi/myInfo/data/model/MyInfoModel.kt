@@ -51,6 +51,19 @@ class MyInfoModel {
         return updated.toDomain()
     }
 
+    /** 첫번째 사용자 여부 **/
+    fun isFirstUser(context: android.content.Context): Boolean {
+        return dataSource.isFirstUser(context)
+    }
+
+    fun markAsFirstUser(context: android.content.Context) {
+        dataSource.setFirstUserTrue(context)
+    }
+
+    fun markNotFirstUser(context: android.content.Context) {
+        dataSource.setFirstUserFalse(context)
+    }
+
     /** 토글: DB 반영 후 최신값(domain) 리턴 */
     suspend fun toggleNotification(): MyInfoDto {
         dataSource.toggleNotificationEnabled()

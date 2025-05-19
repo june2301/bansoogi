@@ -68,12 +68,10 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) {
-        val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
-        if (prefs.getBoolean("isFirstUser", false)) {
+        if (myInfoController.isFirstUser(context)) {
             showEggManager.value = true
         }
     }
-
 
     LaunchedEffect(Unit) {
         onModalOpen()
@@ -112,26 +110,28 @@ fun HomeScreen(
                         showEggManager.value = true
                     }
                 } else {
-                    // 결산이 완료되진 않았는데, 취침시간이거나, 이미 지난 날짜라면 => 결산 + isClosed 갱신
-                    if ((isInSleepRange.value && diffDays <= 1) || (!isInSleepRange.value && diffDays > 0)) {
-                        showEggManager.value = false
-                        todayRecordController.updateIsClosed()
-                        recordController.createRecordedReport(
-                            todayRecord,
-                            15,
-                            healthData.step.toInt(),
-                            0,
-                            healthData.exerciseTime?:0,
-                            healthData.floorsClimbed.toInt()
-                        )
+                    if (!myInfoController.isFirstUser(context)) {
+                        // 결산이 완료되진 않았는데, 취침시간이거나, 이미 지난 날짜라면 => 결산 + isClosed 갱신
+                        if ((isInSleepRange.value && diffDays <= 1) || (!isInSleepRange.value && diffDays > 0)) {
+                            showEggManager.value = false
+                            todayRecordController.updateIsClosed()
+                            recordController.createRecordedReport(
+                                todayRecord,
+                                15,
+                                healthData.step.toInt(),
+                                0,
+                                healthData.exerciseTime?:0,
+                                healthData.floorsClimbed.toInt()
+                            )
 
-                        // CharacterGetScreen으로 이동 (단, 오늘 이미 본 적 없다면)
-                        val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
-                        val key = "egg_seen_${LocalDate.now()}"
-                        val alreadySeen = prefs.getBoolean(key, false)
-                        if (!alreadySeen && CharacterGetController().canDrawCharacter()) {
-                            prefs.edit() { putBoolean(key, true) }
-                            navController.navigate("character_get")
+                            // CharacterGetScreen으로 이동 (단, 오늘 이미 본 적 없다면)
+                            val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
+                            val key = "egg_seen_${LocalDate.now()}"
+                            val alreadySeen = prefs.getBoolean(key, false)
+                            if (!alreadySeen && CharacterGetController().canDrawCharacter()) {
+                                prefs.edit() { putBoolean(key, true) }
+                                navController.navigate("character_get")
+                            }
                         }
                     }
                 }
@@ -148,11 +148,7 @@ fun HomeScreen(
         EggManagerModal(
             myInfo = myInfoState.value,
             onDismiss = {
-                val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
-                if (prefs.getBoolean("isFirstUser", false)) {
-                    prefs.edit() { putBoolean("isFirstUser", false) }
-                }
-
+                myInfoController.markNotFirstUser(context)
                 showEggManager.value = false
                 todayRecordController.renewTodayRecord()
             }

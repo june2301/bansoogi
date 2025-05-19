@@ -9,9 +9,11 @@ import kotlinx.coroutines.flow.map
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.common.notification.AlarmScheduler
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
+import androidx.core.content.edit
 
 class MyInfoDataSource {
     private val realm = RealmManager.realm
+    private val prefsName = "bansoogi_prefs"
 
     val notificationEnabledFlow: Flow<Boolean> =
         realm.query<User>().asFlow()
@@ -31,6 +33,22 @@ class MyInfoDataSource {
                 it.profileBansoogiId = bansoogiId
             }
         }
+    }
+
+    /** 첫번째 사용자 여부 **/
+    fun setFirstUserTrue(context: Context) {
+        val prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+        prefs.edit() { putBoolean("isFirstUser", true) }
+    }
+
+    fun setFirstUserFalse(context: Context) {
+        val prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+        prefs.edit() { putBoolean("isFirstUser", false) }
+    }
+
+    fun isFirstUser(context: Context): Boolean {
+        val prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+        return prefs.getBoolean("isFirstUser", false)
     }
 
     /** 토글 업데이트 */

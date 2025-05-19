@@ -31,6 +31,7 @@ import com.ddc.bansoogi.landing.ui.screen.NicknameInputScreen
 import com.ddc.bansoogi.landing.ui.screen.TermsScreen
 import com.ddc.bansoogi.landing.ui.screen.TimeSettingScreen
 import com.ddc.bansoogi.main.ui.MainActivity
+import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import com.ddc.bansoogi.myInfo.data.entity.User
 import com.ddc.bansoogi.myInfo.data.local.MyInfoDataSource
 import com.ddc.bansoogi.myInfo.data.mapper.MyInfoMapper.toDomain
@@ -45,12 +46,14 @@ class LandingActivity : BaseActivity(), LandingView {
 
     private lateinit var controller: LandingController
     private lateinit var navController: NavHostController
+    private lateinit var myInfoController: MyInfoController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        LandingController.initRealm(applicationContext)
 
         controller = LandingController(this)
+        myInfoController = MyInfoController()
+
 
         setContent {
             navController = rememberNavController()
@@ -189,25 +192,10 @@ class LandingActivity : BaseActivity(), LandingView {
     }
 
     override fun moveToMainActivity() {
-//        val intent = Intent(this, MainActivity::class.java)
-//        startActivity(intent)
-//        finish()
-
         navController.popBackStack("start", inclusive = false)
-        //여기서 데이터 처리해주면 됨.
-        val prefs = getSharedPreferences("bansoogi_prefs", MODE_PRIVATE)
-        prefs.edit().putBoolean("isFirstUser", true).apply()
+        myInfoController.markAsFirstUser(this)
 
         val intent = Intent(this@LandingActivity, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-        // TODO: 데이터 한번에 처리
-// 모든 데이터 수집 후 MainActivity로 전달
-//                        val intent = Intent(this@LandingActivity, MainActivity::class.java).apply {
-//                            putExtra("userName", userName)
-//                            putExtra("wakeUpTime", wakeUpTime)
-//                            putExtra("serviceChecked", serviceChecked)
-//                        }
         startActivity(intent)
         finish()
     }
