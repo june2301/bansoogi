@@ -124,23 +124,8 @@ fun HomeContent(
     // 상호 작용 애니메이션
     var triggerInteraction by remember { mutableStateOf(false) }
 
-//    LaunchedEffect(triggerInteraction) {
-//        if (triggerInteraction) {
-//            // 5초 후에 showInteraction을 false로 설정하고 onFinished 콜백 호출
-//            delay(5000)
-//            triggerInteraction = false
-//        }
-//    }
-
     // 식사 애니메이션
     var triggerMeal by remember { mutableStateOf(false) }
-//    LaunchedEffect(triggerMeal) {
-//        if (triggerMeal) {
-//            // 5초 후에 showInteraction을 false로 설정하고 onFinished 콜백 호출
-//            delay(5000)
-//            triggerMeal = false
-//        }
-//    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
