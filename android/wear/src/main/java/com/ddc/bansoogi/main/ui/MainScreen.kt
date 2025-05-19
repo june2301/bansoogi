@@ -136,17 +136,8 @@ fun MainScreen(navController: NavHostController) {
     // 상호작용 상태 변수
     var triggerInteraction by remember { mutableStateOf(false) }
 
-    // 식사 애니메이션
+    // 식사 상태 변수
     var triggerMeal by remember { mutableStateOf(false) }
-
-    // 임시 호출
-//    LaunchedEffect(triggerInteraction) {
-//        if (triggerInteraction) {
-//            // 5초 후에 showInteraction을 false로 설정하고 onFinished 콜백 호출
-//            delay(5000)
-//            triggerInteraction = false
-//        }
-//    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -157,8 +148,7 @@ fun MainScreen(navController: NavHostController) {
 
         SideButtons(
             navController = navController,
-//            hasMeal       = isMealEnabled,
-            hasMeal = true,
+            hasMeal       = isMealEnabled,
             onMealClick   = {
                 // 1. 반숙이 식사 움직임 출력 -> 변수 변경
                 triggerMeal = true
