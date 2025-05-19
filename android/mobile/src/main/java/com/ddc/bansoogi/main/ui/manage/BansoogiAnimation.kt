@@ -12,7 +12,9 @@ import com.ddc.bansoogi.main.ui.util.getConfig
 @Composable
 fun BansoogiAnimation(
     state: BansoogiState,
-    onFinished: () -> Unit
+    loop: Boolean = true,
+    loopCouont: Int = 0,
+    onAnimationEnd: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     var config = state.getConfig()
@@ -21,6 +23,9 @@ fun BansoogiAnimation(
         context = context,
         spriteSheetName = "${config.sprite}_sheet.png",
         jsonName = "${config.json}.json",
+        loop = loop,
+        loopCount = loopCouont,
+        onAnimationEnd = onAnimationEnd,
         modifier = Modifier
             .fillMaxSize()
             .scale(1.5f)
