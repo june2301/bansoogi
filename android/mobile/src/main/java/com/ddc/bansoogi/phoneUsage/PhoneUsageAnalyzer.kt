@@ -33,13 +33,6 @@ object PhoneUsageAnalyzer {
 
             // ACTIVITY_RESUMED : 사용자가 Activity를 실제로 보고 있는 상태일 때 발생
             // ACTIVITY_PAUSED : 사용자가 Activity를 더 이상 보고 있지 않게 될 때 발생
-//            if (currentEvent.eventType == UsageEvents.Event.ACTIVITY_RESUMED
-//                || currentEvent.eventType == UsageEvents.Event.ACTIVITY_PAUSED
-//            ) {
-//                lastEventType = currentEvent.eventType
-//                lastPackage = currentEvent.packageName
-//            }
-
             if (
                 currentEvent.eventType == UsageEvents.Event.ACTIVITY_RESUMED ||
                 currentEvent.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND ||
