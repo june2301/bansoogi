@@ -14,11 +14,13 @@ class MobileToWearReceiverService : WearableListenerService() {
 
     // 핸들러
     private lateinit var requestHandler: RequestHandler
+    private lateinit var stateHandler: StateHandler
 
     // 서비스 생성될 때, 핸들러에 객체 주입
     override fun onCreate() {
         super.onCreate()
         requestHandler = RequestHandler(applicationContext, serviceScope)
+        stateHandler = StateHandler(applicationContext, serviceScope)
     }
 
     // 메세지 수신 함수
@@ -31,7 +33,7 @@ class MobileToWearReceiverService : WearableListenerService() {
             CommunicationPaths.MobileToWear.TODAY_RECORD_DATA -> requestHandler.handleTodayRecordData(messageEvent.data)
             CommunicationPaths.MobileToWear.MY_INFO_DATA -> requestHandler.handleMyInfoData(messageEvent.data)
 
-            CommunicationPaths.MobileToWear.BANSOOGI_STATE_DATA -> requestHandler.handleBansoogiStateData(messageEvent.data)
+            CommunicationPaths.MobileToWear.BANSOOGI_ANIMATION -> stateHandler.handleBansoogiStateData(messageEvent.data)
 
             else -> Log.w("WatchReceiver", "알 수 없는 경로: ${messageEvent.path}")
         }

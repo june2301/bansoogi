@@ -9,7 +9,7 @@ object BansoogiStateSender {
         MobileToWearMessageSender.sendData(
             context,
             state.name,
-            CommunicationPaths.MobileToWear.BANSOOGI_STATE_DATA
+            CommunicationPaths.MobileToWear.BANSOOGI_ANIMATION
         )
     }
 }
