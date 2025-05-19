@@ -28,6 +28,9 @@ fun SpriteSheetAnimation(
     context: Context,
     spriteSheetName: String,
     jsonName: String,
+    loop: Boolean = true,
+    loopCount: Int = 0,
+    onAnimationEnd: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     // 1. JSON 로드 및 파싱
@@ -50,10 +53,23 @@ fun SpriteSheetAnimation(
     var frameIndex by remember { mutableStateOf(0) }
 
     // 4. 주기적 프레임 변경
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(frames[frameIndex].second.toLong())
-            frameIndex = (frameIndex + 1) % frames.size
+    var currentLoop by remember { mutableStateOf(0) } // 루프 횟수 상태
+
+    LaunchedEffect(spriteSheetName, jsonName, loop) {
+        if (loop) {
+            while (true) {
+                delay(frames[frameIndex].second.toLong())
+                frameIndex = (frameIndex + 1) % frames.size
+            }
+        } else {
+            outer@ while (currentLoop < loopCount) {
+                for ((i, frame) in frames.withIndex()) {
+                    frameIndex = i
+                    delay(frame.second.toLong())
+                }
+                currentLoop++
+            }
+            onAnimationEnd?.invoke()
         }
     }
 

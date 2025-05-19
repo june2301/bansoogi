@@ -59,6 +59,7 @@ import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import kotlinx.coroutines.delay
+import java.nio.file.WatchEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.LocalTime
@@ -123,13 +124,23 @@ fun HomeContent(
     // 상호 작용 애니메이션
     var triggerInteraction by remember { mutableStateOf(false) }
 
-    LaunchedEffect(triggerInteraction) {
-        if (triggerInteraction) {
-            // 5초 후에 showInteraction을 false로 설정하고 onFinished 콜백 호출
-            delay(5000)
-            triggerInteraction = false
-        }
-    }
+//    LaunchedEffect(triggerInteraction) {
+//        if (triggerInteraction) {
+//            // 5초 후에 showInteraction을 false로 설정하고 onFinished 콜백 호출
+//            delay(5000)
+//            triggerInteraction = false
+//        }
+//    }
+
+    // 식사 애니메이션
+    var triggerMeal by remember { mutableStateOf(false) }
+//    LaunchedEffect(triggerMeal) {
+//        if (triggerMeal) {
+//            // 5초 후에 showInteraction을 false로 설정하고 onFinished 콜백 호출
+//            delay(5000)
+//            triggerMeal = false
+//        }
+//    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -223,15 +234,29 @@ fun HomeContent(
             if (triggerInteraction) {
                 BansoogiAnimation(
                     state = BansoogiState.SMILE,
-                    onFinished = { }
+                    loop = false,
+                    loopCouont = 3,
+                    onAnimationEnd = {
+                        triggerInteraction = false
+                    }
+                )
+            } else if (triggerMeal) {
+                BansoogiAnimation(
+                    state = BansoogiState.EAT,
+                    loop = false,
+                    loopCouont = 1,
+                    onAnimationEnd = {
+                        triggerMeal = false
+                    }
                 )
             } else {
                 BansoogiAnimation(
-                    state = BansoogiStateHolder.state,
-                    onFinished = { }
+                    state = BansoogiStateHolder.state
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(28.dp))
 
         val buttonShape = RoundedCornerShape(30.dp)
         val isCoolDown = remember { mutableStateOf(true) }
@@ -261,6 +286,7 @@ fun HomeContent(
             Button(
                 onClick = {
                     triggerInteraction = true
+
                     todayRecordController.onInteract(todayRecordDto, isInSleepRange)
                 },
                 modifier = btnModifier,
@@ -295,6 +321,8 @@ fun HomeContent(
 
             Button(
                 onClick = {
+                    triggerMeal = true
+
                     pendingMealTypes.firstOrNull()?.let { type ->
                         todayRecordController.checkMeal(todayRecordDto, type)
                     }
