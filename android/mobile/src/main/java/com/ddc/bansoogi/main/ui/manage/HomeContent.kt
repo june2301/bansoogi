@@ -287,7 +287,7 @@ fun HomeContent(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .size(20.dp),
-                        tint = if (isCoolDown.value) Color.Gray else Color(0xFF4CAF50)
+                        tint = if (isCoolDown.value || isInSleepRange) Color.Gray else Color(0xFF4CAF50)
                     )
                 }
 
