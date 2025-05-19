@@ -1,7 +1,6 @@
 package com.ddc.bansoogi.main.ui.util
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,16 +15,27 @@ enum class BansoogiState(val configValue: String) {
     RUN("RUN"),
     SLEEP("SLEEP"),
     WALK("WALK");
+
+    companion object {
+        fun fromString(value: String): BansoogiState {
+            val cleanValue = value.trim('"')
+            return BansoogiState.entries.find { it.configValue == cleanValue } ?: BASIC
+        }
+    }
 }
 
 object BansoogiStateHolder {
     var state by mutableStateOf(BansoogiState.BASIC)
 
-    fun update(context: Context, newState: BansoogiState) {
+    fun update(newState: BansoogiState) {
         if (state != newState) {
-            Log.d("Bansoogi State", "${state.name} -> ${newState.name}")
-
             state = newState
+        }
+    }
+
+    fun updateWithWatch(context: Context, newState: BansoogiState) {
+        if (state != newState) {
+            update(newState)
 
             BansoogiStateSender.send(context, state)
         }

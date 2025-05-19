@@ -16,12 +16,14 @@ class WearToMobileReceiverService: WearableListenerService() {
     // 핸들러
     private lateinit var requestHandler: RequestHandler
     private lateinit var triggerHandlers: TriggerHandlers
+    private lateinit var stateHandler: StateHandler
 
     // 서비스 생성될 때, 핸들러에 객체 주입
     override fun onCreate() {
         super.onCreate()
         requestHandler = RequestHandler(applicationContext, serviceScope)
         triggerHandlers = TriggerHandlers(applicationContext, serviceScope)
+        stateHandler = StateHandler(applicationContext, serviceScope)
     }
 
     override fun onDestroy() {
@@ -38,6 +40,8 @@ class WearToMobileReceiverService: WearableListenerService() {
             CommunicationPaths.WearToMobile.ENERGY_REQUEST -> requestHandler.handleEnergyRequest()
             CommunicationPaths.WearToMobile.TODAY_RECORD_REQUEST -> requestHandler.handleTodayRecordRequest()
             CommunicationPaths.WearToMobile.MT_INFO_REQUEST -> requestHandler.handleMyInfoRequest()
+
+            CommunicationPaths.WearToMobile.BANSOOGI_ANIMATION -> stateHandler.handleBansoogiStateData(messageEvent.data)
 
             CommunicationPaths.WearToMobile.INTERACTION_TRIGGER -> triggerHandlers.handleInteractionTrigger()
 

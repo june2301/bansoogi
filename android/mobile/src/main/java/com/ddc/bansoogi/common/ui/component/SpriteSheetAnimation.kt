@@ -56,6 +56,9 @@ fun SpriteSheetAnimation(
     var currentLoop by remember { mutableStateOf(0) } // 루프 횟수 상태
 
     LaunchedEffect(spriteSheetName, jsonName, loop) {
+        frameIndex = 0
+        currentLoop = 0
+
         if (loop) {
             while (true) {
                 delay(frames[frameIndex].second.toLong())

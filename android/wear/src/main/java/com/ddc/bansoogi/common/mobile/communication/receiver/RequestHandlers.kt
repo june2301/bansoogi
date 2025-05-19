@@ -2,8 +2,6 @@ package com.ddc.bansoogi.common.mobile.communication.receiver
 
 import android.content.Context
 import com.ddc.bansoogi.common.mobile.data.mapper.JsonMapper
-import com.ddc.bansoogi.main.ui.util.BansoogiState
-import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.myinfo.data.dto.MyInfoDto
 import com.ddc.bansoogi.myinfo.data.store.saveMyInfoCache
 import com.ddc.bansoogi.myinfo.state.MyInfoStateHolder
@@ -51,16 +49,6 @@ class RequestHandler(
             deserialize = { JsonMapper.fromJson<MyInfoDto>(String(it)) },
             updateState = { MyInfoStateHolder.update(it) },
             saveToLocal = { saveMyInfoCache(context, it) },
-            scope = scope
-        )
-    }
-
-    fun handleBansoogiStateData(data: ByteArray) {
-        handleData (
-            data = data,
-            deserialize = { BansoogiState.fromString(String(it)) },
-            updateState = { BansoogiStateHolder.update(it) },
-            saveToLocal = { },
             scope = scope
         )
     }

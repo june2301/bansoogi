@@ -136,14 +136,8 @@ fun MainScreen(navController: NavHostController) {
     // 상호작용 상태 변수
     var triggerInteraction by remember { mutableStateOf(false) }
 
-    // 임시 호출
-    LaunchedEffect(triggerInteraction) {
-        if (triggerInteraction) {
-            // 5초 후에 showInteraction을 false로 설정하고 onFinished 콜백 호출
-            delay(5000)
-            triggerInteraction = false
-        }
-    }
+    // 식사 상태 변수
+    var triggerMeal by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -156,6 +150,10 @@ fun MainScreen(navController: NavHostController) {
             navController = navController,
             hasMeal       = isMealEnabled,
             onMealClick   = {
+                // 1. 반숙이 식사 움직임 출력 -> 변수 변경
+                triggerMeal = true
+
+                // 2. 식사 데이터 처리
                 currentMealType?.let { type ->
                     MobileTodayRecordSender.sendMealTrigger(context, type.name)
                 }
@@ -172,8 +170,12 @@ fun MainScreen(navController: NavHostController) {
         BansoogiContent(
             progressValue = progressValue,
             triggerInteraction = triggerInteraction,
-            onFinished = {
+            triggerMeal = triggerMeal,
+            onInteractionEnd = {
                 triggerInteraction = false
+            },
+            onMealEnd = {
+                triggerMeal = false
             }
         )
     }
@@ -265,7 +267,9 @@ fun IconCircleButton(
 fun BansoogiContent(
     progressValue: Int,
     triggerInteraction: Boolean,
-    onFinished: () -> Unit
+    triggerMeal: Boolean,
+    onInteractionEnd: () -> Unit,
+    onMealEnd: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -275,7 +279,9 @@ fun BansoogiContent(
     ) {
         BansoogiAnimationContent(
             triggerInteraction = triggerInteraction,
-            onFinished = onFinished
+            triggerMeal = triggerMeal,
+            onInteractionEnd = onInteractionEnd,
+            onMealEnd = onMealEnd
         )
 
         EnergyBar(
@@ -287,17 +293,27 @@ fun BansoogiContent(
 @Composable
 fun BansoogiAnimationContent(
     triggerInteraction: Boolean,
-    onFinished: () -> Unit
+    triggerMeal: Boolean,
+    onInteractionEnd: () -> Unit,
+    onMealEnd: () -> Unit
 ) {
     if (triggerInteraction) {
         BansoogiAnimation(
             state = BansoogiState.SMILE,
-            onFinished = onFinished
+            loop = false,
+            loopCouont = 3,
+            onAnimationEnd = onInteractionEnd
+        )
+    } else if (triggerMeal) {
+        BansoogiAnimation(
+            state = BansoogiState.EAT,
+            loop = false,
+            loopCouont = 1,
+            onAnimationEnd = onMealEnd
         )
     } else {
         BansoogiAnimation(
-            state = BansoogiStateHolder.state,
-            onFinished = { }
+            state = BansoogiStateHolder.state
         )
     }
 }
@@ -305,7 +321,9 @@ fun BansoogiAnimationContent(
 @Composable
 fun BansoogiAnimation(
     state: BansoogiState,
-    onFinished: () -> Unit
+    loop: Boolean = true,
+    loopCouont: Int = 0,
+    onAnimationEnd: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     var config = state.getConfig()
@@ -314,6 +332,9 @@ fun BansoogiAnimation(
         context = context,
         spriteSheetName = "${config.sprite}_sheet.png",
         jsonName = "${config.json}.json",
+        loop = loop,
+        loopCount = loopCouont,
+        onAnimationEnd = onAnimationEnd,
         modifier = Modifier
             .fillMaxSize(0.8f)
     )
