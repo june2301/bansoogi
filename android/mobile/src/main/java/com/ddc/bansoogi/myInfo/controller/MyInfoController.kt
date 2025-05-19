@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlin.system.exitProcess
+import androidx.core.content.edit
 
 class MyInfoController {
     private val model = MyInfoModel()
@@ -26,6 +27,19 @@ class MyInfoController {
 
     // UI가 구독할 Flow
     fun myInfoFlow(): Flow<MyInfoDto> = model.getMyInfo()
+
+    // 첫번째 사용자 여부
+    fun isFirstUser(context: Context): Boolean {
+        return model.isFirstUser(context)
+    }
+
+    fun markAsFirstUser(context: Context) {
+        model.markAsFirstUser(context)
+    }
+
+    fun markNotFirstUser(context: Context) {
+        model.markNotFirstUser(context)
+    }
 
     // 토글 메서드들 — DB만 갱신하면 Flow가 자동 emit
     fun toggleNotification()   { scope.launch { model.toggleNotification() } }
@@ -42,7 +56,7 @@ class MyInfoController {
             RealmManager.clearAll()
 
             appCtx.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-                .edit().clear().commit()
+                .edit(commit = true) { clear() }
 
             withContext(Dispatchers.Main) {
                 if (appCtx is Activity) appCtx.finishAffinity()
