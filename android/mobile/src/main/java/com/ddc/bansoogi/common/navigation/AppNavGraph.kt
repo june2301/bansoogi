@@ -62,8 +62,13 @@ fun AppNavGraph(
             MyInfoUpdateScreen(navController)
         }
 
-        composable("character_get") {
-            CharacterGetScreen(navController)
+        composable("character_get/{walk}/{stairs}/{sleep}/{exercise}") {backStackEntry ->
+            val walk = backStackEntry.arguments?.getString("walk")?.toIntOrNull() ?: 0
+            val stairs = backStackEntry.arguments?.getString("stairs")?.toIntOrNull() ?: 0
+            val sleep = backStackEntry.arguments?.getString("sleep")?.toIntOrNull() ?: 0
+            val exercise = backStackEntry.arguments?.getString("exercise")?.toIntOrNull() ?: 0
+
+            CharacterGetScreen(navController, walk, stairs, sleep, exercise)
         }
     }
 }

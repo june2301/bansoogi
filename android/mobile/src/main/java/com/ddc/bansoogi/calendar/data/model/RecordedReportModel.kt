@@ -26,9 +26,9 @@ class RecordedReportModel {
         todayRecordDto: TodayRecordDto,
         bansoogiIdData: Int,
         walkCountData: Int,
-        runTimeData: Int,
-        exerciseTimeData: Int,
-        stairsClimbedData: Int
+        stairsClimbedData: Int,
+        sleepTimeData: Int,
+        exerciseTimeData: Int
     ) {
         val date = todayRecordDto.createdAt.toLocalDate()
 
@@ -50,12 +50,11 @@ class RecordedReportModel {
                 lyingTime = todayRecordDto.lyingTime
                 sittingTime = todayRecordDto.sittingTime
                 phoneTime = todayRecordDto.phoneTime
-                sleepTime = todayRecordDto.sleepTime
 
                 walkCount = walkCountData
-                runTime = runTimeData
-                exerciseTime = exerciseTimeData
                 stairsClimbed = stairsClimbedData
+                sleepTime = sleepTimeData
+                exerciseTime = exerciseTimeData
 
                 breakfast = todayRecordDto.breakfast
                 lunch = todayRecordDto.lunch
@@ -109,12 +108,11 @@ class RecordedReportModel {
             lyingTime = report.lyingTime,
             sittingTime = report.sittingTime,
             phoneTime = report.phoneTime,
-            sleepTime = report.sleepTime,
 
             walkCount = report.walkCount,
-            runTime = report.runTime,
-            exerciseTime =  report.exerciseTime,
             stairsClimbed = report.stairsClimbed,
+            sleepTime =  report.sleepTime,
+            exerciseTime = report.exerciseTime,
 
             breakfast = report.breakfast,
             lunch = report.lunch,
@@ -153,12 +151,11 @@ class RecordedReportModel {
             lyingTime = report.lyingTime,
             sittingTime = report.sittingTime,
             phoneTime = report.phoneTime,
-            sleepTime = report.sleepTime,
 
             walkCount = report.walkCount,
-            runTime = report.runTime,
-            exerciseTime =  report.exerciseTime,
             stairsClimbed = report.stairsClimbed,
+            sleepTime =  report.sleepTime,
+            exerciseTime = report.exerciseTime,
 
             breakfast = report.breakfast,
             lunch = report.lunch,

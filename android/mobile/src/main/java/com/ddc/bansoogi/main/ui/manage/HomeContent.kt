@@ -58,7 +58,6 @@ import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import kotlinx.coroutines.delay
-import java.nio.file.WatchEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.LocalTime

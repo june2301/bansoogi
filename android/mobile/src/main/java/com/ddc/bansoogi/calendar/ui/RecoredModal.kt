@@ -497,12 +497,11 @@ fun RecordedModalPreview() {
             lyingTime = 10,
             sittingTime = 20,
             phoneTime = 30,
-            sleepTime = 40,
 
             walkCount = 100,
-            runTime = 200,
-            exerciseTime = 300,
-            stairsClimbed = 400,
+            stairsClimbed = 200,
+            sleepTime = 300,
+            exerciseTime = 400,
 
             breakfast = false,
             lunch = false,

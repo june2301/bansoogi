@@ -50,11 +50,10 @@ class RecordedReportDataSource {
                         lyingTime = 180
                         sittingTime = 600
                         phoneTime = 200
-                        sleepTime = 420
                         walkCount = 5000
-                        runTime = 10
+                        stairsClimbed = 300
+                        sleepTime = 5
                         exerciseTime = 30
-                        stairsClimbed = 5
                         breakfast = true
                         lunch = true
                         dinner = true
@@ -72,11 +71,10 @@ class RecordedReportDataSource {
                         lyingTime = 180
                         sittingTime = 600
                         phoneTime = 200
-                        sleepTime = 420
                         walkCount = 5000
-                        runTime = 10
+                        stairsClimbed = 300
+                        sleepTime = 5
                         exerciseTime = 30
-                        stairsClimbed = 5
                         breakfast = true
                         lunch = true
                         dinner = true
