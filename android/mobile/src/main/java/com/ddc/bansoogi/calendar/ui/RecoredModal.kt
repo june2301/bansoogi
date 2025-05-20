@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.calendar.ui
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -67,7 +68,7 @@ fun RecordedModal(
         report = controller.getDetailReport(selectedDate)
 
         if (report == null) {
-            report = controller.getLatestRecordedReport()
+            onDismissRequest
         }
     }
 
