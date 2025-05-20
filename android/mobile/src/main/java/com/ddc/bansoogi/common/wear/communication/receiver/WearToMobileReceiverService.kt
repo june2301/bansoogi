@@ -50,6 +50,10 @@ class WearToMobileReceiverService: WearableListenerService() {
             CommunicationPaths.WearToMobile.EFFECT_SOUND_CHANGE_TRIGGER -> triggerHandlers.handleToggleEffectSoundTrigger()
             CommunicationPaths.WearToMobile.MEAL_CHECK_TRIGGER -> triggerHandlers.handleMealCheckTrigger(messageEvent.data)
 
+            CommunicationPaths.WearToMobile.STATIC_WARN       -> triggerHandlers.handleStaticWarn(messageEvent.data)
+            CommunicationPaths.WearToMobile.STATIC_BREAK      -> triggerHandlers.handleStaticBreak(messageEvent.data)
+            CommunicationPaths.WearToMobile.STATIC_ACCUM_TIME -> triggerHandlers.handleStaticAccum(messageEvent.data)
+
             else -> Log.w("WatchReceiver", "알 수 없는 경로: ${messageEvent.path}")
         }
     }

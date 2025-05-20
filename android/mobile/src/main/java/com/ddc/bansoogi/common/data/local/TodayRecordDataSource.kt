@@ -178,4 +178,36 @@ class TodayRecordDataSource {
             .find()
             ?.isViewed ?: false
     }
+
+    suspend fun updateLyingTime(recordId:ObjectId,addMin:Int){
+        realm.write {
+            query<TodayRecord>("recordId == $0",recordId).first().find()?.apply {
+                lyingTime += addMin; updatedAt = RealmInstant.now()
+            }
+        }
+    }
+
+    suspend fun updateSittingTime(recordId:ObjectId,addMin:Int){
+        realm.write {
+            query<TodayRecord>("recordId == $0",recordId).first().find()?.apply {
+                sittingTime += addMin; updatedAt = RealmInstant.now()
+            }
+        }
+    }
+
+    suspend fun updateStandUpCnt(recordId:ObjectId){
+        realm.write {
+            query<TodayRecord>("recordId == $0",recordId).first().find()?.apply {
+                standUpCnt += 1; updatedAt = RealmInstant.now()
+            }
+        }
+    }
+
+    suspend fun updateStretchCnt(recordId:ObjectId){
+        realm.write {
+            query<TodayRecord>("recordId == $0",recordId).first().find()?.apply {
+                stretchCnt += 1; updatedAt = RealmInstant.now()
+            }
+        }
+    }
 }

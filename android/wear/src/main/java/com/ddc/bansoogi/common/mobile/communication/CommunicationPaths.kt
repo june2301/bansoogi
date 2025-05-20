@@ -31,5 +31,9 @@ object CommunicationPaths {
         const val EFFECT_SOUND_CHANGE_TRIGGER = "${PREFIX}/trigger/change/effect_sound" // 효과음 설정 변경
 
         const val MEAL_CHECK_TRIGGER = "${PREFIX}/trigger/meal_check" // 식사 이벤트 수행
+
+        const val STATIC_WARN        = "/static/warn"        // SITTING_LONG / LYING_LONG
+        const val STATIC_BREAK       = "/static/break"       // STANDUP_REWARD / STRETCH_REWARD
+        const val STATIC_ACCUM_TIME  = "/static/accum_time"  // ΔlyingTime / ΔsittingTime
     }
 }
