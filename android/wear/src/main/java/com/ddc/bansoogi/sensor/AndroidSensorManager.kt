@@ -5,12 +5,18 @@
 package com.ddc.bansoogi.sensor
 
 import android.content.Context
+import android.os.Build
+import android.util.Log
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.util.Log
+import com.samsung.android.service.health.tracking.*
+import com.samsung.android.service.health.tracking.data.*
+import com.samsung.android.service.health.tracking.data.ValueKey.PpgSet
+import com.samsung.android.service.health.tracking.data.ValueKey.PpgSet.PPG_GREEN
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.*
 import kotlin.math.roundToInt
 
 class AndroidSensorManager(private val context: Context) {
@@ -36,6 +42,35 @@ class AndroidSensorManager(private val context: Context) {
         fun stop() = sensorManager.unregisterListener(this)
         protected fun emit(v: T) = _events.tryEmit(v)
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
+    }
+
+    // ────────────────────────────────────────────────────────────
+    //  Samsung Health PPG (Green only, 25 Hz)
+    // ────────────────────────────────────────────────────────────
+    private val _ppgGreen = MutableSharedFlow<Float>(extraBufferCapacity = 64)
+    val ppgGreen: SharedFlow<Float> = _ppgGreen.asSharedFlow()
+
+    private lateinit var hts: HealthTrackingService
+    private lateinit var ppgTracker: HealthTracker
+
+    private val ppgConnListener = object : ConnectionListener {
+        override fun onConnectionSuccess() {
+            Log.i(TAG, "PPG SDK connected")
+            // GREEN 채널만 구독
+            ppgTracker = hts.getHealthTracker(
+                HealthTrackerType.PPG_CONTINUOUS,
+                setOf(PpgType.GREEN)
+            )
+            ppgTracker.setEventListener(ppgListener)
+            startTracker()
+        }
+        override fun onConnectionFailed(e: HealthTrackerException) {
+            Log.e(TAG, "SDK connect fail: ${e.errorCode}")
+        }
+
+        override fun onConnectionEnded() {
+            Log.i(TAG, "PPG SDK disconnected")
+        }
     }
 
     // 실제 ACCELEROMETER 사용
@@ -80,6 +115,37 @@ class AndroidSensorManager(private val context: Context) {
         }
     }
 
+    private val ppgListener = object : HealthTracker.TrackerEventListener {
+        override fun onDataReceived(points: List<DataPoint>) {
+            // 25 Hz로 들어오는 DataPoint들 중 GREEN 값만 추출
+            points.forEach { dp ->
+                val g = (dp.getValue(PPG_GREEN) as? Number)?.toFloat() ?: return@forEach
+                _ppgGreen.tryEmit(g)
+//                Log.d(TAG, "PPG_GREEN raw value: $g  (ts=${dp.timestamp})")
+            }
+        }
+        override fun onFlushCompleted() {}
+        override fun onError(e: HealthTracker.TrackerError) {
+            Log.e(TAG, "PPG listener error: $e")
+        }
+    }
+
+    private fun startTracker() = runCatching {
+        ppgTracker.javaClass.getMethod("start").invoke(ppgTracker)
+    }
+
+
+    private fun startPpg() {
+        hts = HealthTrackingService(ppgConnListener, context)
+        hts.connectService()
+    }
+
+    private fun stopTracker() {
+        ppgTracker.unsetEventListener()
+        ppgTracker.javaClass.getMethod("stop").invoke(ppgTracker)
+        hts.disconnectService()
+    }
+
     // ────────────────────────────────────────────────────────────
     //  public streams & control
     // ────────────────────────────────────────────────────────────
@@ -101,6 +167,7 @@ class AndroidSensorManager(private val context: Context) {
         stepDetectorWrapper.start()
         pressureWrapper.start()
         heartRateWrapper.start()
+        startPpg()
     }
 
     fun stopAll() {
@@ -109,5 +176,6 @@ class AndroidSensorManager(private val context: Context) {
         stepDetectorWrapper.stop()
         pressureWrapper.stop()
         heartRateWrapper.stop()
+        stopTracker()
     }
 }

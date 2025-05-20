@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
         buildList {
             add(Manifest.permission.BODY_SENSORS)
             add(Manifest.permission.ACTIVITY_RECOGNITION)
+            add(Manifest.permission.HIGH_SAMPLING_RATE_SENSORS)
             if (Build.VERSION.SDK_INT >= 34) {
                 add(Manifest.permission.FOREGROUND_SERVICE_HEALTH)
             }
