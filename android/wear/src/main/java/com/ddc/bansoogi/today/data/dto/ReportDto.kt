@@ -10,12 +10,11 @@ data class ReportDto (
     val lyingTime: Int,
     val sittingTime: Int,
     val phoneTime: Int,
-    val sleepTime: Int?,
 
     val walkCount: Int,
-    val runTime: Int,
-    val exerciseTime: Int,
     val stairsClimbed: Int,
+    val sleepTime: Int,
+    val exerciseTime: Int,
 
     val breakfast: Boolean?,
     val lunch: Boolean?,
@@ -32,12 +31,11 @@ data class ReportDto (
             lyingTime = 0,
             sittingTime = 0,
             phoneTime = 0,
-            sleepTime = 0,
 
             walkCount = 0,
-            runTime = 0,
-            exerciseTime = 0,
             stairsClimbed = 0,
+            sleepTime = 0,
+            exerciseTime = 0,
 
             breakfast = false,
             lunch = false,

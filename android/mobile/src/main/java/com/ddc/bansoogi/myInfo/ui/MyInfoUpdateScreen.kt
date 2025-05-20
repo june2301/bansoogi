@@ -324,7 +324,7 @@ fun MyInfoUpdateScreen(navController: NavController) {
 
                 DurationPicker(
                     durationState = notificationDuration,
-                    min   = 1,
+                    min   = 5,
                     max   = 180,
                     step  = 5
                 )
@@ -378,7 +378,7 @@ fun MyInfoUpdateScreen(navController: NavController) {
                             bgSoundEnabled       = initial.bgSoundEnabled,
                             effectSoundEnabled   = initial.effectSoundEnabled
                         )
-                        updateController.save(newInfo)
+                        updateController.save(newInfo, context)
 
                         AlarmScheduler.rescheduleAllDailyAlarms(context, newInfo)
                         SyncHelper.syncNotificationToWatch(context, newInfo)

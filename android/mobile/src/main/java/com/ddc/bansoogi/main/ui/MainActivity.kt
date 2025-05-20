@@ -32,6 +32,7 @@ import com.ddc.bansoogi.common.ui.component.BansoogiNavigationBar
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.common.util.health.Permissions
 import com.ddc.bansoogi.common.util.health.RealTimeHealthDataManager
+import com.ddc.bansoogi.common.wear.communication.state.HealthStateHolder
 import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import com.samsung.android.sdk.health.data.HealthDataService
 import com.samsung.android.sdk.health.data.HealthDataStore
@@ -117,6 +118,9 @@ class MainActivity : BaseActivity() {
         lifecycleScope.launch {
             healthDataManager.healthData.collect { data ->
                 healthData = data
+                
+                // 모바일로 전송을 위한 객체 관리
+                HealthStateHolder.update(healthData)
             }
         }
     }
