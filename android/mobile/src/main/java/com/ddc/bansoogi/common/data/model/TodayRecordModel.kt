@@ -84,9 +84,6 @@ class TodayRecordModel {
                 val stretchLog = logModel.getLogsByTypeAndDate("STRETCH", date)
                 val phoneOffLog = logModel.getLogsByTypeAndDate("PHONE_OFF", date)
 
-                Log.d("Model", "호출 시간 $date")
-                Log.d("Model", "횟수 ${entity.phoneOffCnt}")
-
                 TodayRecordDto(
                     recordId = entity.recordId,
 
