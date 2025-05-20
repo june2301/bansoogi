@@ -4,6 +4,7 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.util.Log
 import com.ddc.bansoogi.common.foreground.NotificationDurationStateHolder
 import java.time.LocalDate
 import java.time.ZoneId
@@ -31,13 +32,17 @@ object PhoneUsageAnalyzer {
         while(events.hasNextEvent()) {
             events.getNextEvent(currentEvent)
 
+            // 홈 화면 감지는 무시
+            if (HomePackageManager.isHomePackage(context, currentEvent.packageName)) continue
+            
+            Log.d("Analyzer", "${currentEvent.eventType} 이 발생 ${currentEvent.packageName}에서")
+
             // ACTIVITY_RESUMED : 사용자가 Activity를 실제로 보고 있는 상태일 때 발생
             // ACTIVITY_PAUSED : 사용자가 Activity를 더 이상 보고 있지 않게 될 때 발생
             if (
                 currentEvent.eventType == UsageEvents.Event.ACTIVITY_RESUMED ||
-                currentEvent.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND ||
                 currentEvent.eventType == UsageEvents.Event.ACTIVITY_PAUSED ||
-                currentEvent.eventType == UsageEvents.Event.MOVE_TO_BACKGROUND
+                currentEvent.eventType == UsageEvents.Event.ACTIVITY_STOPPED
             ) {
                 lastEventType = currentEvent.eventType
                 lastPackage = currentEvent.packageName
@@ -55,13 +60,13 @@ object PhoneUsageAnalyzer {
             }
 
             // 최근 이벤트 ACTIVITY_RESUMED, 이벤트 발생 시점이 5초 이내 -> 새로운 앱 시작 추정
-            if (lastEventType == UsageEvents.Event.ACTIVITY_RESUMED
-                || currentEvent.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+            if (lastEventType == UsageEvents.Event.ACTIVITY_RESUMED) {
                 return true
             }
             // 최근 이벤트 ACTIVITY_PAUSED, 이벤트 발생 시점이 5초 이내 -> 앱을 종료 추정
             else if (lastEventType == UsageEvents.Event.ACTIVITY_PAUSED
-                || currentEvent.eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
+                || lastEventType == UsageEvents.Event.ACTIVITY_STOPPED
+            ) {
                 return false
             }
         }
@@ -75,7 +80,6 @@ object PhoneUsageAnalyzer {
 
         // 가장 마지막 발생 이벤트 확인
         return UsageStateHolder.lastTrackEventType == UsageEvents.Event.ACTIVITY_RESUMED
-                || currentEvent.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND
     }
 
     // 해당 시간 사이의 이벤트

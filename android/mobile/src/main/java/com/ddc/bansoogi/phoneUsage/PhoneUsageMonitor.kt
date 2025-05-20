@@ -40,7 +40,7 @@ object PhoneUsageMonitor {
                         )
 
                         // 핸드폰 off 모니터링 시작
-                        PhoneUsageResponseTracker.startMonitoring(context, scope) {
+                        PhoneUsageFinishTracker.startMonitoring(context, scope) {
                             PhoneUsageEnergyUtil.addEnergy(time)
                         }
                     }

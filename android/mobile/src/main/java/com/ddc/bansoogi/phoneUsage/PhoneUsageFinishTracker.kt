@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-object PhoneUsageResponseTracker {
+object PhoneUsageFinishTracker {
     
     var notificationTime: Long = 0
     var hasAddEnergy: Boolean = false
@@ -19,7 +19,7 @@ object PhoneUsageResponseTracker {
             repeat(60) { // 60번
                 delay(5000) // 5초
 
-                if (isPhoneOff(context)) {
+                if (isPhoneUseFinished(context)) {
                     if (!hasAddEnergy) { // 이미 에너지 점수 부여 했는지 확인
                         hasAddEnergy = true
 
@@ -31,7 +31,7 @@ object PhoneUsageResponseTracker {
         }
     }
 
-    fun isPhoneOff(context: Context): Boolean {
+    fun isPhoneUseFinished(context: Context): Boolean {
         // 알림 발생 부터 현재 이벤트 확인
         val now = System.currentTimeMillis()
         val events = PhoneUsageAnalyzer.getUsageEventsBetween(context, notificationTime, now)
@@ -40,17 +40,23 @@ object PhoneUsageResponseTracker {
 
         while(events.hasNextEvent()) {
             events.getNextEvent(currentEvent)
-            
-            if (currentEvent.eventType == UsageEvents.Event.SCREEN_NON_INTERACTIVE
-                && currentEvent.packageName == context.packageName
+
+            // 1. 반숙이 앱에 접속 -> 폰 off 처리
+            if (currentEvent.eventType == UsageEvents.Event.ACTIVITY_RESUMED
+                && currentEvent.packageName == PhoneUsageAnalyzer.BANSOOGI_PACKAGE
             ) {
-                // 반숙이 앱에 접속 -> 폰 off 처리
                 return true
-            } else if (currentEvent.eventType == UsageEvents.Event.SCREEN_NON_INTERACTIVE) {
-                // 화면 off -> 폰 off 처리
+            }
+
+            // 2. 화면 off -> 폰 off 처리
+            if (currentEvent.eventType == UsageEvents.Event.SCREEN_NON_INTERACTIVE) {
                 return true
-            } else if (currentEvent.eventType == UsageEvents.Event.ACTIVITY_PAUSED) {
-                // 앱 off -> 폰 off 처리
+            }
+
+            // 3. 앱 off -> 폰 off 처리
+            if (currentEvent.eventType == UsageEvents.Event.ACTIVITY_PAUSED
+                || currentEvent.eventType == UsageEvents.Event.ACTIVITY_STOPPED
+            ) {
                 return true
             }
         }
