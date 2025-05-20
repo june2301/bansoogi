@@ -6,15 +6,12 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.ddc.bansoogi.R
-import com.ddc.bansoogi.phoneUsage.PhoneUsageAnalyzer
+import com.ddc.bansoogi.phoneUsage.HomePackageManager
 import com.ddc.bansoogi.phoneUsage.PhoneUsageMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class ForegroundService: Service() {
 
@@ -36,6 +33,14 @@ class ForegroundService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         // 여기에 실시간 처리 or 반복 작업 시작 로직 작성
+
+        // 홈 패키지 찾기
+        HomePackageManager.initialize(applicationContext)
+        
+        // 알림 처리 시간 저장
+        if (NotificationDurationStateHolder.notificationDuration == 0) {
+            NotificationDurationStateHolder.setDuration()
+        }
 
         // 핸드폰 사용 감지
         PhoneUsageMonitor.monitorContinuousPhoneUsage(applicationContext, serviceScope)

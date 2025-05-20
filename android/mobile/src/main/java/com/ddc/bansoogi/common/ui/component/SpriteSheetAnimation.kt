@@ -77,7 +77,9 @@ fun SpriteSheetAnimation(
     }
 
     // 5. 현재 프레임 추출 (128x128 고정)
-    val (pos, _) = frames[frameIndex]
+    val (pos, _) = remember(frameIndex, frames) {
+        frames.getOrNull(frameIndex) ?: frames.first()
+    }
     val croppedBitmap = remember(frameIndex) {
         Bitmap.createBitmap(fullBitmap, pos.x, pos.y, 128, 128).asImageBitmap()
     }
