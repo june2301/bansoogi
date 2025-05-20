@@ -55,6 +55,7 @@ import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun loadCalendarData(): CalendarUiState {
@@ -199,13 +200,23 @@ fun CalendarContent(
     }
 
     // 모달 띄우기
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
     if (uiState.showModal && uiState.selectedDate != null) {
-        RecordedModal(
-            onDismissRequest = {
-                uiState = uiState.copy(showModal = false)
-            },
-            selectedDate = uiState.selectedDate!!
-        )
+        val selectedLocalDate = LocalDate.parse(uiState.selectedDate!!, formatter)
+        val today = LocalDate.now()
+
+        // 오늘보다 이전 날짜만 모달 확인 가능
+        if (selectedLocalDate.isBefore(today)) {
+            RecordedModal(
+                onDismissRequest = {
+                    uiState = uiState.copy(showModal = false)
+                },
+                selectedDate = uiState.selectedDate!!
+            )
+        } else {
+            uiState = uiState.copy(showModal = false)
+        }
     }
 }
 
