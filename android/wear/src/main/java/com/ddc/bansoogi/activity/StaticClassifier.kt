@@ -99,7 +99,7 @@ class StaticClassifier(
         val mag = sqrt(ax*ax + ay*ay + az*az)
         if (mag < 1e-3) return
         val tiltDeg = Math.toDegrees(acos(az / mag))   // 0°=누움, 90°=세움
-        Log.d(TAG, "tilt=${"%.1f".format(tiltDeg)}°")                    // 분모 안전
+//        Log.d(TAG, "tilt=${"%.1f".format(tiltDeg)}°")                    // 분모 안전
 
 
         // 2️⃣ tilt 기준으로 후보 자세 산출
@@ -130,7 +130,7 @@ class StaticClassifier(
 
         // 동일 후보가 유지되는 중 → 지속 시간 체크
         val elapsed = now - candidateStartTime
-        Log.d(TAG, "⏳ CANDIDATE [$candidatePosture]  elapsed=${elapsed}ms")
+//        Log.d(TAG, "⏳ CANDIDATE [$candidatePosture]  elapsed=${elapsed}ms")
         if (elapsed >= ENTRY_DELAY_MS) {
             confirmedPosture = candidatePosture
             _state.value = confirmedPosture
