@@ -54,6 +54,12 @@ class ActivityStateProcessor(
     private val _state = MutableStateFlow<ActivityState>(ActivityState.Unknown)
     val state: StateFlow<ActivityState> = _state.asStateFlow()
 
+    private val sleepDetector = SleepDetector(
+        linAcc    = sensorManager.linearAcceleration,
+        heartRate = sensorManager.heartRate,
+        externalScope = scope
+    )
+
     /* ④ 시작/정지 */
     fun start() {
         sensorManager.startAll()
@@ -61,27 +67,38 @@ class ActivityStateProcessor(
         collectOffBody()
         collectIdleActive()     // Idle/Active 토글
         collectDynamic()
+        collectSleep()
     }
 
     fun stop() {
         sensorManager.stopAll()
         dynamicCls.stop()
         idleActiveDetector.stop()
+        sleepDetector.stop()
         scope.cancel()
     }
 
     /* ───────── Collectors ───────── */
 
     private fun collectOffBody() = sensorManager.isOffBody
-        .onEach { isOnBody = it; recompute() }          // true=착용
-        .launchIn(scope)
+        .onEach { isOnBody = it
+            sleepDetector.setEnabled(!isActive && isOnBody)
+            recompute()
+        }.launchIn(scope)         // true=착용
 
-    private var isActive = false
+
+    private var isActive = false       // ACTIVE⇔IDLE
+    private fun collectSleep() = sleepDetector.state
+         .onEach { recompute() }
+         .launchIn(scope)
+
     private fun collectIdleActive() = idleActiveDetector.state
         .onEach { state ->
             isActive = (state == SmaIdleActiveDetector.State.ACTIVE)
             dynamicCls.setEnabled(isActive)              // ACTIVE 때만 DynamicOn
             // staticCls.setEnabled(!isActive)
+            // IDLE·착용 중일 때만 수면 감지 활성
+            sleepDetector.setEnabled(!isActive && isOnBody)
             recompute()
         }.launchIn(scope)
 
@@ -94,6 +111,8 @@ class ActivityStateProcessor(
     private fun recompute() {
         val newState: ActivityState = when {
             !isOnBody                     -> ActivityState.OffBody
+            sleepDetector.state.value is ActivityState.Sleeping
+                                        -> ActivityState.Sleeping
             idleActiveDetector.state.value == SmaIdleActiveDetector.State.IDLE -> {
                 // StaticClassifier 완성 전까지 Idle
                 ActivityState.Idle
