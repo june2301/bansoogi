@@ -200,23 +200,13 @@ fun CalendarContent(
     }
 
     // 모달 띄우기
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
     if (uiState.showModal && uiState.selectedDate != null) {
-        val selectedLocalDate = LocalDate.parse(uiState.selectedDate!!, formatter)
-        val today = LocalDate.now()
-
-        // 오늘보다 이전 날짜만 모달 확인 가능
-        if (selectedLocalDate.isBefore(today)) {
-            RecordedModal(
-                onDismissRequest = {
-                    uiState = uiState.copy(showModal = false)
-                },
-                selectedDate = uiState.selectedDate!!
-            )
-        } else {
-            uiState = uiState.copy(showModal = false)
-        }
+        RecordedModal(
+            onDismissRequest = {
+                uiState = uiState.copy(showModal = false)
+            },
+            selectedDate = uiState.selectedDate!!
+        )
     }
 }
 
