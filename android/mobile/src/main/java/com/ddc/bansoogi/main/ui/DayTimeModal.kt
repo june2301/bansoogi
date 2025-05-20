@@ -30,8 +30,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.calendar.ui.ActivityLogList
+import com.ddc.bansoogi.common.data.model.ActivityLogDto
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
+import com.ddc.bansoogi.common.util.mapper.ActivityLogMapper.toKoreanBehaviorState
+import kotlin.collections.forEach
 
 @Composable
 fun ModalHeader(
@@ -201,6 +205,39 @@ fun Divider() {
     )
 }
 
+@Composable
+fun ActivityLogList(logs: List<ActivityLogDto>) {
+    Column {
+        logs.forEach { log ->
+            ActivityLogItem(log)
+        }
+    }
+}
+
+@Composable
+fun ActivityLogItem(log: ActivityLogDto) {
+    Row(modifier = Modifier
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = log.reactedTime,
+            fontSize = 12.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 4.dp, start = 8.dp)
+        )
+
+        val readableState = log.fromState.toKoreanBehaviorState()
+        val durationText = "${log.duration ?: 0}분 $readableState 추적"
+
+        Text(
+            text = durationText,
+            fontSize = 12.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 4.dp, start = 8.dp)
+        )
+    }
+}
 
 @Composable
 fun DayTimeModal(
@@ -227,6 +264,8 @@ fun DayTimeModal(
                 )
                 .padding(16.dp)
         ) {
+            Text(text = "${todayRecordDto.phoneOffCnt}")
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
@@ -294,21 +333,27 @@ fun DayTimeModal(
                             unit = " 회"
                         )
 
+                        ActivityLogList(todayRecordDto.standLog)
+
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InfoRow(
                             label = "스트레칭 이벤트 :",
-                            value = 1,
+                            value = todayRecordDto.stretchCnt,
                             unit = " 회"
                         )
+
+                        ActivityLogList(todayRecordDto.stretchLog)
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InfoRow(
                             label = "휴대폰 미사용 이벤트 :",
-                            value = 0,
+                            value = todayRecordDto.phoneOffCnt,
                             unit = " 회"
                         )
+
+                        ActivityLogList(todayRecordDto.phoneOffLog)
 
                         Divider()
 

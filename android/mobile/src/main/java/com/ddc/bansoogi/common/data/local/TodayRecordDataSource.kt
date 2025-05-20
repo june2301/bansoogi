@@ -75,6 +75,36 @@ class TodayRecordDataSource {
         }
     }
 
+    suspend fun updatePhoneOffCnt(recordId: ObjectId) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        phoneOffCnt += 1
+
+                        updatedAt = RealmInstant.now()
+                    }
+                }
+        }
+    }
+
+    suspend fun updatePhoneTime(recordId: ObjectId, time: Int) {
+        realm.write {
+            query<TodayRecord>("recordId == $0", recordId)
+                .first()
+                .find()
+                ?.let { record ->
+                    findLatest(record)?.apply {
+                        phoneTime += time
+
+                        updatedAt = RealmInstant.now()
+                    }
+                }
+        }
+    }
+
     suspend fun updateAllEnergy(recordId: ObjectId, energy: Int) {
         realm.write {
             query<TodayRecord>("recordId == $0", recordId)

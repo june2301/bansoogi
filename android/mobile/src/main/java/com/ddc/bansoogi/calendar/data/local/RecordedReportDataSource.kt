@@ -1,6 +1,5 @@
 package com.ddc.bansoogi.calendar.data.local
 
-import android.util.Log
 import com.ddc.bansoogi.calendar.data.entity.RecordedReport
 import com.ddc.bansoogi.common.data.local.RealmManager
 import io.realm.kotlin.ext.query

@@ -13,7 +13,7 @@ object PhoneUsageEnergyUtil {
         val recordId = todayModel.getTodayRecordSync()?.recordId
 
         if (recordId != null) {
-            todayModel.updateEnergy(recordId, 10)
+            todayModel.updatePhoneOff(recordId)
 
             logModel.createActivicyLog("PHONE_OFF", "PHONE_IN_USE", durationTime)
         } else {
