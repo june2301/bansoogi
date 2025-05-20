@@ -1,5 +1,8 @@
 package com.ddc.bansoogi.common.data.model
 
+import android.util.Log
+import com.ddc.bansoogi.calendar.data.model.toLocalDate
+import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
 import com.ddc.bansoogi.common.data.enum.MealType
 import com.ddc.bansoogi.common.data.local.TodayRecordDataSource
 import kotlinx.coroutines.flow.Flow
@@ -8,6 +11,7 @@ import org.mongodb.kbson.ObjectId
 
 class TodayRecordModel {
     private val dataSource = TodayRecordDataSource()
+    private val logModel = ActivityLogModel()
 
     suspend fun initialize() {
         dataSource.initialize()
@@ -51,26 +55,64 @@ class TodayRecordModel {
         return dataSource.isViewed()
     }
 
+    suspend fun updatePhoneOff(recordId: ObjectId) {
+        // 핸드폰 off 횟수 증가
+        dataSource.updatePhoneOffCnt(recordId)
+
+        // 에너지 점수 증가
+        dataSource.updateEnergy(recordId, 10)
+    }
+
+    suspend fun updatePhoneTime(time: Int) {
+        val recordId = getTodayRecordSync()?.recordId
+
+        if (recordId != null) {
+            dataSource.updatePhoneTime(recordId, time)
+        } else {
+            Log.d("PhoneUsageEnergyUtil", "recordId가 null입니다. 핸드폰 사용 시간 추가 실패")
+        }
+    }
+
     fun getTodayRecord(): Flow<TodayRecordDto?> {
         return dataSource.getTodayRecord().map { entity ->
             entity?.let {
+                // 로그 호출
+                val localDate = entity.createdAt.toLocalDate()
+                val date = CalendarUtils.toFormattedDateString(localDate, localDate.dayOfMonth)
+
+                val standLog = logModel.getLogsByTypeAndDate("STANDUP", date)
+                val stretchLog = logModel.getLogsByTypeAndDate("STRETCH", date)
+                val phoneOffLog = logModel.getLogsByTypeAndDate("PHONE_OFF", date)
+
                 TodayRecordDto(
                     recordId = entity.recordId,
+
                     energyPoint = entity.energyPoint,
+
                     standUpCnt = entity.standUpCnt,
+                    standLog = standLog,
+
                     stretchCnt = entity.stretchCnt,
+                    stretchLog = stretchLog,
+
                     phoneOffCnt = entity.phoneOffCnt,
+                    phoneOffLog = phoneOffLog,
+
                     lyingTime = entity.lyingTime,
                     sittingTime = entity.sittingTime,
                     phoneTime = entity.phoneTime,
                     sleepTime = entity.sleepTime,
+
                     breakfast = entity.breakfast,
                     lunch = entity.lunch,
                     dinner = entity.dinner,
+
                     interactionCnt = entity.interactionCnt,
                     interactionLatestTime = entity.interactionLatestTime,
+
                     isViewed = entity.isViewed,
                     isClosed = entity.isClosed,
+
                     createdAt = entity.createdAt,
                     updatedAt = entity.updatedAt
                 )
@@ -81,23 +123,43 @@ class TodayRecordModel {
     fun getTodayRecordSync(): TodayRecordDto? {
         val entity = dataSource.getTodayRecordSync()
         return entity?.let {
+            // 로그 호출
+            val localDate = entity.createdAt.toLocalDate()
+            val date = CalendarUtils.toFormattedDateString(localDate, localDate.dayOfMonth)
+
+            val standLog = logModel.getLogsByTypeAndDate("STANDUP", date)
+            val stretchLog = logModel.getLogsByTypeAndDate("STRETCH", date)
+            val phoneOffLog = logModel.getLogsByTypeAndDate("PHONE_OFF", date)
+
             TodayRecordDto(
                 recordId = entity.recordId,
+
                 energyPoint = entity.energyPoint,
+
                 standUpCnt = entity.standUpCnt,
+                standLog = standLog,
+
                 stretchCnt = entity.stretchCnt,
+                stretchLog = stretchLog,
+
                 phoneOffCnt = entity.phoneOffCnt,
+                phoneOffLog = phoneOffLog,
+
                 lyingTime = entity.lyingTime,
                 sittingTime = entity.sittingTime,
                 phoneTime = entity.phoneTime,
                 sleepTime = entity.sleepTime,
+
                 breakfast = entity.breakfast,
                 lunch = entity.lunch,
                 dinner = entity.dinner,
+
                 interactionCnt = entity.interactionCnt,
                 interactionLatestTime = entity.interactionLatestTime,
+
                 isViewed = entity.isViewed,
                 isClosed = entity.isClosed,
+
                 createdAt = entity.createdAt,
                 updatedAt = entity.updatedAt
             )

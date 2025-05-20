@@ -1,6 +1,7 @@
 package com.ddc.bansoogi.phoneUsage
 
 import android.content.Context
+import com.ddc.bansoogi.common.data.model.TodayRecordModel
 import com.ddc.bansoogi.common.foreground.NotificationDurationStateHolder
 import com.ddc.bansoogi.common.notification.NotificationDispatcher
 import com.ddc.bansoogi.common.notification.NotificationFactory
@@ -31,6 +32,9 @@ object PhoneUsageMonitor {
 
                         // 측정 시간 리셋
                         PhoneUsageAnalyzer.resetUsageStartTime()
+
+                        // 핸드폰 사용 시간 증가
+                        TodayRecordModel().updatePhoneTime(time)
 
                         // 알림 발생
                         NotificationDispatcher.show(
