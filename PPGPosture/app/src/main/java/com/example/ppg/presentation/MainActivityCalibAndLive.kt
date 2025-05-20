@@ -121,7 +121,7 @@ private fun CalibScreen(
                             action = CalibRuleService.ACTION_CALIB
                             putExtra("label", posture)
                         })
-                        Toast.makeText(ctx, "35s recording…", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(ctx, "65s recording…", Toast.LENGTH_SHORT).show()
                     }) { Text("Rec") }
                     CalibState.RECORDING -> Text("...")
                     CalibState.DONE -> Button(onClick = {

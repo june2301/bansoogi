@@ -21,6 +21,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.example.ppg.filter.Butterworth
 import com.example.ppg.inference.PostureClassifier
 import com.samsung.android.service.health.tracking.*
 import com.samsung.android.service.health.tracking.data.*
@@ -38,6 +39,9 @@ class RecorderService : Service() {
     /* ---------- 상수 ---------- */
     private val FS         = 25          // Hz
     private val WINDOW_SEC = 10          // 분석 윈도우 길이(초)
+    private val STEP_SEC   = 1         // 스텝 간격(초)
+    private val WINDOW_SIZE = FS * WINDOW_SEC      // 250
+    private val STEP_SIZE   = FS * STEP_SEC        // 25
     private val MIN_DIST   = (FS * 0.4).toInt() // find_peaks distance
 
     // raw green 채널 전처리용 μ/σ (calib.json → stats_raw.green)
@@ -62,7 +66,7 @@ class RecorderService : Service() {
     private val gBuf  = mutableListOf<Int>()
     private val rBuf  = mutableListOf<Int>()
     private val irBuf = mutableListOf<Int>()
-    private val rawGBuf = ArrayDeque<Float>(FS * WINDOW_SEC) // 최근 10초(250샘플)
+    private val rawGBuf = ArrayDeque<Float>() // 최근 10초(250샘플)
 
     /* ---------- 예측 버퍼 ---------- */
     private val predList = mutableListOf<Int>()
@@ -192,7 +196,7 @@ class RecorderService : Service() {
         val normed = FloatArray(detrended.size) { i ->
             if (rawGreenSigma > 0f) (detrended[i] - rawGreenMu) / rawGreenSigma else detrended[i] - rawGreenMu
         }
-        val x = zeroPhaseFilter(normed)
+        val x = Butterworth.filtfilt(normed)
 
         /* ---- peak & trough ---- */
         val rawPeaks = mutableListOf<Int>()

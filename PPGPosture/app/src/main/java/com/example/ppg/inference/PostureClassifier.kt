@@ -1,147 +1,143 @@
+// app/src/main/java/com/example/ppg/inference/PostureClassifier.kt
 package com.example.ppg.inference
 
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
-import org.tensorflow.lite.Interpreter
 import org.json.JSONObject
+import org.tensorflow.lite.Interpreter
 import java.io.File
 import kotlin.math.exp
 
+/**
+ * Posture classifier with *user‑specific* Z‑score followed by
+ * re‑alignment to the **training** feature distribution.
+ *
+ * flow:
+ *   1) quantile‑clip (user clip_bounds)
+ *   2) z_user = (x – μ_user) / σ_user
+ *   3) x_final = z_user * σ_train + μ_train
+ *   4) TFLite inference
+ */
 class PostureClassifier(
     private val ctx: Context,
     private val modelName: String
 ) {
     private val tflite: Interpreter = ModelManager.get(ctx, modelName)
-    private val input = Array(1) { FloatArray(FEATURE_DIM) }
+    private val input  = Array(1) { FloatArray(FEATURE_DIM) }
     private val output = Array(1) { FloatArray(OUTPUT_CLASSES) }
 
-    // per-subject means & scale factors
-    private val subjectMeans = FloatArray(FEATURE_DIM)
-    private val scaleFactor = FloatArray(FEATURE_DIM) { 1f }
-    private var rawGreenMu    = 0f
-    private var rawGreenSigma = 1f
+    /* ---------- calibration data ---------- */
+    private val clipBounds  = Array(FEATURE_DIM) { Float.NEGATIVE_INFINITY to Float.POSITIVE_INFINITY }
 
-    // quantile clipping bounds per feature
-    private val clipBounds = Array<Pair<Float,Float>>(FEATURE_DIM) {  // default full range
-        Float.NEGATIVE_INFINITY to Float.POSITIVE_INFINITY
-    }
+    // user stats
+    private val muUser    = FloatArray(FEATURE_DIM) { 0f }
+    private val sigmaUser = FloatArray(FEATURE_DIM) { 1f }
+
+    // training stats (read‑only, from assets/calib.json)
+    private val muTrain    = FloatArray(FEATURE_DIM) { 0f }
+    private val sigmaTrain = FloatArray(FEATURE_DIM) { 1f }
 
     init {
-        loadCalibration()         // load per-subject means from calib.json
-        computeScaleFactors()     // build multiplicative offsets
-        Log.i(TAG, "⚙️ PostureClassifier initialized")
+        loadUserCalibration()
+        loadTrainStats()
+        Log.i(TAG, "⚙️ PostureClassifier initialised (user ↦ train mapping)")
     }
-    
-    /**
-     * Load calibration (subject) means from calib.json → "calib_means"
-     */
-    private fun loadCalibration() {
+
+    /* ---------------------------------------------------------------------- */
+    private fun loadUserCalibration() {
         try {
-            val file = File(ctx.filesDir, "calib.json")
-            if (!file.exists()) return
-            val root = JSONObject(file.readText())
+            val fp = File(ctx.filesDir, "calib.json")
+            if (!fp.exists()) return
+            val root = JSONObject(fp.readText())
 
-            // 1) per-subject feature means
-            root.optJSONObject("calib_means")?.let { calibObj ->
+            /* 1) clip bounds */
+            root.optJSONObject("clip_bounds")?.let { cb ->
                 FEAT_NAMES.forEachIndexed { i, key ->
-                    subjectMeans[i] = calibObj.optDouble(key, 0.0).toFloat()
-                }
-            }
-
-            // 2) raw green μ/σ
-            root.optJSONObject("stats_raw")
-                ?.optJSONObject("green")
-                ?.let { g ->
-                    rawGreenMu    = g.optDouble("mu", 0.0).toFloat()
-                    rawGreenSigma = g.optDouble("sigma", 1.0).toFloat()
-                }
-
-            // 3) quantile clip bounds
-            root.optJSONObject("clip_bounds")?.let { clipObj ->
-                FEAT_NAMES.forEachIndexed { i, key ->
-                    clipObj.optJSONArray(key)?.let { arr ->
-                        val lo = arr.optDouble(0, Double.NEGATIVE_INFINITY).toFloat()
-                        val hi = arr.optDouble(1, Double.POSITIVE_INFINITY).toFloat()
-                        clipBounds[i] = lo to hi
+                    cb.optJSONArray(key)?.let { arr ->
+                        clipBounds[i] = arr.optDouble(0).toFloat() to arr.optDouble(1).toFloat()
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "loadCalibration failed", e)
-        }
-        Log.i(TAG, "🔧 loadCalibration ▶ subjectMeans=${subjectMeans.joinToString()} rawGreenMu/S=$rawGreenMu/$rawGreenSigma")
+            /* 2) user μ/σ */
+            root.optJSONObject("stats")?.let { st ->
+                FEAT_NAMES.forEachIndexed { i, k ->
+                    st.optJSONObject(k)?.let { f ->
+                        muUser[i]    = f.optDouble("mu", 0.0).toFloat()
+                        sigmaUser[i] = f.optDouble("sigma", 1.0).toFloat()
+                    }
+                }
+            }
+        } catch (e: Exception) { Log.w(TAG, "loadUserCalibration failed", e) }
     }
 
-
-    /**
-     * Compute scale = global_mean / subject_mean for features we know
-     */
-    private fun computeScaleFactors() {
-        for (i in 0 until FEATURE_DIM) {
-            val gm = GLOBAL_MEANS[i]
-            val sm = subjectMeans[i]
-            scaleFactor[i] = if (gm > 0f && sm > 0f) gm / sm else 1f
-        }
-        Log.i(TAG, "🔧 computeScaleFactors ▶ GLOBAL_MEANS=${GLOBAL_MEANS.joinToString()} subjectMeans=${subjectMeans.joinToString()} scaleFactor=${scaleFactor.joinToString()}")
+    private fun loadTrainStats() {
+        try {
+            val txt = ctx.assets.open("calib.json").bufferedReader().use { it.readText() }
+            val root = JSONObject(txt)
+            root.optJSONObject("stats")?.let { st ->
+                FEAT_NAMES.forEachIndexed { i, k ->
+                    st.optJSONObject(k)?.let { f ->
+                        muTrain[i]    = f.optDouble("mu", 0.0).toFloat()
+                        sigmaTrain[i] = f.optDouble("sigma", 1.0).toFloat()
+                    }
+                }
+            }
+        } catch (e: Exception) { Log.w(TAG, "loadTrainStats failed", e) }
     }
 
-    /**
-     * Classify by applying multiplicative calibration then running TFLite
-     */
-    fun classify(feats: FloatArray): Int {
-        require(feats.size == FEATURE_DIM)
-        Log.d(TAG, "1️⃣ raw feats ▶ ${feats.joinToString()}")
+    /* ---------------------------------------------------------------------- */
+    fun classify(raw: FloatArray): Int {
+        require(raw.size == FEATURE_DIM)
+        Log.d(TAG, "1️⃣ raw ▶ ${raw.joinToString()}")
 
-        // --- 1) quantile clipping ---
-        for (i in feats.indices) {
-            val (lo, hi) = clipBounds[i]
-            feats[i] = feats[i].coerceIn(lo, hi)
+        /* 1) quantile clip (user bounds) */
+        val clipped = FloatArray(FEATURE_DIM) { i ->
+            raw[i].coerceIn(clipBounds[i].first, clipBounds[i].second)
         }
+        Log.d(TAG, "2️⃣ clipped ▶ ${clipped.joinToString()}")
 
-        Log.d(TAG, "clamped feats: ${feats.joinToString(", ")}")
+        /* 2) user Z‑score */
+        val zUser = FloatArray(FEATURE_DIM) { i ->
+            val sd = sigmaUser[i]; if (sd > 0f) (clipped[i] - muUser[i]) / sd else 0f
+        }
+        Log.d(TAG, "3️⃣ z_user ▶ ${zUser.joinToString()}")
 
-        // --- 2) subject scaling ---
-        val corrected = FloatArray(FEATURE_DIM) { feats[it] * scaleFactor[it] }
-        Log.d(TAG, "3️⃣ scaled feats ▶ ${corrected.joinToString()}")
+        /* 3) realign to *training* distribution */
+//        val aligned = FloatArray(FEATURE_DIM) { i ->
+//            zUser[i] * sigmaTrain[i] + muTrain[i]
+//        }
+//        Log.d(TAG, "4️⃣ aligned ▶ ${aligned.joinToString()}")
+        val aligned = zUser
+        Log.d(TAG, "4️⃣ aligned (no train mapping) ▶ ${aligned.joinToString()}")
 
-        // --- 3) TFLite inference ---
-        for (i in 0 until FEATURE_DIM) input[0][i] = corrected[i]
-        Log.v(TAG, "4️⃣ model input ▶ ${input[0].joinToString()}")
+        /* 4) TFLite inference */
+        for (i in 0 until FEATURE_DIM) input[0][i] = aligned[i]
         tflite.run(input, output)
-        Log.d(TAG, "5️⃣ raw output ▶ ${output[0].joinToString()}  argmax=${output[0].argMax()}")
-        return output[0].argMax()
+        // 🟡 누움 라벨(1번)에 0.5 가중치 부여
+        val pred = output[0].argMax()
+        Log.d(TAG, "5️⃣ output ▶ ${output[0].joinToString()} argmax=$pred")
+        return pred
     }
 
     fun probs(): FloatArray = softmax(output[0])
 
+    /* ---------------- helpers ---------------- */
     private fun FloatArray.argMax(): Int = indices.maxByOrNull { this[it] } ?: 0
     private fun softmax(x: FloatArray): FloatArray {
-        val max = x.maxOrNull() ?: 0f
-        val exps = x.map { exp((it - max).toDouble()).toFloat() }
-        val sum = exps.sum().takeIf { it > 0f } ?: 1f
-        return exps.map { it / sum }.toFloatArray()
+        val m = x.maxOrNull() ?: 0f
+        val exps = x.map { exp((it - m).toDouble()).toFloat() }
+        val s = exps.sum().takeIf { it > 0f } ?: 1f
+        return exps.map { it / s }.toFloatArray()
     }
 
     companion object {
         private const val FEATURE_DIM = 10
         private const val OUTPUT_CLASSES = 3
-        // global dataset means for select features; others=0 → no scaling
-        private val GLOBAL_MEANS = floatArrayOf(
-            /* pnn50 */   0.5958591f,
-            /* rr_mean */ 0f,
-            /* hr_mean */ 103.51322f,
-            /* rmssd */   0f,
-            /* n_peaks */ 0f,
-            /* crest_t */ 0f,
-            /* dwell_t */ 0f,
-            /* pwtf */    0.56113485f,
-            /* kurtosis*/ 0.8517715f,
-            /* skew */    0f
-        )
         private val FEAT_NAMES = listOf(
             "pnn50","rr_mean","hr_mean","rmssd","n_peaks",
             "crest_t","dwell_t","pwtf","kurtosis","skew"
         )
+        private const val TAG = "PostureClassifier"
     }
 }

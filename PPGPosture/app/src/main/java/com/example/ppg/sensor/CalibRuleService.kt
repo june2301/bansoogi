@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.example.ppg.filter.Butterworth
 import com.samsung.android.service.health.tracking.*
 import com.samsung.android.service.health.tracking.data.*
 import kotlinx.coroutines.*
@@ -14,38 +15,59 @@ import kotlinx.coroutines.sync.withLock
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
+/**
+ * Calibration & rule‑based inference service **fully aligned** with the Python
+ * training pipeline (HRV‑10, detrend → z‑score → zero‑phase Butterworth 0.5‑5 Hz).
+ *
+ * ‑ Calibration mode: 35 s 녹화 → 모든 10‑피처 윈도우를 calib.json/raw 에 저장.
+ * ‑ Live rule mode: 짧은 10‑피처 벡터에서 간단한 z‑score 룰로 자세 판정 (기존과 동일).
+ */
 class CalibRuleService : Service() {
+
+    /* ───────────── constants ───────────── */
     companion object {
         const val ACTION_CALIB      = "com.example.ppg.CALIB"
         const val ACTION_LIVE       = "com.example.ppg.LIVE"
         const val ACTION_STOP       = "com.example.ppg.STOP"
         const val ACTION_RULE       = "com.example.ppg.RULE"
         const val ACTION_CALIB_DONE = "com.example.ppg.CALIB_DONE"
+        const val FEATURE_DIM = 10
+        val FEAT_NAMES = arrayOf("mean", "std", "rms", "max", "min", "zc", "ssc", "wl", "kurt", "skew")
         private const val TAG = "CalibRuleSvc"
     }
+    private val FS = 25
+    private val WIN_SEC = 10
+    private val STEP_SEC   = 1
+    private val WINDOW_SIZE = FS * WIN_SEC      // 250
+    private val STEP_SIZE   = FS * STEP_SEC        // 25
+    private val WIN_SAMPLES = FS * WIN_SEC
+    private val MIN_DIST = (FS * 0.4).toInt()
+    private val NOTI_CH = "CALIB_RULE_CH"
+    private val NOTI_ID = 2
 
-    /* --- constants --- */
-    private val FS = 25; private val WIN_SEC = 10; private val INFER_EVERY = 1
-    private val NOTI_CH = "CALIB_RULE_CH"; private val NOTI_ID = 2
-
-    /* --- state --- */
+    /* ───────────── runtime state ───────────── */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private lateinit var hts: HealthTrackingService
     private lateinit var ppgTracker: HealthTracker
-    private var recording = false; private var liveMode = false
-    private var warmupDone = false; private var frameCnt = 0
+    private var recording = false
+    private var liveMode  = false
+    private var warmupFrames = 0
     private val rawBuf = ArrayDeque<Float>()
+    private var frameCnt = 0
 
-    private val calibLabelMutex = Mutex()
-    private var currentLabel: String = "unknown"
+    // calibration collection
+    private val calibMutex = Mutex()
+    private var currentLabel = "unknown"
     private val calibMap = mutableMapOf<String, MutableList<FloatArray>>()
 
-    /* ========================================================= */
-    override fun onCreate() { super.onCreate(); createChannel() }
+    // raw green μ/σ for z‑score (from assets/calib.json)
+    private var gMu = 0f
+    private var gSigma = 1f
+
+    /* ───────────────────────────────────── */
+    override fun onCreate() { super.onCreate(); createChannel(); loadRawStats() }
     override fun onBind(i: Intent?): IBinder? = null
 
     override fun onStartCommand(i: Intent?, flags: Int, id: Int): Int {
@@ -57,115 +79,151 @@ class CalibRuleService : Service() {
         return START_STICKY
     }
 
+    /* ───────────── calibration / live ───────────── */
     private fun startCalibration(label: String) {
-        liveMode = false; currentLabel = label; prepareSensors()
+        liveMode = false; currentLabel = label; beginSensors()
         startForeground(NOTI_ID, notif("Calibrating $label…"))
         scope.launch {
-            val CALIB_DURATION = 35_000L
-            delay(CALIB_DURATION)
-            stopSensors()
-            writeCalibJson()
+            delay(65_000)
+            stopSensors(); writeCalibJson()
             sendBroadcast(Intent(ACTION_CALIB_DONE).setPackage(packageName).putExtra("label", label))
             stopSelf()
         }
     }
-
     private fun startLive() {
-        liveMode = true; prepareSensors()
+        liveMode = true; beginSensors()
         startForeground(NOTI_ID, notif("Rule‑based Inference"))
     }
 
-    private fun prepareSensors() {
+    private fun beginSensors() {
         if (recording) return
-        recording = true; warmupDone = false; frameCnt = 0; rawBuf.clear()
+        recording = true; warmupFrames = 0; rawBuf.clear()
         hts = HealthTrackingService(conn, this)
         hts.connectService()
     }
-
     private fun stopSensors() {
         recording = false
         runCatching { ppgTracker.unsetEventListener() }
         runCatching { hts.disconnectService() }
     }
 
-    /* ---------- Samsung SDK Callbacks ---------- */
+    /* ───────────── Samsung SDK callbacks ───────────── */
     private val conn = object : ConnectionListener {
         override fun onConnectionSuccess() {
             ppgTracker = hts.getHealthTracker(HealthTrackerType.PPG_CONTINUOUS, setOf(PpgType.GREEN))
             ppgTracker.setEventListener(ppgListener)
-            startTracker()
-            scope.launch { delay(5_000); warmupDone = true }
+            runCatching { ppgTracker.javaClass.getMethod("start").invoke(ppgTracker) }
         }
-        override fun onConnectionFailed(e: HealthTrackerException) {
-            Log.e(TAG, "connect fail ${e.errorCode}"); stopSelf()
-        }
+        override fun onConnectionFailed(e: HealthTrackerException) { Log.e(TAG,"connect fail ${e.errorCode}"); stopSelf() }
         override fun onConnectionEnded() {}
     }
 
     private val ppgListener = object : HealthTracker.TrackerEventListener {
         override fun onDataReceived(points: List<DataPoint>) {
-            if (!recording || !warmupDone) return
+            if (!recording) return
             points.forEach { dp ->
-                /* ① Number 캐스팅으로 0 값 문제 해결 */
                 val gRaw = (dp.getValue(ValueKey.PpgSet.PPG_GREEN) as? Number)?.toLong() ?: 0L
                 val g = gRaw.toFloat() / 4096f
 
-                /* ② 원형 버퍼: size > 250 이면 맨 앞 제거 (추론은 size==250일 때마다) */
+                if (warmupFrames < FS * 5) { warmupFrames++; return@forEach } // 5 s 워밍업 동일
+
                 rawBuf.addLast(g)
-                if (rawBuf.size > FS * WIN_SEC) rawBuf.removeFirst()
-                if (++frameCnt < FS*INFER_EVERY) return@forEach; frameCnt = 0
-                if (rawBuf.size == FS*WIN_SEC) handleWindow(extractFeatures(rawBuf.toFloatArray()))
+                if (rawBuf.size > WIN_SAMPLES) rawBuf.removeFirst()
+                if (rawBuf.size == WIN_SAMPLES) {
+                    val feats = extractFeatures10s(rawBuf.toFloatArray())
+                    if (liveMode) sendRuleBroadcast(calcRule(feats))
+                    else scope.launch { calibMutex.withLock {
+                        calibMap.getOrPut(currentLabel) { mutableListOf() }.add(feats)
+                    } }
+                }
             }
         }
         override fun onFlushCompleted() {}
         override fun onError(e: HealthTracker.TrackerError) { Log.e(TAG, "PPG error $e") }
     }
 
-    private fun handleWindow(f: FloatArray) {
-        if (liveMode) sendRuleBroadcast(calcRule(f))
-        else scope.launch { calibLabelMutex.withLock {
-            calibMap.getOrPut(currentLabel) { mutableListOf() }.add(f)
-        }}
+    /* ───────────── feature extraction (HRV‑10 full) ───────────── */
+    private fun detrend(x: FloatArray): FloatArray {
+        val n = x.size; val xsBar = (n - 1) / 2f
+        var sX = 0f; var sY = 0f; var sXY = 0f; var sXX = 0f
+        for (i in x.indices) {
+            val dx = i - xsBar; sX += dx; sY += x[i]; sXY += dx * x[i]; sXX += dx * dx
+        }
+        val slope = if (sXX != 0f) sXY / sXX else 0f
+        val intercept = (sY - slope * sX) / n
+        return FloatArray(n) { i -> x[i] - (slope * i + intercept) }
     }
 
-    /* ---------- Feature extraction (short, HRV subset) ---------- */
-    private fun extractFeatures(x: FloatArray): FloatArray {
-        // simple peak‑based HR metrics only (indices align with training script positions)
+    private fun extractFeatures10s(raw: FloatArray): FloatArray {
+        val dt = detrend(raw)
+        val norm = FloatArray(dt.size) { i -> if (gSigma > 0f) (dt[i] - gMu) / gSigma else dt[i] - gMu }
+        val x = Butterworth.filtfilt(norm)
+
+        /* peak & trough */
         val peaks = mutableListOf<Int>()
-        for (i in 1 until x.lastIndex) if (x[i] > x[i-1] && x[i] > x[i+1]) peaks += i
-        val rr = peaks.zipWithNext { a,b -> (b-a).toFloat()/FS }
-        val out = FloatArray(10)
-        if (rr.isNotEmpty()) {
-            val mean = rr.average().toFloat()
-            out[1] = mean; out[2] = if (mean>0f) 60f/mean else 0f; out[4] = peaks.size.toFloat()
+        val troughs = mutableListOf<Int>()
+        for (i in 1 until x.lastIndex) {
+            if (x[i] > x[i - 1] && x[i] > x[i + 1]) peaks += i
+            if (x[i] < x[i - 1] && x[i] < x[i + 1]) troughs += i
         }
-        if (rr.size>1) {
-            val diff = rr.zipWithNext{a,b->b-a};
-            out[3] = sqrt(diff.map{it*it}.average()).toFloat()
-            out[0] = diff.count{ abs(it) > 0.05 }.toFloat()/diff.size
+        fun filterByMinDist(list: List<Int>): List<Int> {
+            val out = mutableListOf<Int>()
+            var last = -MIN_DIST
+            list.forEach { p -> if (p - last >= MIN_DIST) { out += p; last = p } }
+            return out
         }
-        return out
-    }
-    private fun startTracker() =
-        runCatching { ppgTracker.javaClass.getMethod("start").invoke(ppgTracker) }
+        val pk = filterByMinDist(peaks)
+        val tr = filterByMinDist(troughs)
 
-    /* ---------- Rule logic using calib.json ---------- */
+        /* HRV‑10 */
+        val rr = pk.zipWithNext { a, b -> (b - a).toFloat() / FS }
+        val feat = FloatArray(10)
+        if (rr.isNotEmpty()) {
+            feat[4] = pk.size.toFloat() // n_peaks
+            val rrM = rr.average().toFloat(); feat[1] = rrM; feat[2] = if (rrM > 0f) 60f / rrM else 0f
+        }
+        if (rr.size > 1) {
+            val dif = rr.zipWithNext { a, b -> b - a }
+            feat[3] = sqrt(dif.map { it * it }.average()).toFloat() // rmssd
+            feat[0] = dif.count { abs(it) > 0.05f }.toFloat() / dif.size // pnn50
+        }
+        // crest / dwell / pwtf
+        val cycles = pk.mapNotNull { p ->
+            val f = tr.lastOrNull { it < p } ?: return@mapNotNull null
+            val n = tr.firstOrNull { it > p } ?: return@mapNotNull null
+            Triple(f, p, n)
+        }
+        if (cycles.isNotEmpty()) {
+            val ct = cycles.map { (f, p, _) -> (p - f).toFloat() / FS }.average().toFloat()
+            val dw = cycles.map { (f, _, n) -> (n - f).toFloat() / FS }.average().toFloat()
+            feat[5] = ct; feat[6] = dw; feat[7] = if (dw != 0f) ct / dw else 0f
+        }
+        // kurtosis & skew
+        val mu = x.average().toFloat()
+        val m2 = x.map { (it - mu).pow(2) }.average().toFloat()
+        val m3 = x.map { (it - mu).pow(3) }.average().toFloat()
+        val m4 = x.map { (it - mu).pow(4) }.average().toFloat()
+        feat[8] = if (m2 > 1e-6f) (m4 / (m2 * m2) - 3f) else 0f
+        feat[9] = if (m2 > 1e-6f) (m3 / m2.pow(1.5f)) else 0f
+        return feat
+    }
+
+    /* ───────────── rule calc (기존) ───────────── */
     private fun calcRule(f: FloatArray): String {
         val file = File(filesDir, "calib.json"); if (!file.exists()) return "upright‑sitting"
         val root = JSONObject(file.readText())
         val stats = root.optJSONObject("stats") ?: return "upright‑sitting"
-        fun z(value: Float, key: String): Float {
+        fun z(v: Float, key: String): Float {
             val s = stats.optJSONObject(key) ?: return 0f
-            val mu = s.optDouble("mu", 0.0).toFloat()
-            val sd = s.optDouble("sigma", 1.0).toFloat()
-            return if (sd != 0f) (value-mu)/sd else 0f
+            val mu = s.optDouble("mu", 0.0).toFloat(); val sd = s.optDouble("sigma", 1.0).toFloat()
+            return if (sd != 0f) (v - mu) / sd else 0f
         }
         val hrZ = z(f[2], "hr_mean"); val pnnZ = z(f[0], "pnn50"); val kurZ = z(f[8], "kurtosis")
         val thr = root.optJSONObject("thresholds") ?: return "upright‑sitting"
         val sup = thr.optJSONObject("supine"); val std = thr.optJSONObject("standing")
         return when {
-            sup != null && hrZ < sup.optDouble("hr_z_max",-999.0).toFloat() && pnnZ > sup.optDouble("pnn50_z_min",0.0).toFloat() -> "supine‑lying"
-            std != null && hrZ > std.optDouble("hr_z_min",999.0).toFloat() && kurZ > std.optDouble("kurtosis_z_min",0.0).toFloat() -> "standing"
+            sup != null && hrZ < sup.optDouble("hr_z_max", -9.0).toFloat() && pnnZ > sup.optDouble("pnn50_z_min", 0.0).toFloat() -> "supine‑lying"
+            std != null && hrZ > std.optDouble("hr_z_min", 9.0).toFloat() && kurZ > std.optDouble("kurtosis_z_min", 0.0).toFloat() -> "standing"
             else -> "upright‑sitting"
         }
     }
@@ -174,129 +232,121 @@ class CalibRuleService : Service() {
         sendBroadcast(Intent(ACTION_RULE).setPackage(packageName).putExtra("rule_label", label))
     }
 
-    /* ---------- write calib.json ---------- */
+    /* ───────────── calib.json writer (10‑feat) ───────────── */
     private suspend fun writeCalibJson() = withContext(Dispatchers.IO) {
         if (calibMap.isEmpty()) return@withContext
         val file = File(filesDir, "calib.json")
         val root = runCatching { JSONObject(file.readText()) }.getOrNull() ?: JSONObject()
         val rawObj = root.optJSONObject("raw") ?: JSONObject().also { root.put("raw", it) }
 
-        calibMap.forEach { (lab, list) ->
-            val arr = rawObj.optJSONArray(lab) ?: JSONArray().also { rawObj.put(lab, it) }
+        // ─── 1) raw data append ───────────────────────────
+        calibMap.forEach { (label, list) ->
+            val arr = rawObj.optJSONArray(label) ?: JSONArray().also { rawObj.put(label, it) }
             list.forEach { window -> arr.put(JSONArray(window.toList())) }
         }
         calibMap.clear()
 
-        // collect all windows for stats & subject mean
-        val allWindows = mutableListOf<FloatArray>()
-        rawObj.keys().forEach { k ->
-            rawObj.optJSONArray(k)?.let { ja ->
+        // ─── 2) aggregate all windows ──────────────────────
+        val allWin = mutableListOf<FloatArray>()
+        rawObj.keys().forEach { label ->
+            rawObj.optJSONArray(label)?.let { ja ->
                 for (i in 0 until ja.length()) {
-                    ja.optJSONArray(i)?.let { ja2 ->
-                        allWindows += FloatArray(ja2.length()) { idx -> ja2.optDouble(idx, 0.0).toFloat() }
+                    ja.optJSONArray(i)?.let { wa ->
+                        allWin += FloatArray(wa.length()) { idx -> wa.optDouble(idx, 0.0).toFloat() }
                     }
                 }
             }
         }
 
-        if (allWindows.isNotEmpty()) {
-            val dims = allWindows[0].size
-            val mu = FloatArray(dims)
-            val sd = FloatArray(dims)
-            allWindows.forEach { w -> w.forEachIndexed { i, v -> mu[i] += v } }
-            val count = allWindows.size
-            mu.forEachIndexed { i, v -> mu[i] = v / count }
-            allWindows.forEach { w -> w.forEachIndexed { i, v -> sd[i] += (v - mu[i]).pow(2) } }
-            sd.forEachIndexed { i, v -> sd[i] = sqrt(v / count) }
+        if (allWin.isNotEmpty()) {
+            val dim = FEATURE_DIM  // = 10
+            val mu = FloatArray(dim)
+            val sd = FloatArray(dim)
+            val count = allWin.size
 
-            // write stats
-            val statsObj = JSONObject().apply {
-                put("hr_mean", JSONObject().apply { put("mu", mu[2].toDouble()); put("sigma", sd[2].toDouble()) })
-                put("pnn50",   JSONObject().apply { put("mu", mu[0].toDouble()); put("sigma", sd[0].toDouble()) })
-                put("kurtosis",JSONObject().apply { put("mu", mu[8].toDouble()); put("sigma", sd[8].toDouble()) })
+            // 2.1) compute μ
+            allWin.forEach { w -> w.forEachIndexed { i, v -> mu[i] += v } }
+            for (i in 0 until dim) mu[i] /= count
+
+            // 2.2) compute σ
+            allWin.forEach { w -> w.forEachIndexed { i, v -> sd[i] += (v - mu[i]).pow(2) } }
+            for (i in 0 until dim) sd[i] = sqrt(sd[i] / count)
+
+            // ─── 3) write full stats (μ/σ) for all features ───
+            val statsObj = JSONObject()
+            FEAT_NAMES.forEachIndexed { i, key ->
+                statsObj.put(key, JSONObject().apply {
+                    put("mu", mu[i].toDouble())
+                    put("sigma", sd[i].toDouble())
+                })
             }
             root.put("stats", statsObj)
 
-            // write subject calibration means
-            val featNames = listOf(
-                "pnn50","rr_mean","hr_mean","rmssd","n_peaks",
-                "crest_t","dwell_t","pwtf","kurtosis","skew"
-            )
-            val calibMeansObj = JSONObject().apply {
-                featNames.forEachIndexed { i, key ->
-                    put(key, mu[i].toDouble())
-                }
+            // ─── 4) write full clip_bounds (μ±3σ) all features ─
+            val clipObj = JSONObject()
+            val calibMeansObj = JSONObject()
+            FEAT_NAMES.forEachIndexed { i, key ->
+                val lo = (mu[i] - 3f * sd[i]).coerceAtLeast(0f)
+                val hi = (mu[i] + 3f * sd[i])
+                clipObj.put(key, JSONArray().apply {
+                    put(lo.toDouble())
+                    put(hi.toDouble())
+                })
+                calibMeansObj.put(key, mu[i].toDouble())
+            }
+            root.put("clip_bounds", clipObj)
+            root.put("calib_means", calibMeansObj)
+
+
+            // ─── 5) store calib_means if still needed ─────────
+            FEAT_NAMES.forEachIndexed { i, key ->
+                calibMeansObj.put(key, mu[i].toDouble())
             }
             root.put("calib_means", calibMeansObj)
 
-            // default thresholds
-            root.put("thresholds", JSONObject().apply {
-                put(
-                    "supine",
-                    JSONObject()
-                        .put("hr_z_max", -0.8)
-                        .put("pnn50_z_min", 0.8)
-                )
-                put(
-                    "standing",
-                    JSONObject()
-                        .put("hr_z_min", 0.8)
-                        .put("kurtosis_z_min", 0.5)
-                )
-            })
-            // ★ per-feature clip bounds (mean ±3σ)
-            val clipObj = JSONObject().apply {
-                val featNames = listOf(
-                    "pnn50", "rr_mean", "hr_mean", "rmssd", "n_peaks",
-                    "crest_t", "dwell_t", "pwtf", "kurtosis", "skew"
-                )
-                featNames.forEachIndexed { i, key ->
-                    val m = mu[i]
-                    val s = sd[i]
-                    // 음수방지: 하한은 0 이상으로
-                    put(key, JSONArray().apply {
-                        put((m - 3 * s).coerceAtLeast(0.0f).toDouble())
-                        put((m + 3 * s).toDouble())
-                    })
-                }
+            /* clip bounds: percentile 5–95% fallback */
+            FEAT_NAMES.forEachIndexed { i, key ->
+                val m = mu[i]; val s = sd[i]
+                val lo = if (s > 0) m - 3 * s else m * 0.5f
+                val hi = if (s > 0) m + 3 * s else m * 1.5f
+                clipObj.put(key, JSONArray().apply { put(lo.toDouble()); put(hi.toDouble()) })
             }
             root.put("clip_bounds", clipObj)
-        }
 
+            /* minimal stats subset for rule */
+            root.put("stats", JSONObject().apply {
+                put("hr_mean", JSONObject().apply { put("mu", mu[2].toDouble()); put("sigma", sd[2].toDouble()) })
+                put("pnn50",   JSONObject().apply { put("mu", mu[0].toDouble()); put("sigma", sd[0].toDouble()) })
+                put("kurtosis",JSONObject().apply { put("mu", mu[8].toDouble()); put("sigma", sd[8].toDouble()) })
+            })
+        }
         file.writeText(root.toString())
     }
 
-    /**
-     * 2) Service 라이프사이클 오버라이드
-     */
-
-    override fun onDestroy() {
-        super.onDestroy()
-        stopSensors()    // 센서 해제
-        scope.cancel()   // 코루틴 취소
+    /* ───────────── raw green μ/σ loader ───────────── */
+    private fun loadRawStats() {
+        try {
+            val fp = File(filesDir, "calib.json"); if (!fp.exists()) return
+            JSONObject(fp.readText()).optJSONObject("stats_raw")?.optJSONObject("green")?.let {
+                gMu = it.optDouble("mu", 0.0).toFloat()
+                gSigma = it.optDouble("sigma", 1.0).toFloat()
+            }
+        } catch (_: Exception) {}
     }
 
-
-    /**
-     * 3) 알림(Notification) 채널 생성 및 알림 빌더
-     */
+    /* ───────────── Notification helpers ───────────── */
     private fun createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val nm = getSystemService(NotificationManager::class.java)
-            nm.createNotificationChannel(
-                NotificationChannel(
-                    NOTI_CH,
-                    "PPG CalibRule",
-                    NotificationManager.IMPORTANCE_LOW
-                )
-            )
+            nm.createNotificationChannel(NotificationChannel(NOTI_CH, "PPG CalibRule", NotificationManager.IMPORTANCE_LOW))
         }
     }
+    private fun notif(msg: String) = NotificationCompat.Builder(this, NOTI_CH)
+        .setSmallIcon(android.R.drawable.ic_media_play)
+        .setContentTitle("PPG")
+        .setContentText(msg)
+        .build()
 
-    private fun notif(msg: String): Notification =
-        NotificationCompat.Builder(this, NOTI_CH)
-            .setSmallIcon(android.R.drawable.ic_media_play)
-            .setContentTitle("PPG")
-            .setContentText(msg)
-            .build()
+    /* ───────────── life‑cycle ───────────── */
+    override fun onDestroy() { super.onDestroy(); stopSensors(); scope.cancel() }
 }
