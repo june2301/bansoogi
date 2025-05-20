@@ -20,7 +20,7 @@ sealed class ActivityState {
     object Unknown                  : ActivityState()
 }
 
-enum class StaticType { LYING, SITTING, STANDING }                 // (추후 구현)
+//enum class StaticType { LYING, SITTING, STANDING }                 // (추후 구현)
 
 /* ─────────────── PHONE_USAGE DTO ─────────────── */
 data class PhoneUsageDto(val isUsing: Boolean)
