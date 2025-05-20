@@ -3,6 +3,8 @@ import json
 import numpy as np
 import pandas as pd
 from scipy.signal import butter, filtfilt, find_peaks
+from scipy.stats import skew, kurtosis
+
 
 def load_ppg_files(base_dir):
     """
@@ -33,6 +35,26 @@ def load_ppg_files(base_dir):
             records.append(rec)
     return records
 
+def crest_dwell_pwtf(sig, peaks, troughs, fs=25):
+    """
+    Extract crest time, dwell time, and pulse width time fraction (pwtf) from signal.
+    """
+    triples = []
+    for p in peaks:
+        left = troughs[troughs < p]
+        right = troughs[troughs > p]
+        if left.size and right.size:
+            triples.append((left.max(), p, right.min()))
+
+    if triples:
+        crest_t = np.mean([(p - f) / fs for f, p, _ in triples])
+        dwell_t = np.mean([(n - f) / fs for f, _, n in triples])
+        pwtf = crest_t / dwell_t if dwell_t else 0
+    else:
+        crest_t, dwell_t, pwtf = np.nan, np.nan, np.nan
+
+    return crest_t, dwell_t, pwtf
+
 def butter_bandpass_filter(signal, fs, lowcut=0.5, highcut=5.0, order=3):
     nyq = 0.5 * fs
     low = lowcut / nyq
@@ -59,44 +81,48 @@ def preprocess_signal(ts, sig, warmup_sec=5, fs=25, apply_filter=True):
     
     return ts_clean, sig_clean
 
-def extract_features(ts, sig, fs=25):
-    """
-    Extract time-domain & HRV features from a PPG segment.
-    """
-    # Basic stats
+def full_extract_features(ts, sig, fs=25):
     feats = {
-        'n_samples': len(sig),
         'mean': np.mean(sig),
         'std': np.std(sig),
-        'min': np.min(sig),
+        'rms': np.sqrt(np.mean(sig**2)),
         'max': np.max(sig),
-        'diff_std': np.std(np.diff(sig)),
-        'skew': pd.Series(sig).skew(),
-        'kurtosis': pd.Series(sig).kurtosis(),
+        'min': np.min(sig),
+        'zc': ((sig[:-1] * sig[1:]) < 0).sum(),
+        'ssc': np.sum(np.diff(np.sign(np.diff(sig))) != 0),
+        'wl': np.sum(np.abs(np.diff(sig))),
+        'kurt': kurtosis(sig),
+        'skew': skew(sig)
     }
 
-    # Peak detection for HRV
-    peaks, _ = find_peaks(sig, distance=fs*0.4)  # at least 0.4s between peaks
-    rr_intervals = np.diff(ts[peaks]) / 1000.0  # in seconds
-    if len(rr_intervals) > 1:
+    peaks, _ = find_peaks(sig, distance=fs*0.4)
+    troughs, _ = find_peaks(-sig, distance=fs*0.4)
+    rr = np.diff(ts[peaks]) / 1000.0
+
+    if len(rr) > 1:
         feats.update({
+            'pnn50': np.sum(np.abs(np.diff(rr)) > 0.05) / len(rr),
+            'rr_mean': np.mean(rr),
+            'hr_mean': 60. / np.mean(rr),
+            'rmssd': np.sqrt(np.mean(np.diff(rr)**2)),
             'n_peaks': len(peaks),
-            'hr_mean': 60.0 / np.mean(rr_intervals),
-            'rr_mean': np.mean(rr_intervals),
-            'rr_std': np.std(rr_intervals),
-            'rmssd': np.sqrt(np.mean(np.diff(rr_intervals)**2)),
-            'pnn50': np.sum(np.abs(np.diff(rr_intervals)) > 0.05) / len(rr_intervals),
         })
     else:
         feats.update({
-            'n_peaks': len(peaks),
-            'hr_mean': np.nan,
-            'rr_mean': np.nan,
-            'rr_std': np.nan,
-            'rmssd': np.nan,
             'pnn50': np.nan,
+            'rr_mean': np.nan,
+            'hr_mean': np.nan,
+            'rmssd': np.nan,
+            'n_peaks': len(peaks),
         })
-    
+
+    crest_t, dwell_t, pwtf = crest_dwell_pwtf(sig, peaks, troughs, fs)
+    feats.update({
+        'crest_t': crest_t,
+        'dwell_t': dwell_t,
+        'pwtf': pwtf
+    })
+
     return feats
 
 def build_feature_dataframe(records, warmup_sec=5, fs=25, apply_filter=True):
@@ -108,7 +134,7 @@ def build_feature_dataframe(records, warmup_sec=5, fs=25, apply_filter=True):
         ts_clean, sig_clean = preprocess_signal(rec['ts'], rec['green'],
                                                 warmup_sec=warmup_sec, fs=fs,
                                                 apply_filter=apply_filter)
-        feats = extract_features(ts_clean, sig_clean, fs=fs)
+        feats = full_extract_features(ts_clean, sig_clean, fs=fs)
         feats.update({
             'subject': rec['subject'],
             'label': rec['label'],

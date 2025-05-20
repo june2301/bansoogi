@@ -26,7 +26,7 @@ warnings.filterwarnings("ignore")
 # ─────────────────────────── 설정 ───────────────────────────
 BASE_DIR   = pathlib.Path("recordings")   # JSON recordings 폴더 루트
 WIN_S      = 10                            # 윈도우 길이 (초)
-OVL        = 0.30                          # 윈도우 오버랩 비율 (30 %)
+OVL        = 0.00                          # 윈도우 오버랩 비율 (0 %)
 FS         = 25                            # 샘플링 주파수 (Hz)
 LABELS     = ['upright-sitting', 'supine-lying', 'standing']
 FEATURES   = [  # HRV‑10
@@ -46,6 +46,8 @@ def detrend(x: np.ndarray) -> np.ndarray:
 def bandpass(x: np.ndarray, lo=0.5, hi=5.0, fs=FS, order=2) -> np.ndarray:
     nyq = 0.5 * fs
     b, a = butter(order, [lo/nyq, hi/nyq], btype='band')
+    print('b =', [round(x, 8) for x in b])
+    print('a =', [round(x, 8) for x in a])
     return filtfilt(b, a, filtfilt(b, a, x))  # zero‑phase 4‑pole
 
 
@@ -149,11 +151,11 @@ if __name__ == '__main__':
     sigma_raw_new = float(raw_all.std(ddof=0)) if raw_all.size else 1.0
     calib['stats_raw'] = {'green': {'mu': mu_raw_new, 'sigma': sigma_raw_new}}
 
-    # -------- 3) 글로벌 feature 통계 재계산 (10‑90% 클램핑) --------
+    # -------- 3) 글로벌 feature 통계 재계산 (15‑95% 클램핑) --------
     stats = {}; clip = {}
     for f in FEATURES:
         s = df[f].astype(float).dropna()
-        lo, hi = s.quantile(0.10), s.quantile(0.90)
+        lo, hi = s.quantile(0.05), s.quantile(0.95)
         sc = s.clip(lo, hi)
         stats[f] = {'mu': float(sc.mean()), 'sigma': float(sc.std(ddof=0))}
         clip[f]  = [float(lo), float(hi)]
