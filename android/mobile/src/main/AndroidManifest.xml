@@ -46,6 +46,17 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".common.mobile.communication.receiver.MobileWearReceiverService"
+            android:enabled="true"
+            android:exported="true">
+        <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER"
+                    tools:ignore="WearableBindListener"/>
+            </intent-filter>
+        </service>
+
+
         <!-- ✅ 포그라운드 실행 -->
         <service
             android:name=".common.foreground.ForegroundService"

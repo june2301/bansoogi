@@ -1,6 +1,7 @@
 package com.ddc.bansoogi.activity
 
 import android.util.Log
+import com.ddc.bansoogi.common.mobile.communication.sender.BansoogiStateSender
 import com.ddc.bansoogi.main.ui.util.BansoogiState
 import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.sensor.AndroidSensorManager
@@ -180,6 +181,7 @@ class ActivityStateProcessor(
             val bansoogiState = newState.toBansoogiState(isPhoneUsing)
             CoroutineScope(Dispatchers.Main).launch {
                 BansoogiStateHolder.updateWithMobile(sensorManager.context, bansoogiState)
+                BansoogiStateSender.send(sensorManager.context, bansoogiState)
             }
         }
     }
