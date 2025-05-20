@@ -1,6 +1,5 @@
 package com.ddc.bansoogi.common.util.health
 
-import android.util.Log
 import com.ddc.bansoogi.common.data.model.TodayRecordModel
 
 object EnergyUtil {
@@ -21,11 +20,15 @@ object EnergyUtil {
         }
 
         addedEnergy += (todayRecordDto?.interactionCnt?.times(5) ?: 0)
+
         addedEnergy += (todayRecordDto?.phoneOffCnt?.times(10) ?: 0)
+        addedEnergy += (todayRecordDto?.standUpCnt?.times(10) ?: 0)
+        addedEnergy += (todayRecordDto?.stretchCnt?.times(10) ?: 0)
 
         addedEnergy += calculateStep(healthData.step.toInt())
         addedEnergy += calculateFloorsClimbed(healthData.floorsClimbed.toInt())
         addedEnergy += calculateExercise(healthData.exerciseTime)
+
         return addedEnergy
     }
 

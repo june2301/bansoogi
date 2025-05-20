@@ -19,12 +19,11 @@ class RecordedReport : RealmObject {
     var lyingTime: Int = 0
     var sittingTime: Int = 0
     var phoneTime: Int = 0
-    var sleepTime: Int? = null
 
     var walkCount: Int = 0
-    var runTime: Int = 0
-    var exerciseTime: Int = 0
     var stairsClimbed: Int = 0
+    var sleepTime: Int? = 0
+    var exerciseTime: Int = 0
 
     var breakfast: Boolean? = false
     var lunch: Boolean? = false

@@ -3,6 +3,7 @@ package com.ddc.bansoogi.phoneUsage
 import android.util.Log
 import com.ddc.bansoogi.common.data.model.ActivityLogModel
 import com.ddc.bansoogi.common.data.model.TodayRecordModel
+import com.ddc.bansoogi.common.util.health.EnergyManager
 
 object PhoneUsageEnergyUtil {
 
@@ -14,6 +15,7 @@ object PhoneUsageEnergyUtil {
 
         if (recordId != null) {
             todayModel.updatePhoneOff(recordId)
+            EnergyManager().energyRecalcAndSave()
 
             logModel.createActivicyLog("PHONE_OFF", "PHONE_IN_USE", durationTime)
         } else {

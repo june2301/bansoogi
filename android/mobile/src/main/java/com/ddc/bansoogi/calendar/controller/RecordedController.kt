@@ -19,17 +19,17 @@ class RecordedController {
         todayRecordDto: TodayRecordDto,
         bansoogiIdData: Int,
         walkCountData: Int,
-        runTimeData: Int,
-        exerciseTimeData: Int,
-        stairsClimbedData: Int
+        stairsClimbedData: Int,
+        sleepTimeData: Int,
+        exerciseTimeData: Int
     ) {
         model.createRecordedReport(
             todayRecordDto,
             bansoogiIdData,
             walkCountData,
-            runTimeData,
-            exerciseTimeData,
-            stairsClimbedData
+            stairsClimbedData,
+            sleepTimeData,
+            exerciseTimeData
         )
     }
 }

@@ -58,9 +58,6 @@ class TodayRecordModel {
     suspend fun updatePhoneOff(recordId: ObjectId) {
         // 핸드폰 off 횟수 증가
         dataSource.updatePhoneOffCnt(recordId)
-
-        // 에너지 점수 증가
-        dataSource.updateEnergy(recordId, 10)
     }
 
     suspend fun updatePhoneTime(time: Int) {

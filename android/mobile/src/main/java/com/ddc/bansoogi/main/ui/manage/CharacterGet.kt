@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -16,8 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
+import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import com.ddc.bansoogi.main.controller.CharacterGetController
 import com.ddc.bansoogi.main.controller.TodayRecordController
@@ -28,7 +31,13 @@ import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 
 @Composable
-fun CharacterGetScreen(navController: NavController) {
+fun CharacterGetScreen(
+    navController: NavController,
+    walk: Int,
+    stairs: Int,
+    sleep: Int,
+    exercise: Int
+) {
     val context = LocalContext.current
     val controller = remember { CharacterGetController() }
     val todayRecordController = remember {
@@ -57,8 +66,9 @@ fun CharacterGetScreen(navController: NavController) {
     }
 
     // isViewed 상태 조회
+    var todayRecord by remember { mutableStateOf<TodayRecordDto?>(null) }
     LaunchedEffect(Unit) {
-        val todayRecord = todayRecordController.getTodayRecordSync()
+        todayRecord = todayRecordController.getTodayRecordSync()
         isViewedAlready = todayRecord?.isViewed ?: true
         todayRecordId = todayRecord?.recordId
     }
@@ -75,8 +85,23 @@ fun CharacterGetScreen(navController: NavController) {
         if (isAnimationStarted && selectedCharacter != null) {
             delay(1250)
             currentStage = 1
+            
             withContext(Dispatchers.IO) {
+                // 랜덤 캐릭터 저장
                 controller.saveUnlockedCharacter(selectedCharacter!!)
+                
+                // close 처리
+                todayRecordController.updateIsClosed()
+                
+                // 캘린더에 저장
+                RecordedController().createRecordedReport(
+                    todayRecord!!,
+                    selectedCharacter!!.bansoogiId,
+                    walk,
+                    stairs,
+                    sleep,
+                    exercise
+                )
             }
         }
     }
@@ -94,7 +119,9 @@ fun CharacterGetScreen(navController: NavController) {
                         if (!isViewedAlready) {
                             todayRecordController.updateIsViewed(todayRecordId!!, true)
                         }
-                        navController.navigate("collection")
+                        navController.navigate(NavRoutes.COLLECTION) {
+                            popUpTo(0) { inclusive = true }
+                        }
                     }
                 }
             }
@@ -119,7 +146,7 @@ fun CharacterGetScreen(navController: NavController) {
                         context = context,
                         spriteSheetName = "bansoogi_basic_sheet.png",
                         jsonName = "bansoogi_default_profile.json",
-                        modifier = Modifier.size(180.dp)
+                        modifier = Modifier.size(180.dp).scale(1.8f)
                     )
                 }
                 !isViewedAlready && currentStage == 0 -> {
@@ -127,7 +154,7 @@ fun CharacterGetScreen(navController: NavController) {
                         context = context,
                         spriteSheetName = "bansoogi_explode.png",
                         jsonName = "bansoogi_explode.json",
-                        modifier = Modifier.size(180.dp)
+                        modifier = Modifier.size(180.dp).scale(1.8f)
                     )
                 }
                 currentStage == 1 && selectedCharacter != null -> {
@@ -135,7 +162,7 @@ fun CharacterGetScreen(navController: NavController) {
                         context = context,
                         spriteSheetName = "${selectedCharacter!!.gifUrl}_sheet.png",
                         jsonName = "${selectedCharacter!!.imageUrl}.json",
-                        modifier = Modifier.size(180.dp)
+                        modifier = Modifier.size(180.dp).scale(1.8f)
                     )
                 }
             }
