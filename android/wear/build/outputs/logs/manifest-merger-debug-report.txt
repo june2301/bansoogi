@@ -1,0 +1,1033 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:2:1-122:12
+INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:2:1-122:12
+INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:2:1-122:12
+INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:2:1-122:12
+MERGED from [com.google.android.horologist:horologist-compose-tools:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a845808d0c22cb9e98b225714e7a8900\transformed\horologist-compose-tools-0.6.17\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.wear.tiles:tiles-renderer:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\5cf28634c6a404b65666753269aa1257\transformed\tiles-renderer-1.4.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.tiles:tiles-tooling-preview:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1d3a47f4747b9baaad02d8722c12d56f\transformed\tiles-tooling-preview-1.4.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.tiles:tiles-material:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\96de7e20e74f04331e1cdad715635a9e\transformed\tiles-material-1.4.0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.android.horologist:horologist-tiles:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\fe51923e85f0cf6ac2d8b58ce09e81cc\transformed\horologist-tiles-0.6.17\AndroidManifest.xml:17:1-32:12
+MERGED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:2:1-19:12
+MERGED from [androidx.wear.tiles:tiles-tooling:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f2a2f8853edeefd5e8f548e534ccc8fc\transformed\tiles-tooling-1.4.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.compose:compose-navigation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\923389ab16851cb9090c3f5087e34406\transformed\compose-navigation-1.4.0-beta03\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.compose:compose-material-core:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f9335941b0af186fa366a8e37eb9c357\transformed\compose-material-core-1.4.0-beta03\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.compose:compose-foundation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\02477cf17a4c9d934e2f684c52d56782\transformed\compose-foundation-1.4.0-beta03\AndroidManifest.xml:17:1-28:12
+MERGED from [androidx.wear.compose:compose-material:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ef250214c8e5372ad768cdbdeb93b042\transformed\compose-material-1.4.0-beta03\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.compose:compose-ui-tooling:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\cc1ec38c77a0e409fa2f08ca91718eb2\transformed\compose-ui-tooling-1.4.0-beta03\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear:wear-tooling-preview:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1edc73b08e06fe78de65cfb9d7be77ae\transformed\wear-tooling-preview-1.0.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-common:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\48ced1bd03257a24ec9d4e775724612c\transformed\navigation-common-2.7.5\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.navigation:navigation-runtime:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7bd36e28e2b2e6a7bde3b91564c1c018\transformed\navigation-runtime-2.7.5\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c02f560dc99a24959eefc65df5d8a6ad\transformed\navigation-common-ktx-2.7.5\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8b545c2f445eadd70da85f5163f2d73\transformed\navigation-runtime-ktx-2.7.5\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-compose:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\dd1851ae8e1af4fc17948dd1c6813d71\transformed\navigation-compose-2.7.5\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material3:material3-android:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ac7f42795682ac3752a247050ae601a8\transformed\material3-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.material:material-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\88e32dbbee48503d96378461ee9b83ce\transformed\material-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8798216dfed25be10462e9682b2a033a\transformed\foundation-layout-release\AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil-compose:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2bcc067b3340e2e342d930dabc0c3f1\transformed\coil-compose-2.7.0\AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil-compose-base:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f9ba9c448590b8e3e15389a450fa6789\transformed\coil-compose-base-2.7.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-ripple-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0953d5504d496ecef95886c435344638\transformed\material-ripple-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9b97ce98d02e57658aaf5bc0bcb79efc\transformed\foundation-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-core-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b238b2aed2aa79a8129a4caf55eb8df1\transformed\animation-core-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c9444d05c30155ce3700a6298e5f5e1b\transformed\animation-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-tooling-data-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\50aa16887220082ee7732def50ea87c7\transformed\ui-tooling-data-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-unit-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0c4172d2f177c9f247f42719180afc7c\transformed\ui-unit-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-geometry-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\bb328f27874e735236e6f20d337ac865\transformed\ui-geometry-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-util-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0fa7a1e30fa05711f47dfb019dec8182\transformed\ui-util-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-text-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\00da9bc8746ca8393ecdeaa2cee557c8\transformed\ui-text-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\560c43dc1853f5ec5b0e697eff4ee2f7\transformed\ui-tooling-preview-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:17:1-28:12
+MERGED from [androidx.compose.ui:ui-graphics-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\cd4912cd634a1a8b70209ccc4111ee69\transformed\ui-graphics-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:17:1-28:12
+MERGED from [androidx.compose.material:material-icons-extended-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d77ab1d758967c6d013b70c5607458ae\transformed\material-icons-extended-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-icons-core-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\52e33ad033bc88fec05ad1ca083b7644\transformed\material-icons-core-release\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\58a5a6d514c030e05a1f0d33212db67c\transformed\accompanist-drawablepainter-0.32.0\AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.work:work-runtime-ktx:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\919165d6ebe945d4994b3c5e0a0a0509\transformed\work-runtime-ktx-2.9.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:17:1-145:12
+MERGED from [androidx.wear.watchface:watchface-complications-data:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c863bc5a39a2b2e17f7c61cb1917f514\transformed\watchface-complications-data-1.2.1\AndroidManifest.xml:2:1-13:12
+MERGED from [androidx.wear.watchface:watchface-complications:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0a2e244fc1d75af084451047f14897b1\transformed\watchface-complications-1.2.1\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\446e44bde9215b00a8ad5eacac9aaf41\transformed\watchface-complications-data-source-ktx-1.2.1\AndroidManifest.xml:2:1-13:12
+MERGED from [androidx.wear.watchface:watchface-complications-data-source:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\36f46b40a7f41edd54976b7d27a2b552\transformed\watchface-complications-data-source-1.2.1\AndroidManifest.xml:2:1-13:12
+MERGED from [androidx.preference:preference:1.1.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\80b794c52735204ac79d5f754eff301b\transformed\preference-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [io.coil-kt:coil-gif:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\77b0cbe67d9a93abdfcea1de3aa31a3a\transformed\coil-gif-2.5.0\AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2f9ab6d4b667ac0124aceaf1b66e4e46\transformed\coil-2.7.0\AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil-base:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\3c458b4193d62510523fc039f15135de\transformed\coil-base-2.7.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\e9d57326fcda82abb16676dad651a9f5\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\4f2cf01e70192e778f80e728863ddeeb\transformed\appcompat-1.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.android.gms:play-services-wearable:19.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\530697b57eb81da4d8a46859aab12a31\transformed\play-services-wearable-19.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.gms:play-services-tasks:18.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c8ba04bed96939f9c266bef4ae73dfda\transformed\play-services-tasks-18.2.0\AndroidManifest.xml:2:1-5:12
+MERGED from [com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:2:1-9:12
+MERGED from [androidx.wear.protolayout:protolayout-material-core:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eb9e26eda374ef9539fd54df2350a9c3\transformed\protolayout-material-core-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.protolayout:protolayout-material:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6811922c80b624a651b25b4bc7ecaa3b\transformed\protolayout-material-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.protolayout:protolayout-expression:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\5721323baaa81a6f502152a4ae56663a\transformed\protolayout-expression-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.protolayout:protolayout:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7a0ec706d11398d9a1cf5c679ef82471\transformed\protolayout-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.protolayout:protolayout-expression-pipeline:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f3203a04de8594832210869f176e2447\transformed\protolayout-expression-pipeline-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear.protolayout:protolayout-renderer:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7867be93fcb6721a788a636968c44c83\transformed\protolayout-renderer-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.wear:wear:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c018f1af64447e8636ee39ffd77108a3\transformed\wear-1.3.0\AndroidManifest.xml:17:1-28:12
+MERGED from [androidx.fragment:fragment:1.3.6] C:\Users\lasni\.gradle\caches\8.11.1\transforms\4545e50babff06669a334061ddad27b8\transformed\fragment-1.3.6\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.activity:activity:1.10.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f9a917d790e6215b062e5af48a3e3386\transformed\activity-1.10.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\76db12eaf74354f22b3174444a339785\transformed\savedstate-ktx-1.2.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\120c40bd7a2c24ee7e06a640a7834ad2\transformed\savedstate-1.2.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f2bc33c30ea161157072430bba43e0b9\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8ffb79abba7ac603d38caab709680c4\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6003ce7c971949110cba34a7f502627b\transformed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8cf5dddbfdfd22eafd25b6399c80c310\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\659b3d01cf9347f372772dfa58f8d117\transformed\lifecycle-livedata-core-ktx-2.8.3\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a39d987ad86c1d1cd200f2e3931b48b6\transformed\lifecycle-viewmodel-2.8.3\AndroidManifest.xml:2:1-5:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\26926414ca58701b28e0f5d8e3cb4b92\transformed\lifecycle-viewmodel-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-compose-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\08c4a98ec56186f624aee1b2d88a745b\transformed\lifecycle-runtime-compose-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d80c5eaba4ed162e0ddd2c8659fa01ac\transformed\recyclerview-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1481074c5e3f428bdd81b79f3d955c82\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2c89a951b3a5f6152881a7332ce7fb7b\transformed\autofill-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.graphics:graphics-path:1.0.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\83df8d83672afa2eb2c11270221078dc\transformed\graphics-path-1.0.1\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b570dfe607c1f4213a26773feaa37d08\transformed\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7f1b939573815d07a3fb3a63284b1901\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a585462b5b36f4b1a261d10205392936\transformed\customview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\75cb5ed31cd311268b9ecc3331bab97e\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable-seekable:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\09336c9a4c0fce3624a3a2157ef24040\transformed\vectordrawable-seekable-1.0.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9a627147c25146b3b0e250c51401799b\transformed\vectordrawable-1.2.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.core:core-animation:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\67a61c6f86004002252ceae4d63f02d3\transformed\core-animation-1.0.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7170df74b114f0cb0e0458f6a2aa29e3\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.core:core-ktx:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\103cb4ea406a52646ffc8c0022c8c919\transformed\core-ktx-1.13.1\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9415b775544ae45d63d6f843832513dc\transformed\lifecycle-runtime-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a222984f6619e6b8f427b8f5caeb3753\transformed\lifecycle-livedata-core-2.8.3\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c2b3e0c90263ef84ff0fdd4cd0950e59\transformed\lifecycle-viewmodel-savedstate-2.8.3\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b74fe219aca701bb88d5e896085c3c16\transformed\lifecycle-livedata-2.8.3\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\355a1428ba929dbdf4f76d5cf3b7b000\transformed\lifecycle-viewmodel-ktx-2.8.3\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d804f40243f21763f86bb16411c617cd\transformed\lifecycle-runtime-ktx-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-service:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9f92b62912ed792d5f6987b93f04d3fa\transformed\lifecycle-service-2.8.3\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7086b2a43a49c1dbd55d3c14a94c03ca\transformed\lifecycle-viewmodel-compose-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\cd4c04a07f88b8544332fa899692b8b9\transformed\ui-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity-ktx:1.10.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c6a92d659dadff878a04c9358734e3cd\transformed\activity-ktx-1.10.1\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity-compose:1.10.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1cd10c58ba5a19d4abeaf5f977b31f12\transformed\activity-compose-1.10.1\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f1dfd5dd4a9f444f2ce929087cd97a44\transformed\core-splashscreen-1.0.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.datastore:datastore-preferences:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2f3e8d5df01f7ef3880a6cb2c9f0d7a1\transformed\datastore-preferences-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c9e078062cd51eb2e6949e321111ff7c\transformed\runtime-saveable-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.runtime:runtime-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\4fede01d8678c62b0180b526bd40f0d4\transformed\runtime-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.room:room-ktx:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\032d2324b668f8cc9fd4268f3b8c778b\transformed\room-ktx-2.5.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:17:1-31:12
+MERGED from [androidx.annotation:annotation-experimental:1.4.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\644059c6a0e49f1e8d19496520e77046\transformed\annotation-experimental-1.4.1\AndroidManifest.xml:2:1-7:12
+MERGED from [io.realm.kotlin:library-base-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\e3c6c04411eb1497eacc46f63dbaa6aa\transformed\library-base-release\AndroidManifest.xml:18:1-26:12
+MERGED from [androidx.datastore:datastore:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8203d490c33f3a3c3a9bee085985e1ad\transformed\datastore-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:17:1-55:12
+MERGED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:18:1-38:12
+MERGED from [org.mongodb.kbson:kbson-android-debug:0.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a0cc763c1d8c01e5f4cf4ff9769d1133\transformed\kbson-debug\AndroidManifest.xml:18:1-27:12
+MERGED from [androidx.sqlite:sqlite-framework:2.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1b712ffbf4215fa45c1f9a576899d00e\transformed\sqlite-framework-2.3.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core-viewtree:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b5b741651b662c8db7d581fd0881da1f\transformed\core-viewtree-1.0.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.sqlite:sqlite:2.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b976385f4af33936cbb1bc9536b70919\transformed\sqlite-2.3.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6d0603a2fb7b423c1e66cc8d7ee428df\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\967b0d56938cd8b2b55176b0771457e4\transformed\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2f90d917409c14783a85f2bfc35a582\transformed\startup-runtime-1.1.1\AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\13783858294dbb2ab07b1083040d472d\transformed\tracing-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6fb65859b4ff9d214bb88f81d17d1545\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.exifinterface:exifinterface:1.3.7] C:\Users\lasni\.gradle\caches\8.11.1\transforms\618cea4d84fa38ad7203a8ab744b2913\transformed\exifinterface-1.3.7\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0bf820bef5af3a826c473960f57831d5\transformed\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0ec7626ec1a36e12e55b0862ea3dcb08\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0d46f10e2a9a0df97c5ef7678433c142\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\074d0489389f6516cd7a7592427965a1\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.getkeepsafe.relinker:relinker:1.4.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\56591263d8499bc1d6ed052993a8308d\transformed\relinker-1.4.5\AndroidManifest.xml:2:1-7:12
+	package
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:4:5-31
+		INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:2:11-57
+	android:versionCode
+		INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:3:5-63
+uses-feature#android.hardware.type.watch
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:6:5-64
+MERGED from [com.google.android.horologist:horologist-compose-tools:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a845808d0c22cb9e98b225714e7a8900\transformed\horologist-compose-tools-0.6.17\AndroidManifest.xml:25:5-64
+MERGED from [com.google.android.horologist:horologist-compose-tools:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a845808d0c22cb9e98b225714e7a8900\transformed\horologist-compose-tools-0.6.17\AndroidManifest.xml:25:5-64
+MERGED from [com.google.android.horologist:horologist-tiles:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\fe51923e85f0cf6ac2d8b58ce09e81cc\transformed\horologist-tiles-0.6.17\AndroidManifest.xml:30:5-64
+MERGED from [com.google.android.horologist:horologist-tiles:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\fe51923e85f0cf6ac2d8b58ce09e81cc\transformed\horologist-tiles-0.6.17\AndroidManifest.xml:30:5-64
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:6:19-61
+uses-permission#android.permission.WAKE_LOCK
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:8:5-68
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:23:5-68
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:23:5-68
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:8:22-65
+uses-permission#android.permission.INTERNET
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:9:5-67
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:9:22-64
+uses-permission#android.permission.BLUETOOTH
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:10:5-68
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:10:22-65
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:11:5-74
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:11:22-71
+uses-permission#com.google.android.gms.permission.BIND_LISTENER
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:12:5-87
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:12:22-84
+uses-permission#android.permission.POST_NOTIFICATIONS
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:13:5-77
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:13:22-74
+uses-permission#android.permission.SCHEDULE_EXACT_ALARM
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:14:5-78
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:14:22-76
+uses-permission#android.permission.FOREGROUND_SERVICE
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:15:5-77
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:26:5-77
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:26:5-77
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:15:22-74
+uses-permission#android.permission.FOREGROUND_SERVICE_HEALTH
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:16:5-18:32
+	tools:targetApi
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:18:9-29
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:17:9-68
+uses-permission#android.permission.BODY_SENSORS
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:19:5-71
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:19:22-68
+uses-permission#android.permission.ACTIVITY_RECOGNITION
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:20:5-79
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:20:22-76
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:21:5-81
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:25:5-81
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:25:5-81
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:21:22-78
+application
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:23:5-120:19
+INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:23:5-120:19
+MERGED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:13:5-17:19
+MERGED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:13:5-17:19
+MERGED from [androidx.wear.compose:compose-foundation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\02477cf17a4c9d934e2f684c52d56782\transformed\compose-foundation-1.4.0-beta03\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.wear.compose:compose-foundation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\02477cf17a4c9d934e2f684c52d56782\transformed\compose-foundation-1.4.0-beta03\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:28:5-143:19
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:28:5-143:19
+MERGED from [androidx.wear.watchface:watchface-complications-data:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c863bc5a39a2b2e17f7c61cb1917f514\transformed\watchface-complications-data-1.2.1\AndroidManifest.xml:7:5-11:19
+MERGED from [androidx.wear.watchface:watchface-complications-data:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c863bc5a39a2b2e17f7c61cb1917f514\transformed\watchface-complications-data-1.2.1\AndroidManifest.xml:7:5-11:19
+MERGED from [androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\446e44bde9215b00a8ad5eacac9aaf41\transformed\watchface-complications-data-source-ktx-1.2.1\AndroidManifest.xml:7:5-11:19
+MERGED from [androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\446e44bde9215b00a8ad5eacac9aaf41\transformed\watchface-complications-data-source-ktx-1.2.1\AndroidManifest.xml:7:5-11:19
+MERGED from [androidx.wear.watchface:watchface-complications-data-source:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\36f46b40a7f41edd54976b7d27a2b552\transformed\watchface-complications-data-source-1.2.1\AndroidManifest.xml:7:5-11:19
+MERGED from [androidx.wear.watchface:watchface-complications-data-source:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\36f46b40a7f41edd54976b7d27a2b552\transformed\watchface-complications-data-source-1.2.1\AndroidManifest.xml:7:5-11:19
+MERGED from [com.google.android.gms:play-services-wearable:19.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\530697b57eb81da4d8a46859aab12a31\transformed\play-services-wearable-19.0.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-wearable:19.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\530697b57eb81da4d8a46859aab12a31\transformed\play-services-wearable-19.0.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:4:5-6:19
+MERGED from [com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:4:5-6:19
+MERGED from [com.google.android.gms:play-services-tasks:18.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c8ba04bed96939f9c266bef4ae73dfda\transformed\play-services-tasks-18.2.0\AndroidManifest.xml:4:5-20
+MERGED from [com.google.android.gms:play-services-tasks:18.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c8ba04bed96939f9c266bef4ae73dfda\transformed\play-services-tasks-18.2.0\AndroidManifest.xml:4:5-20
+MERGED from [com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:5:5-7:19
+MERGED from [com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:5:5-7:19
+MERGED from [androidx.wear:wear:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c018f1af64447e8636ee39ffd77108a3\transformed\wear-1.3.0\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.wear:wear:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c018f1af64447e8636ee39ffd77108a3\transformed\wear-1.3.0\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:28:5-89
+MERGED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:28:5-89
+MERGED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:23:5-29:19
+MERGED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:23:5-29:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:23:5-53:19
+MERGED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:26:5-36:19
+MERGED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:26:5-36:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6d0603a2fb7b423c1e66cc8d7ee428df\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6d0603a2fb7b423c1e66cc8d7ee428df\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2f90d917409c14783a85f2bfc35a582\transformed\startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2f90d917409c14783a85f2bfc35a582\transformed\startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
+	android:extractNativeLibs
+		INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+	android:supportsRtl
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:27:9-35
+	android:label
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:26:9-41
+	android:icon
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:25:9-43
+	android:allowBackup
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:24:9-35
+	android:theme
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:28:9-59
+service#com.ddc.bansoogi.complication.MainComplicationService
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:29:9-44:19
+	android:label
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:32:13-55
+	android:exported
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:31:13-36
+	android:permission
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:33:13-99
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:30:13-65
+intent-filter#action:name:android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:34:13-36:29
+action#android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:35:17-116
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:35:25-113
+meta-data#android.support.wearable.complications.SUPPORTED_TYPES
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:38:13-40:46
+	android:value
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:40:17-43
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:39:17-86
+meta-data#android.support.wearable.complications.UPDATE_PERIOD_SECONDS
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:41:13-43:37
+	android:value
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:43:17-34
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:42:17-92
+service#com.ddc.bansoogi.tile.MainTileService
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:45:9-57:19
+	android:label
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:48:13-47
+	android:exported
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:47:13-36
+	android:permission
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:49:13-91
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:46:13-49
+intent-filter#action:name:androidx.wear.tiles.action.BIND_TILE_PROVIDER
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:50:13-52:29
+action#androidx.wear.tiles.action.BIND_TILE_PROVIDER
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:51:17-88
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:51:25-85
+meta-data#androidx.wear.tiles.PREVIEW
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:54:13-56:61
+	android:resource
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:56:17-58
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:55:17-59
+service#com.ddc.bansoogi.common.mobile.communication.receiver.MobileToWearReceiverService
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:60:9-68:19
+	android:enabled
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:62:13-35
+	android:exported
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:63:13-36
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:61:13-93
+intent-filter#action:name:com.google.android.gms.wearable.BIND_LISTENER
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:64:13-67:29
+action#com.google.android.gms.wearable.BIND_LISTENER
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:65:17-66:59
+	tools:ignore
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:66:21-56
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:65:25-85
+service#com.ddc.bansoogi.common.notification.MyInfoListenerService
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:71:9-79:19
+	android:enabled
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:73:13-35
+	android:exported
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:74:13-36
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:72:13-70
+service#com.ddc.bansoogi.sensor.SensorForegroundService
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:81:9-84:54
+	android:exported
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:83:13-37
+	android:foregroundServiceType
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:84:13-51
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:82:13-59
+receiver#com.ddc.bansoogi.sensor.BootCompletedReceiver
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:86:9-92:20
+	android:exported
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:88:13-37
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:87:13-57
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:89:13-91:29
+action#android.intent.action.BOOT_COMPLETED
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:90:17-79
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:90:25-76
+uses-library#com.google.android.wearable
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:94:9-96:39
+MERGED from [androidx.wear.watchface:watchface-complications-data:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c863bc5a39a2b2e17f7c61cb1917f514\transformed\watchface-complications-data-1.2.1\AndroidManifest.xml:8:9-10:40
+MERGED from [androidx.wear.watchface:watchface-complications-data:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c863bc5a39a2b2e17f7c61cb1917f514\transformed\watchface-complications-data-1.2.1\AndroidManifest.xml:8:9-10:40
+MERGED from [androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\446e44bde9215b00a8ad5eacac9aaf41\transformed\watchface-complications-data-source-ktx-1.2.1\AndroidManifest.xml:8:9-10:40
+MERGED from [androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\446e44bde9215b00a8ad5eacac9aaf41\transformed\watchface-complications-data-source-ktx-1.2.1\AndroidManifest.xml:8:9-10:40
+MERGED from [androidx.wear.watchface:watchface-complications-data-source:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\36f46b40a7f41edd54976b7d27a2b552\transformed\watchface-complications-data-source-1.2.1\AndroidManifest.xml:8:9-10:40
+MERGED from [androidx.wear.watchface:watchface-complications-data-source:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\36f46b40a7f41edd54976b7d27a2b552\transformed\watchface-complications-data-source-1.2.1\AndroidManifest.xml:8:9-10:40
+MERGED from [androidx.wear:wear:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c018f1af64447e8636ee39ffd77108a3\transformed\wear-1.3.0\AndroidManifest.xml:23:9-25:40
+MERGED from [androidx.wear:wear:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c018f1af64447e8636ee39ffd77108a3\transformed\wear-1.3.0\AndroidManifest.xml:23:9-25:40
+	android:required
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:96:13-36
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:95:13-55
+meta-data#com.google.android.wearable.standalone
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:101:9-103:36
+	android:value
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:103:13-33
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:102:13-66
+activity#com.ddc.bansoogi.presentation.MainActivity
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:105:9-115:20
+	android:exported
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:107:13-36
+	android:theme
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:109:13-62
+	android:taskAffinity
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:108:13-36
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:106:13-54
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:110:13-114:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:111:17-69
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:111:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:113:17-77
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:113:27-74
+receiver#com.ddc.bansoogi.common.notification.WatchDailyAlarmReceiver
+ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:117:9-119:40
+	android:exported
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:119:13-37
+	android:name
+		ADDED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:118:13-72
+uses-sdk
+INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml
+INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml
+MERGED from [com.google.android.horologist:horologist-compose-tools:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a845808d0c22cb9e98b225714e7a8900\transformed\horologist-compose-tools-0.6.17\AndroidManifest.xml:21:5-23:42
+MERGED from [com.google.android.horologist:horologist-compose-tools:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a845808d0c22cb9e98b225714e7a8900\transformed\horologist-compose-tools-0.6.17\AndroidManifest.xml:21:5-23:42
+MERGED from [androidx.wear.tiles:tiles-renderer:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\5cf28634c6a404b65666753269aa1257\transformed\tiles-renderer-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.tiles:tiles-renderer:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\5cf28634c6a404b65666753269aa1257\transformed\tiles-renderer-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.tiles:tiles-tooling-preview:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1d3a47f4747b9baaad02d8722c12d56f\transformed\tiles-tooling-preview-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.tiles:tiles-tooling-preview:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1d3a47f4747b9baaad02d8722c12d56f\transformed\tiles-tooling-preview-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.tiles:tiles-material:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\96de7e20e74f04331e1cdad715635a9e\transformed\tiles-material-1.4.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.wear.tiles:tiles-material:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\96de7e20e74f04331e1cdad715635a9e\transformed\tiles-material-1.4.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.horologist:horologist-tiles:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\fe51923e85f0cf6ac2d8b58ce09e81cc\transformed\horologist-tiles-0.6.17\AndroidManifest.xml:25:5-28:471
+MERGED from [com.google.android.horologist:horologist-tiles:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\fe51923e85f0cf6ac2d8b58ce09e81cc\transformed\horologist-tiles-0.6.17\AndroidManifest.xml:25:5-28:471
+MERGED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.tiles:tiles-tooling:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f2a2f8853edeefd5e8f548e534ccc8fc\transformed\tiles-tooling-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.tiles:tiles-tooling:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f2a2f8853edeefd5e8f548e534ccc8fc\transformed\tiles-tooling-1.4.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.compose:compose-navigation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\923389ab16851cb9090c3f5087e34406\transformed\compose-navigation-1.4.0-beta03\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.compose:compose-navigation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\923389ab16851cb9090c3f5087e34406\transformed\compose-navigation-1.4.0-beta03\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.compose:compose-material-core:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f9335941b0af186fa366a8e37eb9c357\transformed\compose-material-core-1.4.0-beta03\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.compose:compose-material-core:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f9335941b0af186fa366a8e37eb9c357\transformed\compose-material-core-1.4.0-beta03\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.compose:compose-foundation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\02477cf17a4c9d934e2f684c52d56782\transformed\compose-foundation-1.4.0-beta03\AndroidManifest.xml:20:5-44
+MERGED from [androidx.wear.compose:compose-foundation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\02477cf17a4c9d934e2f684c52d56782\transformed\compose-foundation-1.4.0-beta03\AndroidManifest.xml:20:5-44
+MERGED from [androidx.wear.compose:compose-material:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ef250214c8e5372ad768cdbdeb93b042\transformed\compose-material-1.4.0-beta03\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.compose:compose-material:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ef250214c8e5372ad768cdbdeb93b042\transformed\compose-material-1.4.0-beta03\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.compose:compose-ui-tooling:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\cc1ec38c77a0e409fa2f08ca91718eb2\transformed\compose-ui-tooling-1.4.0-beta03\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.compose:compose-ui-tooling:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\cc1ec38c77a0e409fa2f08ca91718eb2\transformed\compose-ui-tooling-1.4.0-beta03\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear:wear-tooling-preview:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1edc73b08e06fe78de65cfb9d7be77ae\transformed\wear-tooling-preview-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear:wear-tooling-preview:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1edc73b08e06fe78de65cfb9d7be77ae\transformed\wear-tooling-preview-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-common:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\48ced1bd03257a24ec9d4e775724612c\transformed\navigation-common-2.7.5\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-common:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\48ced1bd03257a24ec9d4e775724612c\transformed\navigation-common-2.7.5\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-runtime:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7bd36e28e2b2e6a7bde3b91564c1c018\transformed\navigation-runtime-2.7.5\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-runtime:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7bd36e28e2b2e6a7bde3b91564c1c018\transformed\navigation-runtime-2.7.5\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c02f560dc99a24959eefc65df5d8a6ad\transformed\navigation-common-ktx-2.7.5\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c02f560dc99a24959eefc65df5d8a6ad\transformed\navigation-common-ktx-2.7.5\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8b545c2f445eadd70da85f5163f2d73\transformed\navigation-runtime-ktx-2.7.5\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8b545c2f445eadd70da85f5163f2d73\transformed\navigation-runtime-ktx-2.7.5\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-compose:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\dd1851ae8e1af4fc17948dd1c6813d71\transformed\navigation-compose-2.7.5\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-compose:2.7.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\dd1851ae8e1af4fc17948dd1c6813d71\transformed\navigation-compose-2.7.5\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material3:material3-android:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ac7f42795682ac3752a247050ae601a8\transformed\material3-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material3:material3-android:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ac7f42795682ac3752a247050ae601a8\transformed\material3-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material:material-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\88e32dbbee48503d96378461ee9b83ce\transformed\material-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\88e32dbbee48503d96378461ee9b83ce\transformed\material-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8798216dfed25be10462e9682b2a033a\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8798216dfed25be10462e9682b2a033a\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2bcc067b3340e2e342d930dabc0c3f1\transformed\coil-compose-2.7.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2bcc067b3340e2e342d930dabc0c3f1\transformed\coil-compose-2.7.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose-base:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f9ba9c448590b8e3e15389a450fa6789\transformed\coil-compose-base-2.7.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose-base:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f9ba9c448590b8e3e15389a450fa6789\transformed\coil-compose-base-2.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0953d5504d496ecef95886c435344638\transformed\material-ripple-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0953d5504d496ecef95886c435344638\transformed\material-ripple-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9b97ce98d02e57658aaf5bc0bcb79efc\transformed\foundation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9b97ce98d02e57658aaf5bc0bcb79efc\transformed\foundation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b238b2aed2aa79a8129a4caf55eb8df1\transformed\animation-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b238b2aed2aa79a8129a4caf55eb8df1\transformed\animation-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c9444d05c30155ce3700a6298e5f5e1b\transformed\animation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c9444d05c30155ce3700a6298e5f5e1b\transformed\animation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-data-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\50aa16887220082ee7732def50ea87c7\transformed\ui-tooling-data-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-data-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\50aa16887220082ee7732def50ea87c7\transformed\ui-tooling-data-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0c4172d2f177c9f247f42719180afc7c\transformed\ui-unit-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0c4172d2f177c9f247f42719180afc7c\transformed\ui-unit-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\bb328f27874e735236e6f20d337ac865\transformed\ui-geometry-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\bb328f27874e735236e6f20d337ac865\transformed\ui-geometry-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0fa7a1e30fa05711f47dfb019dec8182\transformed\ui-util-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0fa7a1e30fa05711f47dfb019dec8182\transformed\ui-util-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\00da9bc8746ca8393ecdeaa2cee557c8\transformed\ui-text-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\00da9bc8746ca8393ecdeaa2cee557c8\transformed\ui-text-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\560c43dc1853f5ec5b0e697eff4ee2f7\transformed\ui-tooling-preview-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\560c43dc1853f5ec5b0e697eff4ee2f7\transformed\ui-tooling-preview-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\cd4912cd634a1a8b70209ccc4111ee69\transformed\ui-graphics-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\cd4912cd634a1a8b70209ccc4111ee69\transformed\ui-graphics-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material:material-icons-extended-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d77ab1d758967c6d013b70c5607458ae\transformed\material-icons-extended-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-extended-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d77ab1d758967c6d013b70c5607458ae\transformed\material-icons-extended-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\52e33ad033bc88fec05ad1ca083b7644\transformed\material-icons-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\52e33ad033bc88fec05ad1ca083b7644\transformed\material-icons-core-release\AndroidManifest.xml:5:5-44
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\58a5a6d514c030e05a1f0d33212db67c\transformed\accompanist-drawablepainter-0.32.0\AndroidManifest.xml:21:5-44
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\58a5a6d514c030e05a1f0d33212db67c\transformed\accompanist-drawablepainter-0.32.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.work:work-runtime-ktx:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\919165d6ebe945d4994b3c5e0a0a0509\transformed\work-runtime-ktx-2.9.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.work:work-runtime-ktx:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\919165d6ebe945d4994b3c5e0a0a0509\transformed\work-runtime-ktx-2.9.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.wear.watchface:watchface-complications-data:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c863bc5a39a2b2e17f7c61cb1917f514\transformed\watchface-complications-data-1.2.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.watchface:watchface-complications-data:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c863bc5a39a2b2e17f7c61cb1917f514\transformed\watchface-complications-data-1.2.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.watchface:watchface-complications:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0a2e244fc1d75af084451047f14897b1\transformed\watchface-complications-1.2.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.watchface:watchface-complications:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0a2e244fc1d75af084451047f14897b1\transformed\watchface-complications-1.2.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\446e44bde9215b00a8ad5eacac9aaf41\transformed\watchface-complications-data-source-ktx-1.2.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\446e44bde9215b00a8ad5eacac9aaf41\transformed\watchface-complications-data-source-ktx-1.2.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.watchface:watchface-complications-data-source:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\36f46b40a7f41edd54976b7d27a2b552\transformed\watchface-complications-data-source-1.2.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.watchface:watchface-complications-data-source:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\36f46b40a7f41edd54976b7d27a2b552\transformed\watchface-complications-data-source-1.2.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.preference:preference:1.1.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\80b794c52735204ac79d5f754eff301b\transformed\preference-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.preference:preference:1.1.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\80b794c52735204ac79d5f754eff301b\transformed\preference-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [io.coil-kt:coil-gif:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\77b0cbe67d9a93abdfcea1de3aa31a3a\transformed\coil-gif-2.5.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-gif:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\77b0cbe67d9a93abdfcea1de3aa31a3a\transformed\coil-gif-2.5.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2f9ab6d4b667ac0124aceaf1b66e4e46\transformed\coil-2.7.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2f9ab6d4b667ac0124aceaf1b66e4e46\transformed\coil-2.7.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-base:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\3c458b4193d62510523fc039f15135de\transformed\coil-base-2.7.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-base:2.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\3c458b4193d62510523fc039f15135de\transformed\coil-base-2.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\e9d57326fcda82abb16676dad651a9f5\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\e9d57326fcda82abb16676dad651a9f5\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\4f2cf01e70192e778f80e728863ddeeb\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\4f2cf01e70192e778f80e728863ddeeb\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-wearable:19.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\530697b57eb81da4d8a46859aab12a31\transformed\play-services-wearable-19.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-wearable:19.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\530697b57eb81da4d8a46859aab12a31\transformed\play-services-wearable-19.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:3:5-44
+MERGED from [com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:3:5-44
+MERGED from [com.google.android.gms:play-services-tasks:18.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c8ba04bed96939f9c266bef4ae73dfda\transformed\play-services-tasks-18.2.0\AndroidManifest.xml:3:5-44
+MERGED from [com.google.android.gms:play-services-tasks:18.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c8ba04bed96939f9c266bef4ae73dfda\transformed\play-services-tasks-18.2.0\AndroidManifest.xml:3:5-44
+MERGED from [com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:3:5-44
+MERGED from [com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:3:5-44
+MERGED from [androidx.wear.protolayout:protolayout-material-core:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eb9e26eda374ef9539fd54df2350a9c3\transformed\protolayout-material-core-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout-material-core:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eb9e26eda374ef9539fd54df2350a9c3\transformed\protolayout-material-core-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout-material:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6811922c80b624a651b25b4bc7ecaa3b\transformed\protolayout-material-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout-material:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6811922c80b624a651b25b4bc7ecaa3b\transformed\protolayout-material-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout-expression:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\5721323baaa81a6f502152a4ae56663a\transformed\protolayout-expression-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout-expression:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\5721323baaa81a6f502152a4ae56663a\transformed\protolayout-expression-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7a0ec706d11398d9a1cf5c679ef82471\transformed\protolayout-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7a0ec706d11398d9a1cf5c679ef82471\transformed\protolayout-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout-expression-pipeline:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f3203a04de8594832210869f176e2447\transformed\protolayout-expression-pipeline-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout-expression-pipeline:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f3203a04de8594832210869f176e2447\transformed\protolayout-expression-pipeline-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout-renderer:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7867be93fcb6721a788a636968c44c83\transformed\protolayout-renderer-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear.protolayout:protolayout-renderer:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7867be93fcb6721a788a636968c44c83\transformed\protolayout-renderer-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.wear:wear:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c018f1af64447e8636ee39ffd77108a3\transformed\wear-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.wear:wear:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c018f1af64447e8636ee39ffd77108a3\transformed\wear-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.3.6] C:\Users\lasni\.gradle\caches\8.11.1\transforms\4545e50babff06669a334061ddad27b8\transformed\fragment-1.3.6\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.3.6] C:\Users\lasni\.gradle\caches\8.11.1\transforms\4545e50babff06669a334061ddad27b8\transformed\fragment-1.3.6\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.10.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f9a917d790e6215b062e5af48a3e3386\transformed\activity-1.10.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.10.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f9a917d790e6215b062e5af48a3e3386\transformed\activity-1.10.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\76db12eaf74354f22b3174444a339785\transformed\savedstate-ktx-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\76db12eaf74354f22b3174444a339785\transformed\savedstate-ktx-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\120c40bd7a2c24ee7e06a640a7834ad2\transformed\savedstate-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\120c40bd7a2c24ee7e06a640a7834ad2\transformed\savedstate-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f2bc33c30ea161157072430bba43e0b9\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f2bc33c30ea161157072430bba43e0b9\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8ffb79abba7ac603d38caab709680c4\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8ffb79abba7ac603d38caab709680c4\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6003ce7c971949110cba34a7f502627b\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6003ce7c971949110cba34a7f502627b\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8cf5dddbfdfd22eafd25b6399c80c310\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8cf5dddbfdfd22eafd25b6399c80c310\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\659b3d01cf9347f372772dfa58f8d117\transformed\lifecycle-livedata-core-ktx-2.8.3\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\659b3d01cf9347f372772dfa58f8d117\transformed\lifecycle-livedata-core-ktx-2.8.3\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a39d987ad86c1d1cd200f2e3931b48b6\transformed\lifecycle-viewmodel-2.8.3\AndroidManifest.xml:4:5-43
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a39d987ad86c1d1cd200f2e3931b48b6\transformed\lifecycle-viewmodel-2.8.3\AndroidManifest.xml:4:5-43
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\26926414ca58701b28e0f5d8e3cb4b92\transformed\lifecycle-viewmodel-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\26926414ca58701b28e0f5d8e3cb4b92\transformed\lifecycle-viewmodel-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-compose-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\08c4a98ec56186f624aee1b2d88a745b\transformed\lifecycle-runtime-compose-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-compose-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\08c4a98ec56186f624aee1b2d88a745b\transformed\lifecycle-runtime-compose-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d80c5eaba4ed162e0ddd2c8659fa01ac\transformed\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d80c5eaba4ed162e0ddd2c8659fa01ac\transformed\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1481074c5e3f428bdd81b79f3d955c82\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1481074c5e3f428bdd81b79f3d955c82\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2c89a951b3a5f6152881a7332ce7fb7b\transformed\autofill-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2c89a951b3a5f6152881a7332ce7fb7b\transformed\autofill-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.graphics:graphics-path:1.0.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\83df8d83672afa2eb2c11270221078dc\transformed\graphics-path-1.0.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.graphics:graphics-path:1.0.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\83df8d83672afa2eb2c11270221078dc\transformed\graphics-path-1.0.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b570dfe607c1f4213a26773feaa37d08\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b570dfe607c1f4213a26773feaa37d08\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7f1b939573815d07a3fb3a63284b1901\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7f1b939573815d07a3fb3a63284b1901\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a585462b5b36f4b1a261d10205392936\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a585462b5b36f4b1a261d10205392936\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\75cb5ed31cd311268b9ecc3331bab97e\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\75cb5ed31cd311268b9ecc3331bab97e\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-seekable:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\09336c9a4c0fce3624a3a2157ef24040\transformed\vectordrawable-seekable-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-seekable:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\09336c9a4c0fce3624a3a2157ef24040\transformed\vectordrawable-seekable-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9a627147c25146b3b0e250c51401799b\transformed\vectordrawable-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9a627147c25146b3b0e250c51401799b\transformed\vectordrawable-1.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-animation:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\67a61c6f86004002252ceae4d63f02d3\transformed\core-animation-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-animation:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\67a61c6f86004002252ceae4d63f02d3\transformed\core-animation-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7170df74b114f0cb0e0458f6a2aa29e3\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7170df74b114f0cb0e0458f6a2aa29e3\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.core:core-ktx:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\103cb4ea406a52646ffc8c0022c8c919\transformed\core-ktx-1.13.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\103cb4ea406a52646ffc8c0022c8c919\transformed\core-ktx-1.13.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9415b775544ae45d63d6f843832513dc\transformed\lifecycle-runtime-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9415b775544ae45d63d6f843832513dc\transformed\lifecycle-runtime-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a222984f6619e6b8f427b8f5caeb3753\transformed\lifecycle-livedata-core-2.8.3\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a222984f6619e6b8f427b8f5caeb3753\transformed\lifecycle-livedata-core-2.8.3\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c2b3e0c90263ef84ff0fdd4cd0950e59\transformed\lifecycle-viewmodel-savedstate-2.8.3\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c2b3e0c90263ef84ff0fdd4cd0950e59\transformed\lifecycle-viewmodel-savedstate-2.8.3\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b74fe219aca701bb88d5e896085c3c16\transformed\lifecycle-livedata-2.8.3\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b74fe219aca701bb88d5e896085c3c16\transformed\lifecycle-livedata-2.8.3\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\355a1428ba929dbdf4f76d5cf3b7b000\transformed\lifecycle-viewmodel-ktx-2.8.3\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\355a1428ba929dbdf4f76d5cf3b7b000\transformed\lifecycle-viewmodel-ktx-2.8.3\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d804f40243f21763f86bb16411c617cd\transformed\lifecycle-runtime-ktx-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d804f40243f21763f86bb16411c617cd\transformed\lifecycle-runtime-ktx-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-service:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9f92b62912ed792d5f6987b93f04d3fa\transformed\lifecycle-service-2.8.3\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-service:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\9f92b62912ed792d5f6987b93f04d3fa\transformed\lifecycle-service-2.8.3\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7086b2a43a49c1dbd55d3c14a94c03ca\transformed\lifecycle-viewmodel-compose-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7086b2a43a49c1dbd55d3c14a94c03ca\transformed\lifecycle-viewmodel-compose-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\cd4c04a07f88b8544332fa899692b8b9\transformed\ui-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\cd4c04a07f88b8544332fa899692b8b9\transformed\ui-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-ktx:1.10.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c6a92d659dadff878a04c9358734e3cd\transformed\activity-ktx-1.10.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-ktx:1.10.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c6a92d659dadff878a04c9358734e3cd\transformed\activity-ktx-1.10.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-compose:1.10.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1cd10c58ba5a19d4abeaf5f977b31f12\transformed\activity-compose-1.10.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-compose:1.10.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1cd10c58ba5a19d4abeaf5f977b31f12\transformed\activity-compose-1.10.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f1dfd5dd4a9f444f2ce929087cd97a44\transformed\core-splashscreen-1.0.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core-splashscreen:1.0.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\f1dfd5dd4a9f444f2ce929087cd97a44\transformed\core-splashscreen-1.0.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.datastore:datastore-preferences:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2f3e8d5df01f7ef3880a6cb2c9f0d7a1\transformed\datastore-preferences-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.datastore:datastore-preferences:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2f3e8d5df01f7ef3880a6cb2c9f0d7a1\transformed\datastore-preferences-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c9e078062cd51eb2e6949e321111ff7c\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c9e078062cd51eb2e6949e321111ff7c\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\4fede01d8678c62b0180b526bd40f0d4\transformed\runtime-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\4fede01d8678c62b0180b526bd40f0d4\transformed\runtime-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.room:room-ktx:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\032d2324b668f8cc9fd4268f3b8c778b\transformed\room-ktx-2.5.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-ktx:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\032d2324b668f8cc9fd4268f3b8c778b\transformed\room-ktx-2.5.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\644059c6a0e49f1e8d19496520e77046\transformed\annotation-experimental-1.4.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\644059c6a0e49f1e8d19496520e77046\transformed\annotation-experimental-1.4.1\AndroidManifest.xml:5:5-44
+MERGED from [io.realm.kotlin:library-base-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\e3c6c04411eb1497eacc46f63dbaa6aa\transformed\library-base-release\AndroidManifest.xml:22:5-24:41
+MERGED from [io.realm.kotlin:library-base-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\e3c6c04411eb1497eacc46f63dbaa6aa\transformed\library-base-release\AndroidManifest.xml:22:5-24:41
+MERGED from [androidx.datastore:datastore:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8203d490c33f3a3c3a9bee085985e1ad\transformed\datastore-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.datastore:datastore:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8203d490c33f3a3c3a9bee085985e1ad\transformed\datastore-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:21:5-44
+MERGED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:22:5-24:41
+MERGED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:22:5-24:41
+MERGED from [org.mongodb.kbson:kbson-android-debug:0.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a0cc763c1d8c01e5f4cf4ff9769d1133\transformed\kbson-debug\AndroidManifest.xml:23:5-25:41
+MERGED from [org.mongodb.kbson:kbson-android-debug:0.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a0cc763c1d8c01e5f4cf4ff9769d1133\transformed\kbson-debug\AndroidManifest.xml:23:5-25:41
+MERGED from [androidx.sqlite:sqlite-framework:2.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1b712ffbf4215fa45c1f9a576899d00e\transformed\sqlite-framework-2.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1b712ffbf4215fa45c1f9a576899d00e\transformed\sqlite-framework-2.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core-viewtree:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b5b741651b662c8db7d581fd0881da1f\transformed\core-viewtree-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-viewtree:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b5b741651b662c8db7d581fd0881da1f\transformed\core-viewtree-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.sqlite:sqlite:2.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b976385f4af33936cbb1bc9536b70919\transformed\sqlite-2.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b976385f4af33936cbb1bc9536b70919\transformed\sqlite-2.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6d0603a2fb7b423c1e66cc8d7ee428df\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6d0603a2fb7b423c1e66cc8d7ee428df\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\967b0d56938cd8b2b55176b0771457e4\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\967b0d56938cd8b2b55176b0771457e4\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2f90d917409c14783a85f2bfc35a582\transformed\startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2f90d917409c14783a85f2bfc35a582\transformed\startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\13783858294dbb2ab07b1083040d472d\transformed\tracing-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\13783858294dbb2ab07b1083040d472d\transformed\tracing-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6fb65859b4ff9d214bb88f81d17d1545\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\6fb65859b4ff9d214bb88f81d17d1545\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.exifinterface:exifinterface:1.3.7] C:\Users\lasni\.gradle\caches\8.11.1\transforms\618cea4d84fa38ad7203a8ab744b2913\transformed\exifinterface-1.3.7\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.7] C:\Users\lasni\.gradle\caches\8.11.1\transforms\618cea4d84fa38ad7203a8ab744b2913\transformed\exifinterface-1.3.7\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0bf820bef5af3a826c473960f57831d5\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0bf820bef5af3a826c473960f57831d5\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0ec7626ec1a36e12e55b0862ea3dcb08\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0ec7626ec1a36e12e55b0862ea3dcb08\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0d46f10e2a9a0df97c5ef7678433c142\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\0d46f10e2a9a0df97c5ef7678433c142\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\074d0489389f6516cd7a7592427965a1\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\074d0489389f6516cd7a7592427965a1\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.getkeepsafe.relinker:relinker:1.4.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\56591263d8499bc1d6ed052993a8308d\transformed\relinker-1.4.5\AndroidManifest.xml:5:5-43
+MERGED from [com.getkeepsafe.relinker:relinker:1.4.5] C:\Users\lasni\.gradle\caches\8.11.1\transforms\56591263d8499bc1d6ed052993a8308d\transformed\relinker-1.4.5\AndroidManifest.xml:5:5-43
+	tools:overrideLibrary
+		ADDED from [com.google.android.horologist:horologist-tiles:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\fe51923e85f0cf6ac2d8b58ce09e81cc\transformed\horologist-tiles-0.6.17\AndroidManifest.xml:28:9-468
+	android:targetSdkVersion
+		INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml
+	tools:ignore
+		ADDED from [com.google.android.horologist:horologist-compose-tools:0.6.17] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a845808d0c22cb9e98b225714e7a8900\transformed\horologist-compose-tools-0.6.17\AndroidManifest.xml:23:9-39
+	android:minSdkVersion
+		INJECTED from C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml
+queries
+ADDED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:7:5-11:15
+intent#action:name:androidx.wear.tiles.action.BIND_UPDATE_REQUESTER
+ADDED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:8:9-10:18
+action#androidx.wear.tiles.action.BIND_UPDATE_REQUESTER
+ADDED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:9:13-87
+	android:name
+		ADDED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:9:21-84
+uses-library#wear-sdk
+ADDED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:14:9-16:40
+MERGED from [androidx.wear.compose:compose-foundation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\02477cf17a4c9d934e2f684c52d56782\transformed\compose-foundation-1.4.0-beta03\AndroidManifest.xml:23:9-25:40
+MERGED from [androidx.wear.compose:compose-foundation:1.4.0-beta03] C:\Users\lasni\.gradle\caches\8.11.1\transforms\02477cf17a4c9d934e2f684c52d56782\transformed\compose-foundation-1.4.0-beta03\AndroidManifest.xml:23:9-25:40
+	android:required
+		ADDED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:16:13-37
+	android:name
+		ADDED from [androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:15:13-36
+activity#androidx.compose.ui.tooling.PreviewActivity
+ADDED from [androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
+	android:exported
+		ADDED from [androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
+	android:name
+		ADDED from [androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
+activity#androidx.activity.ComponentActivity
+ADDED from [androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:23:9-25:39
+	android:exported
+		ADDED from [androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:25:13-36
+	android:name
+		ADDED from [androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:24:13-63
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:24:5-79
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:24:22-76
+provider#androidx.startup.InitializationProvider
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:29:9-37:20
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:24:9-32:20
+MERGED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:27:9-35:20
+MERGED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:27:9-35:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2f90d917409c14783a85f2bfc35a582\transformed\startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a2f90d917409c14783a85f2bfc35a582\transformed\startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:33:13-31
+	android:authorities
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:31:13-68
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:32:13-37
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:30:13-67
+meta-data#androidx.work.WorkManagerInitializer
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:34:13-36:52
+	android:value
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:36:17-49
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:35:17-68
+service#androidx.work.impl.background.systemalarm.SystemAlarmService
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:39:9-45:35
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:42:13-72
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:43:13-37
+	tools:ignore
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:44:13-60
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:45:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:41:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:40:13-88
+service#androidx.work.impl.background.systemjob.SystemJobService
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:46:9-52:35
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:49:13-70
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:50:13-36
+	android:permission
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:51:13-69
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:52:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:48:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:47:13-84
+service#androidx.work.impl.foreground.SystemForegroundService
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:53:9-59:35
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:56:13-77
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:57:13-37
+	tools:ignore
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:58:13-60
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:59:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:55:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:54:13-81
+receiver#androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:61:9-66:35
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:64:13-35
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:65:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:66:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:63:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:62:13-88
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:67:9-77:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:70:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:71:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:72:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:69:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:68:13-106
+intent-filter#action:name:android.intent.action.ACTION_POWER_CONNECTED+action:name:android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:73:13-76:29
+action#android.intent.action.ACTION_POWER_CONNECTED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:74:17-87
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:74:25-84
+action#android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:75:17-90
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:75:25-87
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:78:9-88:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:81:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:82:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:83:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:80:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:79:13-104
+intent-filter#action:name:android.intent.action.BATTERY_LOW+action:name:android.intent.action.BATTERY_OKAY
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:84:13-87:29
+action#android.intent.action.BATTERY_OKAY
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:85:17-77
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:85:25-74
+action#android.intent.action.BATTERY_LOW
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:86:17-76
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:86:25-73
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:89:9-99:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:92:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:93:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:94:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:91:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:90:13-104
+intent-filter#action:name:android.intent.action.DEVICE_STORAGE_LOW+action:name:android.intent.action.DEVICE_STORAGE_OK
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:95:13-98:29
+action#android.intent.action.DEVICE_STORAGE_LOW
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:96:17-83
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:96:25-80
+action#android.intent.action.DEVICE_STORAGE_OK
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:97:17-82
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:97:25-79
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:100:9-109:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:103:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:104:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:105:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:102:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:101:13-103
+intent-filter#action:name:android.net.conn.CONNECTIVITY_CHANGE
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:106:13-108:29
+action#android.net.conn.CONNECTIVITY_CHANGE
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:107:17-79
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:107:25-76
+receiver#androidx.work.impl.background.systemalarm.RescheduleReceiver
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:110:9-121:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:113:13-36
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:114:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:115:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:112:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:111:13-88
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED+action:name:android.intent.action.TIMEZONE_CHANGED+action:name:android.intent.action.TIME_SET
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:116:13-120:29
+action#android.intent.action.TIME_SET
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:118:17-73
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:118:25-70
+action#android.intent.action.TIMEZONE_CHANGED
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:119:17-81
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:119:25-78
+receiver#androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:122:9-131:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:125:13-72
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:126:13-37
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:127:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:124:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:123:13-99
+intent-filter#action:name:androidx.work.impl.background.systemalarm.UpdateProxies
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:128:13-130:29
+action#androidx.work.impl.background.systemalarm.UpdateProxies
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:129:17-98
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:129:25-95
+receiver#androidx.work.impl.diagnostics.DiagnosticsReceiver
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:132:9-142:20
+	android:enabled
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:135:13-35
+	android:exported
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:136:13-36
+	android:permission
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:137:13-57
+	tools:targetApi
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:138:13-32
+	android:directBootAware
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:134:13-44
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:133:13-78
+intent-filter#action:name:androidx.work.diagnostics.REQUEST_DIAGNOSTICS
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:139:13-141:29
+action#androidx.work.diagnostics.REQUEST_DIAGNOSTICS
+ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:140:17-88
+	android:name
+		ADDED from [androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:140:25-85
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:9-173
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:146-170
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:86-145
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:19-85
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:9-122
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:66-119
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:20-65
+meta-data#androidx.emoji2.text.EmojiCompatInitializer
+ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+meta-data#androidx.lifecycle.ProcessLifecycleInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:30:17-78
+permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+permission#com.ddc.bansoogi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+uses-permission#com.ddc.bansoogi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+service#androidx.room.MultiInstanceInvalidationService
+ADDED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:24:9-28:63
+	android:exported
+		ADDED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:27:13-37
+	tools:ignore
+		ADDED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:28:13-60
+	android:directBootAware
+		ADDED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:26:13-43
+	android:name
+		ADDED from [androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:25:13-74
+meta-data#androidx.profileinstaller.ProfileInstallerInitializer
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
+receiver#androidx.profileinstaller.ProfileInstallReceiver
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+	android:enabled
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+	android:exported
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+	android:permission
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+	android:directBootAware
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+intent-filter#action:name:androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+action#androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+intent-filter#action:name:androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+action#androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+intent-filter#action:name:androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+action#androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+intent-filter#action:name:androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+action#androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+meta-data#io.realm.kotlin.internal.RealmInitializer
+ADDED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:32:13-34:52
+	android:value
+		ADDED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:34:17-49
+	android:name
+		ADDED from [io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:33:17-73

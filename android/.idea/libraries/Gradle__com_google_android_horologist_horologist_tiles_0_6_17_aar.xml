@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.android.horologist:horologist-tiles:0.6.17@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/fe51923e85f0cf6ac2d8b58ce09e81cc/transformed/horologist-tiles-0.6.17/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/fe51923e85f0cf6ac2d8b58ce09e81cc/transformed/horologist-tiles-0.6.17/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/fe51923e85f0cf6ac2d8b58ce09e81cc/transformed/horologist-tiles-0.6.17/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.horologist/horologist-tiles/0.6.17/5e855581cbf43bd7774fa0017615d306e3ec5b46/horologist-tiles-0.6.17-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.horologist/horologist-tiles/0.6.17/7648f12bbdb318587cd0c59c11194978a5f8deea/horologist-tiles-0.6.17-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

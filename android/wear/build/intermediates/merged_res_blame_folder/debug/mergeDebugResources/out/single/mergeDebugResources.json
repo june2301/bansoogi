@@ -1,0 +1,66 @@
+[
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_bansoogi_temp_interaction.png.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/bansoogi_temp_interaction.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable-round_tile_preview.png.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable-round/tile_preview.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_background_sunny_sky.png.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/background_sunny_sky.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_bansoogi_smile_to_me_sprite.png.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/bansoogi_smile_to_me_sprite.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_temp_interaction.png.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/temp_interaction.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_bansoogi_basic_sprite.png.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/bansoogi_basic_sprite.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_cookie.png.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/cookie.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_splash_icon.xml.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/splash_icon.xml"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_bansoogi_basic.gif.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/bansoogi_basic.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_dehaze.png.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/dehaze.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.wear-debug-101:/drawable_tile_preview.png.flat",
+        "source": "com.ddc.bansoogi.wear-main-103:/drawable/tile_preview.png"
+    }
+]

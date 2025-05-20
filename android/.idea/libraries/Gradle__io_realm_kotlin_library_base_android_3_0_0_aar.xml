@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: io.realm.kotlin:library-base-android:3.0.0@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/e3c6c04411eb1497eacc46f63dbaa6aa/transformed/library-base-release/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/e3c6c04411eb1497eacc46f63dbaa6aa/transformed/library-base-release/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm.kotlin/library-base-android/3.0.0/5f49b11aac530223cb651eecf81794fcc0ebe8ae/library-base-android-3.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm.kotlin/library-base-android/3.0.0/76efb5a098c501e9683798e374be2a63db890d09/library-base-android-3.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.wear.tiles:tiles-tooling:1.4.0@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/f2a2f8853edeefd5e8f548e534ccc8fc/transformed/tiles-tooling-1.4.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/f2a2f8853edeefd5e8f548e534ccc8fc/transformed/tiles-tooling-1.4.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/f2a2f8853edeefd5e8f548e534ccc8fc/transformed/tiles-tooling-1.4.0/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.wear.tiles/tiles-tooling/1.4.0/1daa35d0597c7e8409036335d3fe6cdb205572a5/tiles-tooling-1.4.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

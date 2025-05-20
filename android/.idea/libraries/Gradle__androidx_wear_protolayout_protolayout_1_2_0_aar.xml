@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.wear.protolayout:protolayout:1.2.0@aar" external-system-id="GRADLE">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/7a0ec706d11398d9a1cf5c679ef82471/transformed/protolayout-1.2.0/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/7a0ec706d11398d9a1cf5c679ef82471/transformed/protolayout-1.2.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/7a0ec706d11398d9a1cf5c679ef82471/transformed/protolayout-1.2.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/7a0ec706d11398d9a1cf5c679ef82471/transformed/protolayout-1.2.0/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.wear.protolayout/protolayout/1.2.0/2cdc100bacf1bc807c630c4480cc1d053f68528/protolayout-1.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

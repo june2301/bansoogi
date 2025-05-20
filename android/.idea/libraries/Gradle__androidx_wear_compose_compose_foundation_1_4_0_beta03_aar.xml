@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.wear.compose:compose-foundation:1.4.0-beta03@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/02477cf17a4c9d934e2f684c52d56782/transformed/compose-foundation-1.4.0-beta03/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/02477cf17a4c9d934e2f684c52d56782/transformed/compose-foundation-1.4.0-beta03/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/02477cf17a4c9d934e2f684c52d56782/transformed/compose-foundation-1.4.0-beta03/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.wear.compose/compose-foundation/1.4.0-beta03/9f2bbe02750815c7f551c20583913463fcbb9fb8/compose-foundation-1.4.0-beta03-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.wear.compose/compose-foundation/1.4.0-beta03/d5be6f1675f7fc4117e118c9c2cae60abe500e7/compose-foundation-1.4.0-beta03-samples-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

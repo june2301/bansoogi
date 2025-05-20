@@ -1,0 +1,555 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.ddc.bansoogi"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="30"
+9        android:targetSdkVersion="35" />
+10
+11    <uses-feature android:name="android.hardware.type.watch" />
+11-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:6:5-64
+11-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:6:19-61
+12
+13    <uses-permission android:name="android.permission.WAKE_LOCK" />
+13-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:8:5-68
+13-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:8:22-65
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:9:5-67
+14-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:9:22-64
+15    <uses-permission android:name="android.permission.BLUETOOTH" />
+15-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:10:5-68
+15-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:10:22-65
+16    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+16-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:11:5-74
+16-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:11:22-71
+17    <uses-permission android:name="com.google.android.gms.permission.BIND_LISTENER" />
+17-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:12:5-87
+17-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:12:22-84
+18    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+18-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:13:5-77
+18-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:13:22-74
+19    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+19-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:14:5-78
+19-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:14:22-76
+20    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+20-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:15:5-77
+20-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:15:22-74
+21    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
+21-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:16:5-18:32
+21-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:17:9-68
+22    <uses-permission android:name="android.permission.BODY_SENSORS" />
+22-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:19:5-71
+22-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:19:22-68
+23    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+23-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:20:5-79
+23-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:20:22-76
+24    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+24-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:21:5-81
+24-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:21:22-78
+25
+26    <queries>
+26-->[androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:7:5-11:15
+27        <intent>
+27-->[androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:8:9-10:18
+28            <action android:name="androidx.wear.tiles.action.BIND_UPDATE_REQUESTER" />
+28-->[androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:9:13-87
+28-->[androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:9:21-84
+29        </intent>
+30    </queries>
+31
+32    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+32-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:24:5-79
+32-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:24:22-76
+33
+34    <permission
+34-->[androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+35        android:name="com.ddc.bansoogi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+35-->[androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+36        android:protectionLevel="signature" />
+36-->[androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+37
+38    <uses-permission android:name="com.ddc.bansoogi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+38-->[androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+38-->[androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+39
+40    <application
+40-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:23:5-120:19
+41        android:allowBackup="true"
+41-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:24:9-35
+42        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+42-->[androidx.core:core:1.13.1] C:\Users\lasni\.gradle\caches\8.11.1\transforms\2cae776b74900dab83934f2e1773300f\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+43        android:debuggable="true"
+44        android:extractNativeLibs="false"
+45        android:icon="@mipmap/ic_launcher"
+45-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:25:9-43
+46        android:label="@string/app_name"
+46-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:26:9-41
+47        android:supportsRtl="true"
+47-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:27:9-35
+48        android:testOnly="true"
+49        android:theme="@android:style/Theme.DeviceDefault" >
+49-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:28:9-59
+50        <service
+50-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:29:9-44:19
+51            android:name="com.ddc.bansoogi.complication.MainComplicationService"
+51-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:30:13-65
+52            android:exported="true"
+52-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:31:13-36
+53            android:label="@string/complication_label"
+53-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:32:13-55
+54            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER" >
+54-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:33:13-99
+55            <intent-filter>
+55-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:34:13-36:29
+56                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+56-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:35:17-116
+56-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:35:25-113
+57            </intent-filter>
+58
+59            <meta-data
+59-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:38:13-40:46
+60                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+60-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:39:17-86
+61                android:value="SHORT_TEXT" />
+61-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:40:17-43
+62            <meta-data
+62-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:41:13-43:37
+63                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+63-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:42:17-92
+64                android:value="0" />
+64-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:43:17-34
+65        </service>
+66        <service
+66-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:45:9-57:19
+67            android:name="com.ddc.bansoogi.tile.MainTileService"
+67-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:46:13-49
+68            android:exported="true"
+68-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:47:13-36
+69            android:label="@string/tile_label"
+69-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:48:13-47
+70            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER" >
+70-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:49:13-91
+71            <intent-filter>
+71-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:50:13-52:29
+72                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+72-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:51:17-88
+72-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:51:25-85
+73            </intent-filter>
+74
+75            <meta-data
+75-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:54:13-56:61
+76                android:name="androidx.wear.tiles.PREVIEW"
+76-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:55:17-59
+77                android:resource="@drawable/tile_preview" />
+77-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:56:17-58
+78        </service>
+79
+80        <!-- ✅ 모바일과 통신을 위한 수신 서비스 등록 -->
+81        <service
+81-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:60:9-68:19
+82            android:name="com.ddc.bansoogi.common.mobile.communication.receiver.MobileToWearReceiverService"
+82-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:61:13-93
+83            android:enabled="true"
+83-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:62:13-35
+84            android:exported="true" >
+84-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:63:13-36
+85            <intent-filter>
+85-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:64:13-67:29
+86                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+86-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:65:17-66:59
+86-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:65:25-85
+87            </intent-filter>
+88        </service>
+89
+90        <!-- MyInfoMessageListenerService (MyInfo 메시지 전용 - 알림 등록) -->
+91        <service
+91-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:71:9-79:19
+92            android:name="com.ddc.bansoogi.common.notification.MyInfoListenerService"
+92-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:72:13-70
+93            android:enabled="true"
+93-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:73:13-35
+94            android:exported="true" >
+94-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:74:13-36
+95            <intent-filter>
+95-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:64:13-67:29
+96                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+96-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:65:17-66:59
+96-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:65:25-85
+97            </intent-filter>
+98        </service>
+99        <service
+99-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:81:9-84:54
+100            android:name="com.ddc.bansoogi.sensor.SensorForegroundService"
+100-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:82:13-59
+101            android:exported="false"
+101-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:83:13-37
+102            android:foregroundServiceType="health" />
+102-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:84:13-51
+103
+104        <receiver
+104-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:86:9-92:20
+105            android:name="com.ddc.bansoogi.sensor.BootCompletedReceiver"
+105-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:87:13-57
+106            android:exported="false" >
+106-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:88:13-37
+107            <intent-filter>
+107-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:89:13-91:29
+108                <action android:name="android.intent.action.BOOT_COMPLETED" />
+108-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:90:17-79
+108-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:90:25-76
+109            </intent-filter>
+110        </receiver>
+111
+112        <uses-library
+112-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:94:9-96:39
+113            android:name="com.google.android.wearable"
+113-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:95:13-55
+114            android:required="true" />
+114-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:96:13-36
+115        <!--
+116               Set to true if your app is Standalone, that is, it does not require the handheld
+117               app to run.
+118        -->
+119        <meta-data
+119-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:101:9-103:36
+120            android:name="com.google.android.wearable.standalone"
+120-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:102:13-66
+121            android:value="true" />
+121-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:103:13-33
+122
+123        <activity
+123-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:105:9-115:20
+124            android:name="com.ddc.bansoogi.presentation.MainActivity"
+124-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:106:13-54
+125            android:exported="true"
+125-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:107:13-36
+126            android:taskAffinity=""
+126-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:108:13-36
+127            android:theme="@style/MainActivityTheme.Starting" >
+127-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:109:13-62
+128            <intent-filter>
+128-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:110:13-114:29
+129                <action android:name="android.intent.action.MAIN" />
+129-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:111:17-69
+129-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:111:25-66
+130
+131                <category android:name="android.intent.category.LAUNCHER" />
+131-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:113:17-77
+131-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:113:27-74
+132            </intent-filter>
+133        </activity>
+134
+135        <receiver
+135-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:117:9-119:40
+136            android:name="com.ddc.bansoogi.common.notification.WatchDailyAlarmReceiver"
+136-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:118:13-72
+137            android:exported="false" />
+137-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:119:13-37
+138
+139        <uses-library
+139-->[androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:14:9-16:40
+140            android:name="wear-sdk"
+140-->[androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:15:13-36
+141            android:required="false" />
+141-->[androidx.wear.tiles:tiles:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\b6cd7bacd2a20168e3ca82b2cea80bfc\transformed\tiles-1.4.0\AndroidManifest.xml:16:13-37
+142
+143        <activity
+143-->[androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
+144            android:name="androidx.compose.ui.tooling.PreviewActivity"
+144-->[androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
+145            android:exported="true" />
+145-->[androidx.compose.ui:ui-tooling-android:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7b5cdede7394587ea20cb8d3bc6b4d34\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
+146        <activity
+146-->[androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:23:9-25:39
+147            android:name="androidx.activity.ComponentActivity"
+147-->[androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:24:13-63
+148            android:exported="true" />
+148-->[androidx.compose.ui:ui-test-manifest:1.7.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\eaf65af1b24ce4c829fc92ad617a5ff7\transformed\ui-test-manifest-1.7.0\AndroidManifest.xml:25:13-36
+149
+150        <provider
+150-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:29:9-37:20
+151            android:name="androidx.startup.InitializationProvider"
+151-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:30:13-67
+152            android:authorities="com.ddc.bansoogi.androidx-startup"
+152-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:31:13-68
+153            android:exported="false" >
+153-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:32:13-37
+154            <meta-data
+154-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:34:13-36:52
+155                android:name="androidx.work.WorkManagerInitializer"
+155-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:35:17-68
+156                android:value="androidx.startup" />
+156-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:36:17-49
+157            <meta-data
+157-->[androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+158                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+158-->[androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+159                android:value="androidx.startup" />
+159-->[androidx.emoji2:emoji2:1.3.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\7cdbe08c3b9c8e77d1d92efaa98e124f\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+160            <meta-data
+160-->[androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:29:13-31:52
+161                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+161-->[androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:30:17-78
+162                android:value="androidx.startup" />
+162-->[androidx.lifecycle:lifecycle-process:2.8.3] C:\Users\lasni\.gradle\caches\8.11.1\transforms\ed1dca968fed7b8c6eb3296697914fc7\transformed\lifecycle-process-2.8.3\AndroidManifest.xml:31:17-49
+163            <meta-data
+163-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
+164                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+164-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
+165                android:value="androidx.startup" />
+165-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
+166            <meta-data
+166-->[io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:32:13-34:52
+167                android:name="io.realm.kotlin.internal.RealmInitializer"
+167-->[io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:33:17-73
+168                android:value="androidx.startup" />
+168-->[io.realm.kotlin:cinterop-android:3.0.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\30cf00c3584a97023fb1727b6191d99d\transformed\cinterop-release\AndroidManifest.xml:34:17-49
+169        </provider>
+170
+171        <service
+171-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:39:9-45:35
+172            android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"
+172-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:40:13-88
+173            android:directBootAware="false"
+173-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:41:13-44
+174            android:enabled="@bool/enable_system_alarm_service_default"
+174-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:42:13-72
+175            android:exported="false" />
+175-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:43:13-37
+176        <service
+176-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:46:9-52:35
+177            android:name="androidx.work.impl.background.systemjob.SystemJobService"
+177-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:47:13-84
+178            android:directBootAware="false"
+178-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:48:13-44
+179            android:enabled="@bool/enable_system_job_service_default"
+179-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:49:13-70
+180            android:exported="true"
+180-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:50:13-36
+181            android:permission="android.permission.BIND_JOB_SERVICE" />
+181-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:51:13-69
+182        <service
+182-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:53:9-59:35
+183            android:name="androidx.work.impl.foreground.SystemForegroundService"
+183-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:54:13-81
+184            android:directBootAware="false"
+184-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:55:13-44
+185            android:enabled="@bool/enable_system_foreground_service_default"
+185-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:56:13-77
+186            android:exported="false" />
+186-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:57:13-37
+187
+188        <receiver
+188-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:61:9-66:35
+189            android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
+189-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:62:13-88
+190            android:directBootAware="false"
+190-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:63:13-44
+191            android:enabled="true"
+191-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:64:13-35
+192            android:exported="false" />
+192-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:65:13-37
+193        <receiver
+193-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:67:9-77:20
+194            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy"
+194-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:68:13-106
+195            android:directBootAware="false"
+195-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:69:13-44
+196            android:enabled="false"
+196-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:70:13-36
+197            android:exported="false" >
+197-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:71:13-37
+198            <intent-filter>
+198-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:73:13-76:29
+199                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+199-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:74:17-87
+199-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:74:25-84
+200                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+200-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:75:17-90
+200-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:75:25-87
+201            </intent-filter>
+202        </receiver>
+203        <receiver
+203-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:78:9-88:20
+204            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy"
+204-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:79:13-104
+205            android:directBootAware="false"
+205-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:80:13-44
+206            android:enabled="false"
+206-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:81:13-36
+207            android:exported="false" >
+207-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:82:13-37
+208            <intent-filter>
+208-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:84:13-87:29
+209                <action android:name="android.intent.action.BATTERY_OKAY" />
+209-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:85:17-77
+209-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:85:25-74
+210                <action android:name="android.intent.action.BATTERY_LOW" />
+210-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:86:17-76
+210-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:86:25-73
+211            </intent-filter>
+212        </receiver>
+213        <receiver
+213-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:89:9-99:20
+214            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy"
+214-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:90:13-104
+215            android:directBootAware="false"
+215-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:91:13-44
+216            android:enabled="false"
+216-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:92:13-36
+217            android:exported="false" >
+217-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:93:13-37
+218            <intent-filter>
+218-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:95:13-98:29
+219                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+219-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:96:17-83
+219-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:96:25-80
+220                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
+220-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:97:17-82
+220-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:97:25-79
+221            </intent-filter>
+222        </receiver>
+223        <receiver
+223-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:100:9-109:20
+224            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy"
+224-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:101:13-103
+225            android:directBootAware="false"
+225-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:102:13-44
+226            android:enabled="false"
+226-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:103:13-36
+227            android:exported="false" >
+227-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:104:13-37
+228            <intent-filter>
+228-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:106:13-108:29
+229                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+229-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:107:17-79
+229-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:107:25-76
+230            </intent-filter>
+231        </receiver>
+232        <receiver
+232-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:110:9-121:20
+233            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+233-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:111:13-88
+234            android:directBootAware="false"
+234-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:112:13-44
+235            android:enabled="false"
+235-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:113:13-36
+236            android:exported="false" >
+236-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:114:13-37
+237            <intent-filter>
+237-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:116:13-120:29
+238                <action android:name="android.intent.action.BOOT_COMPLETED" />
+238-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:90:17-79
+238-->C:\Users\lasni\Desktop\S12P31A302\android\wear\src\main\AndroidManifest.xml:90:25-76
+239                <action android:name="android.intent.action.TIME_SET" />
+239-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:118:17-73
+239-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:118:25-70
+240                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+240-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:119:17-81
+240-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:119:25-78
+241            </intent-filter>
+242        </receiver>
+243        <receiver
+243-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:122:9-131:20
+244            android:name="androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver"
+244-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:123:13-99
+245            android:directBootAware="false"
+245-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:124:13-44
+246            android:enabled="@bool/enable_system_alarm_service_default"
+246-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:125:13-72
+247            android:exported="false" >
+247-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:126:13-37
+248            <intent-filter>
+248-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:128:13-130:29
+249                <action android:name="androidx.work.impl.background.systemalarm.UpdateProxies" />
+249-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:129:17-98
+249-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:129:25-95
+250            </intent-filter>
+251        </receiver>
+252        <receiver
+252-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:132:9-142:20
+253            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+253-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:133:13-78
+254            android:directBootAware="false"
+254-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:134:13-44
+255            android:enabled="true"
+255-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:135:13-35
+256            android:exported="true"
+256-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:136:13-36
+257            android:permission="android.permission.DUMP" >
+257-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:137:13-57
+258            <intent-filter>
+258-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:139:13-141:29
+259                <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
+259-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:140:17-88
+259-->[androidx.work:work-runtime:2.9.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\8ab49b6b0cc7be233e30016844e0e9d8\transformed\work-runtime-2.9.0\AndroidManifest.xml:140:25-85
+260            </intent-filter>
+261        </receiver>
+262
+263        <activity
+263-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:9-173
+264            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+264-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:19-85
+265            android:exported="false"
+265-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:146-170
+266            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+266-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\d45aec3d868fdcf9d94495b1f4a26404\transformed\play-services-base-18.5.0\AndroidManifest.xml:5:86-145
+267
+268        <meta-data
+268-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:9-122
+269            android:name="com.google.android.gms.version"
+269-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:20-65
+270            android:value="@integer/google_play_services_version" />
+270-->[com.google.android.gms:play-services-basement:18.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\1dac9938b2cec2194c2b3cf5540f8367\transformed\play-services-basement-18.4.0\AndroidManifest.xml:6:66-119
+271
+272        <service
+272-->[androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:24:9-28:63
+273            android:name="androidx.room.MultiInstanceInvalidationService"
+273-->[androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:25:13-74
+274            android:directBootAware="true"
+274-->[androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:26:13-43
+275            android:exported="false" />
+275-->[androidx.room:room-runtime:2.5.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\c0233ef754cd40a537298fd8111ff75e\transformed\room-runtime-2.5.0\AndroidManifest.xml:27:13-37
+276
+277        <receiver
+277-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+278            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+278-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+279            android:directBootAware="false"
+279-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+280            android:enabled="true"
+280-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+281            android:exported="true"
+281-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+282            android:permission="android.permission.DUMP" >
+282-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+283            <intent-filter>
+283-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+284                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+284-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+284-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+285            </intent-filter>
+286            <intent-filter>
+286-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+287                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+287-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+287-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+288            </intent-filter>
+289            <intent-filter>
+289-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+290                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+290-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+290-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+291            </intent-filter>
+292            <intent-filter>
+292-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+293                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+293-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+293-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\lasni\.gradle\caches\8.11.1\transforms\a8d88988b69d642afb988334eaddf1bf\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+294            </intent-filter>
+295        </receiver>
+296    </application>
+297
+298</manifest>

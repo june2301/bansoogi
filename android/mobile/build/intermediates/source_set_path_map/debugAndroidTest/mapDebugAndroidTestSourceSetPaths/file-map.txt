@@ -1,0 +1,6 @@
+com.ddc.bansoogi.test.mobile-tracing-1.2.0-0 C:\Users\lasni\.gradle\caches\8.11.1\transforms\041772625368675cec3ff5228907a96c\transformed\tracing-1.2.0\res
+com.ddc.bansoogi.test.mobile-core-1.6.1-1 C:\Users\lasni\.gradle\caches\8.11.1\transforms\a9fda8b2d2496375af322954cb1d74f1\transformed\core-1.6.1\res
+com.ddc.bansoogi.test.mobile-androidTest-2 C:\Users\lasni\Desktop\S12P31A302\android\mobile\build\generated\res\resValues\androidTest\debug
+com.ddc.bansoogi.test.mobile-mergeDebugAndroidTestResources-3 C:\Users\lasni\Desktop\S12P31A302\android\mobile\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.ddc.bansoogi.test.mobile-mergeDebugAndroidTestResources-4 C:\Users\lasni\Desktop\S12P31A302\android\mobile\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.ddc.bansoogi.test.mobile-debugAndroidTest-5 C:\Users\lasni\Desktop\S12P31A302\android\mobile\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

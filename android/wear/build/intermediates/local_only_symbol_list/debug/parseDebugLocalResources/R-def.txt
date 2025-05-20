@@ -1,0 +1,18 @@
+R_DEF: Internal format may change without notice
+local
+drawable background_sunny_sky
+drawable bansoogi_basic
+drawable bansoogi_basic_sprite
+drawable bansoogi_smile_to_me_sprite
+drawable bansoogi_temp_interaction
+drawable cookie
+drawable dehaze
+drawable splash_icon
+drawable temp_interaction
+drawable tile_preview
+mipmap ic_launcher
+string app_name
+string complication_label
+string hello_world
+string tile_label
+style MainActivityTheme.Starting

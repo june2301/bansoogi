@@ -1,0 +1,334 @@
+[
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_ic_home.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/ic_home.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi_intro_logo.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi_intro_logo.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi11_eggshell.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi11_eggshell.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-hdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi33_pikachu.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi33_pikachu.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi6_soysaucing.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi6_soysaucing.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_background_cooked.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/background_cooked.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi_eat.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi_eat.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_egg_before_broken.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/egg_before_broken.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_egg_breaking.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/egg_breaking.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi11_eggshelling.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi11_eggshelling.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi_eating.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi_eating.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-xxxhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-mdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/xml_backup_rules.xml.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi31_cloud.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi31_cloud.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi3_yogurting.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi3_yogurting.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_background_fan_1.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/background_fan_1.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi34_revive.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi34_revive.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi10_garlicing.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi10_garlicing.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi7_flying_fish.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi7_flying_fish.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi10_garlic.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi10_garlic.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi_walk.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi_walk.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_egg_white.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/egg_white.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi6_soysauce.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi6_soysauce.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi8_furikaking.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi8_furikaking.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi12_headphoning.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi12_headphoning.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi2_drying.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi2_drying.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-xxhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_ic_collection.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/ic_collection.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi8_furikake.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi8_furikake.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi14_pensive_bodhisattving.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi14_pensive_bodhisattving.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_background_sunny_sky.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/background_sunny_sky.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi16_hero.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi16_hero.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/xml_data_extraction_rules.xml.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi_default_profile.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi_default_profile.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi_run_sheet.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi_run_sheet.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi12_headphone.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi12_headphone.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi34_reviving.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi34_reviving.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_ic_my_info.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/ic_my_info.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_ic_today.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/ic_today.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_egg_gold.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/egg_gold.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi15_seaweed.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi15_seaweed.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi33_pikachuing.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi33_pikachuing.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi5_backing.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi5_backing.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-xhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-xhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_unknown.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/unknown.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi16_heroing.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi16_heroing.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_ic_calender.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/ic_calender.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi7_flying_fishing.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi7_flying_fishing.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi4_solemn.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi4_solemn.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi3_yogurt.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi3_yogurt.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi13_gold.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi13_gold.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi32_zzaeching.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi32_zzaeching.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_ic_not_broken_egg.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/ic_not_broken_egg.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi31_clouding.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi31_clouding.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi32_zzaechi.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi32_zzaechi.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi5_back.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi5_back.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/layout_activity_splash.xml.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/layout/activity_splash.xml"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi14_pensive_bodhisattva.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi14_pensive_bodhisattva.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi4_solemning.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi4_solemning.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_background_fan_2.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/background_fan_2.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi_basic.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi_basic.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_background.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/background.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi2_dry.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi2_dry.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi15_seaweeding.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi15_seaweeding.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi9_half.png.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi9_half.png"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi9_halfing.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi9_halfing.gif"
+    },
+    {
+        "merged": "com.ddc.bansoogi.mobile-debug-70:/drawable_bansoogi13_golding.gif.flat",
+        "source": "com.ddc.bansoogi.mobile-main-72:/drawable/bansoogi13_golding.gif"
+    }
+]

@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: C" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/ed8405288a300852fd24398e59e91a67/transformed/samsung-health-data-api-1.0.0-b2/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/ed8405288a300852fd24398e59e91a67/transformed/samsung-health-data-api-1.0.0-b2/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
