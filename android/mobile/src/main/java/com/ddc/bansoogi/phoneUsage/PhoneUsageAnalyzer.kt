@@ -4,7 +4,6 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
-import android.util.Log
 import com.ddc.bansoogi.common.foreground.NotificationDurationStateHolder
 import java.time.LocalDate
 import java.time.ZoneId
@@ -34,8 +33,6 @@ object PhoneUsageAnalyzer {
 
             // 홈 화면 감지는 무시
             if (HomePackageManager.isHomePackage(context, currentEvent.packageName)) continue
-            
-            Log.d("Analyzer", "${currentEvent.eventType} 이 발생 ${currentEvent.packageName}에서")
 
             // ACTIVITY_RESUMED : 사용자가 Activity를 실제로 보고 있는 상태일 때 발생
             // ACTIVITY_PAUSED : 사용자가 Activity를 더 이상 보고 있지 않게 될 때 발생
