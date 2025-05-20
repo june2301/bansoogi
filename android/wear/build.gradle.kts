@@ -67,6 +67,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
 
+    // SAMSUNG HEALTH SENSOR SDK
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
+
     // coil
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)

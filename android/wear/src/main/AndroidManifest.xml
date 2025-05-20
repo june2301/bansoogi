@@ -20,6 +20,11 @@
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+    <uses-permission android:name="com.samsung.android.permission.health.MONITOR_PPG" />
+    <uses-permission android:name="com.samsung.android.service.health.permission.HEALTH_TRACKING" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -81,7 +86,7 @@
         <service
             android:name=".sensor.SensorForegroundService"
             android:exported="false"
-            android:foregroundServiceType="health" />
+            android:foregroundServiceType="health|dataSync" />
 
         <receiver
             android:name=".sensor.BootCompletedReceiver"
