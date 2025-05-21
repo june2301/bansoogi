@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.ddc.bansoogi.R
 import com.ddc.bansoogi.common.mobile.communication.sender.BansoogiStateSender
 
 enum class BansoogiState(val configValue: String) {
@@ -39,6 +40,16 @@ object BansoogiStateHolder {
         }
 
         BansoogiStateSender.send(context, newState)
+    }
+
+    fun background(): Int {
+        if (state == BansoogiState.BASIC
+            || state == BansoogiState.WALK
+            || state == BansoogiState.RUN) {
+            return R.drawable.background_sunny_sky
+        }
+
+        return R.drawable.background_kitchen
     }
 }
 

@@ -5,14 +5,24 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +44,7 @@ import com.ddc.bansoogi.common.util.health.Permissions
 import com.ddc.bansoogi.common.util.health.RealTimeHealthDataManager
 import com.ddc.bansoogi.common.wear.communication.state.HealthStateHolder
 import com.ddc.bansoogi.main.controller.TodayHealthDataController
+import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.samsung.android.sdk.health.data.HealthDataService
 import com.samsung.android.sdk.health.data.HealthDataStore
 import kotlinx.coroutines.launch
@@ -172,13 +183,46 @@ fun MainScreen(
         else -> NavRoutes.HOME
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.background_sunny_sky),
-            contentDescription = "배경 하늘",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+    var currentBackgroundResId by remember{ mutableIntStateOf(R.drawable.background_sunny_sky) }
+
+    LaunchedEffect(BansoogiStateHolder.state) {
+        currentBackgroundResId = BansoogiStateHolder.background()
+    }
+
+    val lightPosition = remember { Animatable(initialValue = -1000f) }
+    LaunchedEffect(Unit) {
+        // 빛이 위에서 아래로 내려오는 애니메이션
+        lightPosition.animateTo(
+            targetValue = 2000f,
+            animationSpec = tween(
+                durationMillis = 1500,
+                easing = FastOutSlowInEasing
+            )
         )
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AnimatedContent(
+            targetState = currentBackgroundResId,
+            transitionSpec = {
+                slideInHorizontally(
+                    animationSpec = tween(durationMillis = 1000),
+                    initialOffsetX = { -it } // 위에서 아래로 등장
+                ) togetherWith
+                        slideOutHorizontally(
+                            animationSpec = tween(durationMillis = 1000),
+                            targetOffsetX = { it }   // 아래로 밀려서 퇴장
+                        )
+            }
+
+        ) { resId ->
+            Image(
+                painter = painterResource(id = resId),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
 
         Scaffold(
             containerColor = Color.Transparent,
