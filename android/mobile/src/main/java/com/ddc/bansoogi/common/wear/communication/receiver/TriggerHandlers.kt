@@ -65,7 +65,16 @@ class TriggerHandlers(
         }
     }
 
-    fun handleStaticWarn(raw: ByteArray) { StaticEventProcessor.handleWarn(scope,raw) }
-    fun handleStaticBreak(raw: ByteArray) { StaticEventProcessor.handleBreak(scope,raw) }
-    fun handleStaticAccum(raw: ByteArray) { StaticEventProcessor.handleAccum(scope,raw) }
+    // com/ddc/bansoogi/common/wear/communication/receiver/TriggerHandlers.kt
+    fun handleStaticWarn(raw: ByteArray) {
+        StaticEventProcessor.handleWarn(context, scope, raw)
+    }
+
+    fun handleStaticBreak(raw: ByteArray) {
+        StaticEventProcessor.handleBreak(context, scope, raw)
+    }
+
+    fun handleStaticAccum(raw: ByteArray) {
+        StaticEventProcessor.handleAccum(context, scope, raw)
+    }
 }

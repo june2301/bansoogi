@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.ddc.bansoogi.myinfo.data.dto.MyInfoDto
 
 object MyInfoStateHolder {
-    var myInfoDto by mutableStateOf<MyInfoDto?>(null)
+    var myInfoDto by mutableStateOf(MyInfoDto.default())
 
     fun update(newDto: MyInfoDto?) {
         myInfoDto = newDto ?: MyInfoDto.default()

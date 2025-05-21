@@ -12,7 +12,7 @@ object StaticEventSender {
 
     /** STATIC_WARN & STATIC_BREAK 메세지 전송용 DTO */
     private data class StaticWarnDto(val type: String, val duration: Int)
-    private data class StaticBreakDto(val type: String, val energy: Int)
+    private data class StaticBreakDto(val type: String)      // 에너지 제거
     private data class StaticAccumDto(val lying: Int? = null, val sitting: Int? = null)
 
     fun sendWarn(context: Context, type: String, durationMin: Int) {
@@ -20,9 +20,11 @@ object StaticEventSender {
         WearToMobileMessageSender.sendData(context, dto, CommunicationPaths.WearToMobile.STATIC_WARN)
     }
 
-    fun sendBreak(context: Context, type: String, energy: Int = 10) {
-        val dto = StaticBreakDto(type, energy)
-        WearToMobileMessageSender.sendData(context, dto, CommunicationPaths.WearToMobile.STATIC_BREAK)
+    fun sendBreak(ctx: Context, type: String) {
+        WearToMobileMessageSender.sendData(ctx,
+            StaticBreakDto(type),
+            CommunicationPaths.WearToMobile.STATIC_BREAK
+        )
     }
 
     fun sendAccumTime(context: Context, lyingΔ: Int? = null, sittingΔ: Int? = null) {
