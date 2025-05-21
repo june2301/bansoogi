@@ -1,6 +1,5 @@
 package com.ddc.bansoogi.main.ui.manage
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -59,11 +58,9 @@ import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
 import kotlinx.coroutines.delay
-import java.nio.file.WatchEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.LocalTime
-import androidx.core.content.edit
 
 @Composable
 fun HomeContent(
@@ -128,24 +125,10 @@ fun HomeContent(
     // 식사 애니메이션
     var triggerMeal by remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            modifier = Modifier,
-            onClick = {
-                val prefs = context.getSharedPreferences("bansoogi_prefs", Context.MODE_PRIVATE)
-                val key = "egg_seen_${LocalDate.now()}"
-                prefs.edit() { remove(key) }
-            },
-            content = {
-                Text(text = "리셋")
-            }
-        )
-
         Spacer(modifier = Modifier.height(120.dp))
 
         Box(
