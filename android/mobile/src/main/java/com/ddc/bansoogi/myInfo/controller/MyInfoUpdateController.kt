@@ -14,13 +14,10 @@ class MyInfoUpdateController(
     private val model = MyInfoModel()
     private val scope = CoroutineScope(Dispatchers.Main)
 
-    fun save(input: MyInfoDto, context: Context) {
+    fun save(input: MyInfoDto) {
         scope.launch {
             val updated = model.updateMyInfo(input)
             onCompleted(updated)
-
-            // 워치로 전송
-            RequestHandler(context, scope).handleMyInfoRequest()
         }
     }
 }

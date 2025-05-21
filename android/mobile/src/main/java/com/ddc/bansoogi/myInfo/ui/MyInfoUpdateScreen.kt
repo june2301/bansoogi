@@ -378,7 +378,7 @@ fun MyInfoUpdateScreen(navController: NavController) {
                             bgSoundEnabled       = initial.bgSoundEnabled,
                             effectSoundEnabled   = initial.effectSoundEnabled
                         )
-                        updateController.save(newInfo, context)
+                        updateController.save(newInfo)
 
                         AlarmScheduler.rescheduleAllDailyAlarms(context, newInfo)
                         SyncHelper.syncNotificationToWatch(context, newInfo)
