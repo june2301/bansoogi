@@ -33,6 +33,8 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
 import androidx.core.content.edit
+import com.ddc.bansoogi.common.util.health.EnergyUtil
+import com.ddc.bansoogi.common.wear.communication.state.HealthStateHolder
 
 fun RealmInstant.toLocalDate(): LocalDate {
     val instant = Instant.ofEpochSecond(this.epochSeconds, this.nanosecondsOfSecond.toLong())
@@ -81,6 +83,15 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         myInfoController.myInfoFlow().collect { dto ->
             myInfoState.value = dto
+        }
+    }
+
+    // 헬스 데이터 호출해서 점수 계산
+    LaunchedEffect(Unit) {
+        val health =  HealthStateHolder.healthData
+        if (health != null) {
+            val energy = EnergyUtil.calculateEnergyOnce(health)
+            todayRecordDtoState.value?.energyPoint = energy
         }
     }
 
