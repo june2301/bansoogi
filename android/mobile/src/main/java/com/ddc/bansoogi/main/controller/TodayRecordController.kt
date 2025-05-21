@@ -42,6 +42,8 @@ class TodayRecordController(
         coroutineScope.launch {
             model.initialize()
             refreshTodayRecord()
+
+            sendToWatch()
         }
     }
 
@@ -56,6 +58,8 @@ class TodayRecordController(
         coroutineScope.launch {
             model.renewTodayRecord()
             refreshTodayRecord()
+
+            sendToWatch()
         }
     }
 
@@ -63,7 +67,7 @@ class TodayRecordController(
         coroutineScope.launch {
             handleInteraction(todayRecord, isInSleepRange)
 
-            RequestHandler(context, coroutineScope).handleTodayRecordRequest()
+            sendToWatch()
         }
     }
 
@@ -89,6 +93,12 @@ class TodayRecordController(
             RequestHandler(context, this).handleTodayRecordRequest()
 
             refreshTodayRecord()
+
+            sendToWatch()
         }
+    }
+
+    private fun sendToWatch() {
+        RequestHandler(context, coroutineScope).handleTodayRecordRequest()
     }
 }

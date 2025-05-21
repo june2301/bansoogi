@@ -5,6 +5,7 @@ import com.ddc.bansoogi.common.data.model.TodayRecordModel
 import com.ddc.bansoogi.common.foreground.NotificationDurationStateHolder
 import com.ddc.bansoogi.common.notification.NotificationDispatcher
 import com.ddc.bansoogi.common.notification.NotificationFactory
+import com.ddc.bansoogi.common.wear.communication.receiver.RequestHandler
 import com.ddc.bansoogi.main.ui.util.BansoogiState
 import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +48,9 @@ object PhoneUsageMonitor {
                         PhoneUsageFinishTracker.startMonitoring(context, scope) {
                             PhoneUsageEnergyUtil.addEnergy(time)
                         }
+
+                        // 워치로 결과 전송
+                        RequestHandler(context, scope).handleTodayRecordRequest()
                     }
                 } else {
                     // 핸드폰 사용 중이 아니면 측정 리셋

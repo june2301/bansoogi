@@ -105,10 +105,10 @@ fun TodayRecordedContent(report: ReportDto) {
 
         InfoSection(
             items = listOf(
-                { InfoRow("걸음 수", report.walkCount, unit = "걸음") },
-                { InfoRow("런닝 시간", report.runTime, unit = "분") },
-                { InfoRow("운동 시간", report.exerciseTime, unit = "분") },
-                { InfoRow("계단 오르기", report.stairsClimbed, unit = "m") }
+                { InfoRow("총 걸음 수", report.walkCount, unit = "걸음") },
+                { InfoRow("총 계단 수", report.stairsClimbed, unit = "계단") },
+                { InfoRow("수면 시간", report.sleepTime, unit = "분") },
+                { InfoRow("운동 시간", report.exerciseTime, unit = "분") }
             )
         )
 
