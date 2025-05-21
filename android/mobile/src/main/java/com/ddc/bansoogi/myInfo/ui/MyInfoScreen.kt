@@ -390,7 +390,8 @@ private fun ToggleRow(
             onCheckedChange = { onToggle() },
             modifier = Modifier.padding(end = 8.dp),
             colors = SwitchDefaults.colors(
-                checkedTrackColor = GreenChecked
+                checkedTrackColor = GreenChecked,
+                uncheckedTrackColor = Color(0xFFECECEC)
             )
         )
     }
@@ -469,7 +470,10 @@ private fun NotificationToggleRow(
                 }
             },
             modifier = Modifier.padding(end = 8.dp),
-            colors = SwitchDefaults.colors(checkedTrackColor = GreenChecked)
+            colors = SwitchDefaults.colors(
+                checkedTrackColor = GreenChecked,
+                uncheckedTrackColor = Color(0xFFECECEC)
+            )
         )
     }
 
