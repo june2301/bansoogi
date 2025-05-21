@@ -133,10 +133,8 @@ fun HomeContent(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 에너지 바 (상단)
         Spacer(modifier = Modifier.height(100.dp))
 
-        // 에너지 바
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.85f)
@@ -170,7 +168,6 @@ fun HomeContent(
             )
         }
 
-        // Today 버튼
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -217,7 +214,6 @@ fun HomeContent(
             }
         }
 
-        // 캐릭터 영역
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -228,8 +224,8 @@ fun HomeContent(
             Box(
                 modifier = Modifier
                     .sizeIn(
-                        maxWidth = 240.dp,  // 최대 너비 제한
-                        maxHeight = 240.dp  // 최대 높이 제한
+                        maxWidth = 240.dp,
+                        maxHeight = 240.dp
                     )
                     .aspectRatio(1f), // 1:1 비율
                 contentAlignment = Alignment.Center
