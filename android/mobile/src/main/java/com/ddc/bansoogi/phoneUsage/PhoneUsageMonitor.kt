@@ -23,8 +23,10 @@ object PhoneUsageMonitor {
                         PhoneUsageAnalyzer.startUsageTracking()
                     }
 
-                    // 반숙이 애니메이션 변경
-                    BansoogiStateHolder.updateWithWatch(context, BansoogiState.PHONE)
+                    // 반숙이 애니메이션 변경, BASIC 상태에서만 PHONE으로 변경
+                    if (BansoogiStateHolder.state == BansoogiState.BASIC) {
+                        BansoogiStateHolder.updateWithWatch(context, BansoogiState.PHONE)
+                    }
 
                     // 기준 이상 사용 확인
                     if (PhoneUsageAnalyzer.isPhoneUsedOverThreshold(NotificationDurationStateHolder.notificationDuration)) {
@@ -53,9 +55,12 @@ object PhoneUsageMonitor {
                         RequestHandler(context, scope).handleTodayRecordRequest()
                     }
                 } else {
-                    // 핸드폰 사용 중이 아니면 측정 리셋
-                    BansoogiStateHolder.updateWithWatch(context, BansoogiState.BASIC) // 애니메이션 리셋
-                    PhoneUsageAnalyzer.resetUsageStartTime()
+                    // 핸드폰 사용 중이 아니면 측정 리셋, PHONE에서만 BASIC으로 변경
+                    if (BansoogiStateHolder.state == BansoogiState.PHONE) {
+                        BansoogiStateHolder.updateWithWatch(context, BansoogiState.BASIC)
+                    }
+
+                    PhoneUsageAnalyzer.resetUsageStartTime() // 측정 시간 리셋
                 }
 
                 delay(5 * 1000) // 5초마다 체크
