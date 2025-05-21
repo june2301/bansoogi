@@ -8,23 +8,44 @@ object NotificationFactory {
 
     fun phoneUsage(context: Context, minutes: Int): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_PHONE_USAGE)
-            .setContentTitle("휴대폰 사용 과다")
-            .setContentText("$minutes 분 넘게 사용 중입니다. 잠시 휴식하세요!")
+            .setContentTitle("핸드폰 그만해!")
+            .setContentText("$minutes 분이나 핸드폰?")
+            .setContentIntent(
+                buildDeepLinkPendingIntent(
+                    context,
+                    "bansoogi://home",
+                    NotificationDispatcher.Id.PHONE.value
+                )
+            )
 
     fun sitting(context: Context, minutes: Int): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_SITTING)
-            .setContentTitle("장시간 앉아 있음")
-            .setContentText("$minutes 분 동안 앉아 있었습니다. 잠시 스트레칭 어떠세요?")
+            .setContentTitle("좀 쉬었다 해!")
+            .setContentText("$minutes 분 동안 앉아 있었어!")
+            .setContentIntent(
+                buildDeepLinkPendingIntent(
+                    context,
+                    "bansoogi://home",
+                    NotificationDispatcher.Id.SITTING.value
+                )
+            )
 
     fun lying(context: Context, minutes: Int): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_LYING)
-            .setContentTitle("장시간 누워 있음")
-            .setContentText("$minutes 분 동안 누워 있었습니다. 몸을 움직여 보세요.")
+            .setContentTitle("일어나! 이 게으름뱅이야!")
+            .setContentText("$minutes 분 동안 누워 있었어!")
+            .setContentIntent(
+                buildDeepLinkPendingIntent(
+                    context,
+                    "bansoogi://home",
+                    NotificationDispatcher.Id.LYING.value
+                )
+            )
 
     fun dailySummary(context: Context): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_TODAY_RECORD)
-            .setContentTitle("오늘의 활동 리포트")
-            .setContentText("터치해서 상세 내용을 확인하세요.")
+            .setContentTitle("활동 리포트 도착!")
+            .setContentText("오늘 활동 내용을 확인해봐!")
             .setContentIntent(
                 buildDeepLinkPendingIntent(
                     context,
@@ -35,8 +56,8 @@ object NotificationFactory {
 
     fun sleepReminder(context: Context): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_SLEEP)
-            .setContentTitle("취침 시간이 되었어요")
-            .setContentText("하루를 마무리하고 푹 쉬세요!")
+            .setContentTitle("잘 시간이야")
+            .setContentText("수고했어! 오늘도!")
             .setContentIntent(
                 buildDeepLinkPendingIntent(
                     context,
@@ -47,8 +68,8 @@ object NotificationFactory {
 
     fun wakeUp(context: Context) =
         baseBuilder(context, NotificationHelper.CHANNEL_WAKE)
-            .setContentTitle("기상 시간이에요")
-            .setContentText("상쾌한 하루를 시작해 볼까요?")
+            .setContentTitle("일어날 시간이야!")
+            .setContentText("오늘 하루도 화이팅!")
             .setContentIntent(
                 buildDeepLinkPendingIntent(
                     context,
@@ -62,14 +83,14 @@ object NotificationFactory {
         type: AlarmType
     ): NotificationCompat.Builder {
         val description = when (type) {
-            AlarmType.BREAKFAST -> "아침 식사 시간이에요"
-            AlarmType.LUNCH     -> "점심 식사 시간이에요"
-            AlarmType.DINNER    -> "저녁 식사 시간이에요"
-            else                -> "식사 시간이에요"
+            AlarmType.BREAKFAST -> "아침 시간~"
+            AlarmType.LUNCH     -> "점심 먹고 가자~"
+            AlarmType.DINNER    -> "맛있는거 먹자!"
+            else                -> "밥 먹어! 밥!"
         }
 
         val builder = baseBuilder(context, NotificationHelper.CHANNEL_MEAL)
-            .setContentTitle("식사 알림")
+            .setContentTitle("밥 먹자!")
             .setContentText(description)
             .setContentIntent(
                 buildDeepLinkPendingIntent(

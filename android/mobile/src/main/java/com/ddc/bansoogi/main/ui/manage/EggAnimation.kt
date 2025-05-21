@@ -77,7 +77,9 @@ fun EggBreakingAnimation(eggState: MutableState<Int>) {
 @Composable
 fun EggCharacterReceived(onDismiss: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { onDismiss() },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(0.37f))
@@ -109,7 +111,6 @@ fun EggCharacterReceived(onDismiss: () -> Unit) {
 
         Text(
             text = "터치해서 시작하기 →",
-            modifier = Modifier.clickable { onDismiss() },
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             style = TextStyle(

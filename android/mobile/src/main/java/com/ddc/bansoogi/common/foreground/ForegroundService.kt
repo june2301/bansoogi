@@ -73,7 +73,7 @@ class ForegroundService: Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("반숙이 활동 중")
             .setContentText("반숙이가 활동하고 있어요")
-            .setSmallIcon(R.drawable.bansoogi_default_profile)
+            .setSmallIcon(R.drawable.ic_home)
             .setOngoing(true)
             .build()
     }
