@@ -71,7 +71,7 @@ object NotificationHelper {
                 CHANNEL_REWARD,
                 "즉시 행동 보상 알림",
                 NotificationManager.IMPORTANCE_HIGH
-            ).apply { description = "일어서기/스트레칭 성공 시 에기가 기뻐합니다!" }
+            ).apply { description = "일어서기/스트레칭 성공 시 반숙이가 기뻐합니다!" }
         )
         manager.createNotificationChannels(channels)
     }
