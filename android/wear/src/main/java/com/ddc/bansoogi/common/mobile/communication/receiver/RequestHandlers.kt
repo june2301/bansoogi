@@ -1,6 +1,8 @@
 package com.ddc.bansoogi.common.mobile.communication.receiver
 
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
 import com.ddc.bansoogi.common.mobile.data.mapper.JsonMapper
 import com.ddc.bansoogi.myinfo.data.dto.MyInfoDto
 import com.ddc.bansoogi.myinfo.data.store.saveMyInfoCache
@@ -47,7 +49,13 @@ class RequestHandler(
         handleData (
             data = data,
             deserialize = { JsonMapper.fromJson<MyInfoDto>(String(it)) },
-            updateState = { MyInfoStateHolder.update(it) },
+//            updateState = { MyInfoStateHolder.update(it) },
+            updateState = { dto ->
+                // ① 로그 남기기
+                Log.d(TAG, "handleMyInfoData 받음 → 업데이트 전 DTO: $dto")
+                MyInfoStateHolder.update(dto)
+                Log.d(TAG, "MyInfoStateHolder.myInfoDto = ${MyInfoStateHolder.myInfoDto}")
+            },
             saveToLocal = { saveMyInfoCache(context, it) },
             scope = scope
         )

@@ -108,7 +108,11 @@ object NotificationFactory {
         return builder
     }
 
-
+    /** 즉시 행동 보상(일어서기·스트레칭) */
+    fun cheer(context: Context): NotificationCompat.Builder =
+        baseBuilder(context, NotificationHelper.CHANNEL_REWARD)
+           .setContentTitle("에기가 기뻐하고 있어요!")
+           .setContentText("에기: 얏호~")
 
     /* 공통 속성을 모아 둔 private 메서드 */
     private fun baseBuilder(context: Context, channelId: String) =
