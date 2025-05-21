@@ -120,9 +120,22 @@ fun HomeScreen(
                             val key = "egg_seen_${LocalDate.now()}"
                             val alreadySeen = prefs.getBoolean(key, false)
 
-                            if (!alreadySeen && CharacterGetController().canDrawCharacter()) {
-                                prefs.edit() { putBoolean(key, true) }
-                                navController.navigate("character_get/${healthData.step.toInt()}/${healthData.floorsClimbed.toInt()}/${healthData.sleepData}/${healthData.exerciseTime?:0}")
+                            if (!alreadySeen) {
+                                if (CharacterGetController().canDrawCharacter()) {
+                                    prefs.edit() { putBoolean(key, true) }
+                                    navController.navigate("character_get/${healthData.step.toInt()}/${healthData.floorsClimbed.toInt()}/${healthData.sleepData}/${healthData.exerciseTime?:0}")
+                                }
+                                // 점수가 80점 미만인 경우!
+                                else {
+                                    RecordedController().createRecordedReport(
+                                        todayRecordDtoState.value!!,
+                                        0,
+                                        healthData.step.toInt(),
+                                        healthData.floorsClimbed.toInt(),
+                                        healthData.sleepData?:0,
+                                        healthData.exerciseTime?:0
+                                    )
+                                }
                             }
                         }
                     }
