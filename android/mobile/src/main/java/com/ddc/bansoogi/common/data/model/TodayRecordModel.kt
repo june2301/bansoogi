@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
 
 class TodayRecordModel {
-    private val dataSource = TodayRecordDataSource()
-    private val logModel = ActivityLogModel()
+    val dataSource = TodayRecordDataSource()
+    val logModel = ActivityLogModel()
 
     suspend fun initialize() {
         dataSource.initialize()

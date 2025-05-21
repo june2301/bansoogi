@@ -5,21 +5,25 @@
 package com.ddc.bansoogi.sensor
 
 import android.content.Context
-import android.os.Build
-import android.util.Log
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import com.samsung.android.service.health.tracking.*
-import com.samsung.android.service.health.tracking.data.*
-import com.samsung.android.service.health.tracking.data.ValueKey.PpgSet
+import android.util.Log
+import com.samsung.android.service.health.tracking.ConnectionListener
+import com.samsung.android.service.health.tracking.HealthTracker
+import com.samsung.android.service.health.tracking.HealthTrackerException
+import com.samsung.android.service.health.tracking.HealthTrackingService
+import com.samsung.android.service.health.tracking.data.DataPoint
+import com.samsung.android.service.health.tracking.data.HealthTrackerType
+import com.samsung.android.service.health.tracking.data.PpgType
 import com.samsung.android.service.health.tracking.data.ValueKey.PpgSet.PPG_GREEN
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlin.math.roundToInt
 
-class AndroidSensorManager(private val context: Context) {
+class AndroidSensorManager(val context: Context) {
 
     private val sensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -141,9 +145,20 @@ class AndroidSensorManager(private val context: Context) {
     }
 
     private fun stopTracker() {
-        ppgTracker.unsetEventListener()
-        ppgTracker.javaClass.getMethod("stop").invoke(ppgTracker)
-        hts.disconnectService()
+        // `startPpg()` is asynchronous – it is possible that `stopAll()` is invoked
+        // before the Health Tracking Service finishes connecting and the `ppgTracker`
+        // field is initialised.  Guard against that race condition.
+
+        if (::ppgTracker.isInitialized) {
+            runCatching {
+                ppgTracker.unsetEventListener()
+                ppgTracker.javaClass.getMethod("stop").invoke(ppgTracker)
+            }.onFailure { Log.w(TAG, "Failed to stop PPG tracker: $it") }
+        }
+
+        if (::hts.isInitialized) {
+            runCatching { hts.disconnectService() }
+        }
     }
 
     // ────────────────────────────────────────────────────────────
@@ -171,7 +186,6 @@ class AndroidSensorManager(private val context: Context) {
     }
 
     fun stopAll() {
-        offBodyWrapper.stop()
         accelWrapper.stop()
         stepDetectorWrapper.stop()
         pressureWrapper.stop()

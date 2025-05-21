@@ -10,6 +10,7 @@ import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.common.util.health.EnergyUtil
 import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
+import com.ddc.bansoogi.common.wear.communication.processor.StaticEventProcessor
 import com.ddc.bansoogi.main.data.model.TodayHealthDataDto
 import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import java.time.LocalDate
@@ -63,4 +64,8 @@ class TriggerHandlers(
             RequestHandler(context, scope).handleTodayRecordRequest()
         }
     }
+
+    fun handleStaticWarn(raw: ByteArray) { StaticEventProcessor.handleWarn(scope,raw) }
+    fun handleStaticBreak(raw: ByteArray) { StaticEventProcessor.handleBreak(scope,raw) }
+    fun handleStaticAccum(raw: ByteArray) { StaticEventProcessor.handleAccum(scope,raw) }
 }

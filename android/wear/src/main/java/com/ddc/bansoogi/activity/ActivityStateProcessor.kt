@@ -1,15 +1,28 @@
 package com.ddc.bansoogi.activity
 
 import android.util.Log
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import com.ddc.bansoogi.common.mobile.communication.sender.BansoogiStateSender
+import com.ddc.bansoogi.main.ui.util.BansoogiState
+import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.sensor.AndroidSensorManager
+import com.ddc.bansoogi.state.ProlongedStaticMonitor
+import com.ddc.bansoogi.state.StaticBreakRewardMonitor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 /* ─────────────── 최종 ActivityState 모델 ─────────────── */
 sealed class ActivityState {
     object OffBody                  : ActivityState()
     object Sleeping                 : ActivityState()
-    object Idle                     : ActivityState()               // StaticClassifier 적용 전
     data class Static(
         val type: StaticType,
 //        val phoneUsage: Boolean
@@ -28,6 +41,8 @@ class ActivityStateProcessor(
     private val sensorManager: AndroidSensorManager,
     /** 폰 사용 여부를 워치로 브로드캐스트 받는 Flow (선택) */
     private val phoneUsage: Flow<PhoneUsageDto>? = null,           // ⭐
+    /** 장시간 정적 상태 경고 기준(분). Wear 단말에 저장해 두었다가 주입 */
+    private val notificationDurationMin: Int = 1,
     externalScope: CoroutineScope? = null
 ) {
     private val scope = externalScope ?: CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -74,7 +89,7 @@ class ActivityStateProcessor(
         collectDynamic()
         collectStatic()                // ⭐
         collectSleep()
-//        collectPhoneUsage()            // ⭐
+        collectPhoneUsage()
     }
 
     fun stop() {
@@ -86,56 +101,100 @@ class ActivityStateProcessor(
         scope.cancel()
     }
 
-    /* ─────────── Collector 영역 ─────────── */
-
-    /* (1) 착용 여부 */
     private fun collectOffBody() = sensorManager.isOffBody
         .onEach { isOnBody = it
+            dynamicCls.setEnabled(isOnBody && isActive)
+            staticCls.setEnabled(isOnBody && !isActive)
             sleepDetector.setEnabled(!isActive && isOnBody)
-            recompute()
-        }.launchIn(scope)         // true=착용
 
-    /* (2) 수면 */
-    private fun collectSleep() = sleepDetector.state
-         .onEach { recompute() }
-         .launchIn(scope)
-
-    /* (3) Idle / Active 전이 */
-    private var isActive = false       // ACTIVE⇔IDLE
-    private fun collectIdleActive() = idleActiveDetector.state
-        .onEach { state ->
-            isActive = (state == SmaIdleActiveDetector.State.ACTIVE)
-
-            /* ACTIVE → Dynamic만 켜고 Static 꺼두기 */
-            dynamicCls.setEnabled(isActive)              // ACTIVE 때만 DynamicOn
-            staticCls.setEnabled(!isActive)      // ⭐ 반대로
-
-            /* 수면 감지: IDLE + OnBody 때만 */
-            sleepDetector.setEnabled(!isActive && isOnBody)
+            if (!isOnBody) {
+                Log.i(TAG, "🔌 OffBody detected → Stopping all sensors")
+                sensorManager.stopAll()            // ✅ 센서 중지
+                onStaticInterrupted()
+            } else {
+                Log.i(TAG, "⚡ OnBody detected → Restarting all sensors")
+                sensorManager.startAll()           // ✅ 센서 재시작
+            }
 
             recompute()
         }.launchIn(scope)
 
-    /* (4) Dynamic */
+    private fun collectSleep() = sleepDetector.state
+        .onEach { recompute() }
+        .launchIn(scope)
+
+    private var isActive = false
+    private fun collectIdleActive() = idleActiveDetector.state
+        .onEach { state ->
+            val wasActive = isActive
+            isActive = (state == SmaIdleActiveDetector.State.ACTIVE)
+            if (wasActive && !isActive) onStaticInterrupted() // ACTIVE→IDLE 전이 시 초기화
+            dynamicCls.setEnabled(isActive)
+            staticCls.setEnabled(!isActive)
+            sleepDetector.setEnabled(!isActive && isOnBody)
+            recompute()
+        }.launchIn(scope)
+
     private var latestDynamic: DynamicType? = null
     private fun collectDynamic() = dynamicCls.state
         .onEach { latestDynamic = it; recompute() }
         .launchIn(scope)
 
     /* (5) Static */
+    /* ───────── Static 수집 로직 수정 ───────── */
     private var latestStatic: StaticType? = null
-    private fun collectStatic() = staticCls.state          // ⭐
-        .onEach { latestStatic = it; recompute() }
+    private fun collectStatic() = staticCls.state
+        .onEach { newStatic ->
+            val currSitting = newStatic == StaticType.SITTING
+            val currLying   = newStatic == StaticType.LYING
+
+            // 1) ProlongedMonitor 입력
+            prolongedMonitor.onStatic(currSitting, currLying)
+            // 2) RewardMonitor 평가 (이전↔현재 비교)
+            rewardMonitor.evaluate(prevSitting, prevLying, currSitting, currLying)
+            // 3) 플래그 최신화
+            prevSitting = currSitting
+            prevLying   = currLying
+            // 4) 상태 저장 및 재계산
+            latestStatic = newStatic
+            recompute()
+        }
         .launchIn(scope)
 
+    /* Idle→Active 또는 OffBody 로 전환될 때 Static 버퍼 초기화 */
+    private fun onStaticInterrupted() {
+        prolongedMonitor.onNonStatic()
+        prevSitting = false; prevLying = false
+    }
+
     /* (6) PhoneUsage (선택) */
-//    private var isPhoneUsing: Boolean = false              // ⭐
-//    private fun collectPhoneUsage() {
-//        phoneUsage?.onEach {
-//            isPhoneUsing = it.isUsing
-//            recompute()
-//        }?.launchIn(scope)
-//    }
+    private var isPhoneUsing: Boolean = false              // ⭐
+    private fun collectPhoneUsage() {
+        phoneUsage?.onEach {
+            val wasUsing = isPhoneUsing
+            isPhoneUsing = it.isUsing
+
+            // phoneUsage 변경 시 recompute 실행
+            if (wasUsing != isPhoneUsing) {
+                recompute()
+            }
+        }?.launchIn(scope)
+    }
+
+    private val prolongedMonitor = ProlongedStaticMonitor(
+        ctx = sensorManager.context,
+        scope = scope,
+        notificationDurationMin = notificationDurationMin
+    )
+    private val rewardMonitor = StaticBreakRewardMonitor(
+        ctx = sensorManager.context,
+        scope = scope,
+        prolonged = prolongedMonitor
+    )
+
+    // 상태 캐싱용 플래그
+    private var prevSitting = false
+    private var prevLying   = false
 
     /* ───────── 최종 상태 합성 ───────── */
     private fun recompute() {
@@ -148,20 +207,46 @@ class ActivityStateProcessor(
             idleActiveDetector.state.value == SmaIdleActiveDetector.State.IDLE -> {
                 latestStatic?.let {
                     ActivityState.Static(it)      // ⭐
-//                    ActivityState.Static(it, isPhoneUsing)      // ⭐
-                } ?: ActivityState.Idle                         // Static 미확정 시
+                }
+                    ?: ActivityState.Static(StaticType.UNKNOWN)                         // Static 미확정 시
             }
 
             /* ACTIVE → Dynamic 결과 우선 */
             latestDynamic != null         -> ActivityState.Dynamic(latestDynamic!!)
 
-            else                          -> ActivityState.Unknown
+            else                          -> ActivityState.Dynamic(DynamicType.UNKNOWN)
         }
         if (_state.value != newState) {
             _state.value = newState
             Log.d(TAG, "ActivityState → $newState")
+
+            // ⭐ BansoogiState 업데이트 로직 추가
+            val bansoogiState = newState.toBansoogiState(isPhoneUsing)
+            CoroutineScope(Dispatchers.Main).launch {
+                BansoogiStateHolder.updateWithMobile(sensorManager.context, bansoogiState)
+                BansoogiStateSender.send(sensorManager.context, bansoogiState)
+            }
         }
     }
 
     private companion object { const val TAG = "ActivityProcessor" }
+
+    fun ActivityState.toBansoogiState(phoneUsage: Boolean): BansoogiState = when (this) {
+        is ActivityState.Static -> {
+            if (phoneUsage) BansoogiState.PHONE else when (type) {
+                StaticType.SITTING, StaticType.LYING  -> BansoogiState.LIE
+                StaticType.STANDING, StaticType.UNKNOWN -> BansoogiState.BASIC
+            }
+        }
+        is ActivityState.Dynamic -> when (type) {
+            DynamicType.WALKING     -> BansoogiState.WALK
+            DynamicType.RUNNING     -> BansoogiState.RUN
+            DynamicType.CLIMBING,
+            DynamicType.EXERCISING  -> BansoogiState.RUN
+            DynamicType.UNKNOWN     -> BansoogiState.BASIC
+        }
+        ActivityState.Sleeping      -> BansoogiState.SLEEP
+        ActivityState.OffBody       -> BansoogiState.BASIC
+        else                        -> BansoogiState.BASIC
+    }
 }
