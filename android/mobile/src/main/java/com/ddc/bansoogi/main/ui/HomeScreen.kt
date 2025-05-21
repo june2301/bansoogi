@@ -33,6 +33,7 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
 import androidx.core.content.edit
+import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.util.health.EnergyUtil
 import com.ddc.bansoogi.common.wear.communication.state.HealthStateHolder
 
@@ -160,29 +161,25 @@ fun HomeScreen(
     }
 
     // Egg Manager 페이지 보여주기!
-    if (showEggManager.value) {
-        EggManagerModal(
-            myInfo = myInfoState.value,
-            onDismiss = {
-                myInfoController.markNotFirstUser(context)
-                showEggManager.value = false
-                todayRecordController.renewTodayRecord()
-            }
-        )
-    } else {
-        onModalOpen()
-        todayRecordDtoState.value?.let { todayRecord ->
-            HomeContent(
-                todayRecord,
-                todayRecordController,
-                isInSleepRange.value,
-                healthData,
-            )
-        } ?: Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("로딩 중...", fontSize = 16.sp)
+    LaunchedEffect(showEggManager.value) {
+        if (showEggManager.value) {
+            navController.navigate(NavRoutes.EGGMANAGER)
+            showEggManager.value = false
         }
+    }
+
+    // 6) 화면 렌더링: 항상 HomeContent (또는 로딩)
+    todayRecordDtoState.value?.let { todayRecord ->
+        HomeContent(
+            todayRecord,
+            todayRecordController,
+            isInSleepRange.value,
+            healthData
+        )
+    } ?: Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text("로딩 중...", fontSize = 16.sp)
     }
 }

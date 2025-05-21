@@ -226,16 +226,16 @@ fun MyInfoContent(
             checked = myInfoDto.notificationEnabled,
             onToggle = onToggleNotification
         )
-        ToggleRow(
-            label = "배경음 설정",
-            checked = myInfoDto.bgSoundEnabled,
-            onToggle = onToggleBgSound
-        )
-        ToggleRow(
-            label = "효과음 설정",
-            checked = myInfoDto.effectSoundEnabled,
-            onToggle = onToggleEffect
-        )
+//        ToggleRow(
+//            label = "배경음 설정",
+//            checked = myInfoDto.bgSoundEnabled,
+//            onToggle = onToggleBgSound
+//        )
+//        ToggleRow(
+//            label = "효과음 설정",
+//            checked = myInfoDto.effectSoundEnabled,
+//            onToggle = onToggleEffect
+//        )
 
         Spacer(modifier = Modifier.height(12.dp))
         Divider(thickness = 2.dp, color = Color(0xFF888888))
