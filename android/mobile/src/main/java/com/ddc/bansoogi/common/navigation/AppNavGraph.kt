@@ -2,17 +2,24 @@ package com.ddc.bansoogi.common.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import com.ddc.bansoogi.calendar.ui.CalendarScreen
 import com.ddc.bansoogi.collection.ui.CollectionScreen
+import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
+import com.ddc.bansoogi.main.controller.TodayRecordController
 import com.ddc.bansoogi.main.ui.HomeScreen
 import com.ddc.bansoogi.main.ui.manage.CharacterGetScreen
+import com.ddc.bansoogi.main.ui.manage.EggManagerScreen
+import com.ddc.bansoogi.main.view.TodayRecordView
 import com.ddc.bansoogi.myInfo.ui.MyInfoScreen
 import com.ddc.bansoogi.myInfo.ui.MyInfoUpdateScreen
 
@@ -26,6 +33,18 @@ fun AppNavGraph(
     onModalClose: () -> Unit,
     isFirstUser: Boolean
 ) {
+    val context = LocalContext.current
+
+    val todayRecordController = remember {
+        TodayRecordController(
+            view = object : TodayRecordView {
+                override fun displayTodayRecord(todayRecordDto: TodayRecordDto) { }
+                override fun showEmptyState() { }
+            },
+            context = context
+        )
+    }
+
     NavHost(
         navController = navController,
         startDestination = NavRoutes.HOME,
@@ -69,6 +88,14 @@ fun AppNavGraph(
             val exercise = backStackEntry.arguments?.getString("exercise")?.toIntOrNull() ?: 0
 
             CharacterGetScreen(navController, walk, stairs, sleep, exercise)
+        }
+
+        composable(NavRoutes.EGGMANAGER) {
+            EggManagerScreen(
+                onRenewRecord = { todayRecordController.renewTodayRecord() },
+                onDismiss     = { navController.popBackStack() },
+                modifier      = Modifier.fillMaxSize()
+            )
         }
     }
 }

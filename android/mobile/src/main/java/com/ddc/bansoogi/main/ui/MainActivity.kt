@@ -129,7 +129,7 @@ class MainActivity : BaseActivity() {
         lifecycleScope.launch {
             healthDataManager.healthData.collect { data ->
                 healthData = data
-                
+
                 // 모바일로 전송을 위한 객체 관리
                 HealthStateHolder.update(healthData)
             }
@@ -180,6 +180,7 @@ fun MainScreen(
         currentDestination?.hierarchy?.any { it.route == NavRoutes.CALENDAR } == true -> NavRoutes.CALENDAR
         currentDestination?.hierarchy?.any { it.route == NavRoutes.MYINFO } == true -> NavRoutes.MYINFO
         currentDestination?.hierarchy?.any { it.route == NavRoutes.MYINFOUPDATE } == true -> NavRoutes.MYINFO
+        currentDestination?.hierarchy?.any { it.route == NavRoutes.EGGMANAGER } == true -> NavRoutes.EGGMANAGER
         else -> NavRoutes.HOME
     }
 
@@ -227,28 +228,35 @@ fun MainScreen(
         Scaffold(
             containerColor = Color.Transparent,
             bottomBar = {
-                BansoogiNavigationBar(
-                    currentRoute = currentRoute,
-                    onNavigate = { route ->
-                        if (route != currentRoute) {
-                            navController.navigate(route) {
-                                popUpTo(NavRoutes.HOME) {
-                                    saveState = true
-                                    inclusive = false
+                if (currentRoute != NavRoutes.EGGMANAGER) {
+                    BansoogiNavigationBar(
+                        currentRoute = currentRoute,
+                        onNavigate = { route ->
+                            if (route != currentRoute) {
+                                navController.navigate(route) {
+                                    popUpTo(NavRoutes.HOME) {
+                                        saveState = true
+                                        inclusive = false
+                                    }
+                                    // 중복 방지
+                                    launchSingleTop = true
+                                    // 상태 저장
+                                    restoreState = true
                                 }
-                                // 중복 방지
-                                launchSingleTop = true
-                                // 상태 저장
-                                restoreState = true
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         ) { paddingValues ->
+            val contentMod = if (currentRoute == NavRoutes.EGGMANAGER) {
+                Modifier.fillMaxSize()
+            } else {
+                Modifier.padding(paddingValues)
+            }
             AppNavGraph(
                 navController = navController,
-                modifier = Modifier.padding(paddingValues),
+                modifier = contentMod,
                 healthData = healthData,
                 onModalOpen = onModalOpen,
                 onModalClose = onModalClose,

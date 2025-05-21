@@ -3,9 +3,12 @@ package com.ddc.bansoogi.main.ui.manage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -35,7 +38,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun EggBreakingAnimation(eggState: MutableState<Int>) {
-    Box(
+    BoxWithConstraints(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
@@ -58,9 +61,9 @@ fun EggBreakingAnimation(eggState: MutableState<Int>) {
             ),
             contentDescription = "달걀 깨지는 중",
             modifier = Modifier
-                .width(1000.dp)
-                .height(1000.dp)
-                .padding(bottom = 240.dp),
+                .fillMaxWidth(1f)
+                .fillMaxHeight(1f)
+                .padding(bottom = maxHeight * 0.25f),
             contentScale = ContentScale.Fit
         )
 
@@ -77,7 +80,7 @@ fun EggCharacterReceived(onDismiss: () -> Unit) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(330.dp))
+        Spacer(modifier = Modifier.weight(0.37f))
 
         val context = LocalContext.current
         val imageLoader = remember {
@@ -116,5 +119,7 @@ fun EggCharacterReceived(onDismiss: () -> Unit) {
                 )
             )
         )
+
+        Spacer(modifier = Modifier.weight(0.18f))
     }
 }
