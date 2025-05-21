@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -31,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -61,6 +64,7 @@ import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.LocalTime
+import kotlin.math.round
 
 @Composable
 fun HomeContent(
@@ -129,28 +133,30 @@ fun HomeContent(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(120.dp))
+        Spacer(modifier = Modifier.height(100.dp))
 
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.85f)
                 .padding(horizontal = 16.dp)
+                .clip(RoundedCornerShape(16.dp))
                 .background(Color.White)
                 .border(
                     width = 2.dp,
-                    color = Color.DarkGray
+                    color = Color.DarkGray,
+                    shape = RoundedCornerShape(16.dp)
                 )
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(28.dp)
+                    .height(32.dp)
                     .background(Color(0xFFEEEEEE))
             )
             Box(
                 modifier = Modifier
                     .fillMaxWidth(todayRecordDto.energyPoint / 100f)
-                    .height(24.dp)
+                    .height(32.dp)
                     .background(Color.Green)
             )
             Text(
@@ -165,7 +171,7 @@ fun HomeContent(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 50.dp),
+                .padding(horizontal = 16.dp, vertical = 30.dp),
             contentAlignment = Alignment.CenterEnd
         ) {
             Column(
@@ -190,8 +196,8 @@ fun HomeContent(
                     ),
                     contentDescription = "버튼 이미지",
                     modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp)
+                        .width(55.dp)
+                        .height(55.dp)
                         .clickable {
                             showModal = true
                         },
@@ -210,36 +216,45 @@ fun HomeContent(
 
         Box(
             modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f)
-                .fillMaxWidth(),
+                .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
-            if (triggerInteraction) {
-                BansoogiAnimation(
-                    state = BansoogiState.SMILE,
-                    loop = false,
-                    loopCouont = 3,
-                    onAnimationEnd = {
-                        triggerInteraction = false
-                    }
-                )
-            } else if (triggerMeal) {
-                BansoogiAnimation(
-                    state = BansoogiState.EAT,
-                    loop = false,
-                    loopCouont = 1,
-                    onAnimationEnd = {
-                        triggerMeal = false
-                    }
-                )
-            } else {
-                BansoogiAnimation(
-                    state = BansoogiStateHolder.state
-                )
+            Box(
+                modifier = Modifier
+                    .sizeIn(
+                        maxWidth = 240.dp,
+                        maxHeight = 240.dp
+                    )
+                    .aspectRatio(1f), // 1:1 비율
+                contentAlignment = Alignment.Center
+            ) {
+                if (triggerInteraction) {
+                    BansoogiAnimation(
+                        state = BansoogiState.SMILE,
+                        loop = false,
+                        loopCouont = 3,
+                        onAnimationEnd = {
+                            triggerInteraction = false
+                        }
+                    )
+                } else if (triggerMeal) {
+                    BansoogiAnimation(
+                        state = BansoogiState.EAT,
+                        loop = false,
+                        loopCouont = 1,
+                        onAnimationEnd = {
+                            triggerMeal = false
+                        }
+                    )
+                } else {
+                    BansoogiAnimation(
+                        state = BansoogiStateHolder.state
+                    )
+                }
             }
         }
-
-        Spacer(modifier = Modifier.height(28.dp))
 
         val buttonShape = RoundedCornerShape(30.dp)
         val isCoolDown = remember { mutableStateOf(true) }
@@ -331,7 +346,7 @@ fun HomeContent(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(120.dp))
+        Spacer(modifier = Modifier.height(32.dp))
     }
 
     if (showModal) {
