@@ -5,6 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun SubTitleText(title: String) {
@@ -13,6 +14,7 @@ fun SubTitleText(title: String) {
         style = MaterialTheme.typography.titleLarge.copy(
             fontWeight = FontWeight.SemiBold,
             color = Color.Black
-        )
+        ),
+        fontSize = 20.sp
     )
 }

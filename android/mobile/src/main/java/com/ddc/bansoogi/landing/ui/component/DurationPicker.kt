@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -36,12 +37,12 @@ fun DurationPicker(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .border(1.dp, Color.Black, RoundedCornerShape(12.dp))
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+            .padding(horizontal = 8.dp, vertical = 8.dp)
     ) {
         Box(
             modifier = Modifier
-                .size(36.dp)
+                .requiredSize(36.dp)
                 .clip(CircleShape)
                 .background(Color(0xFFFF6F61))
                 .clickable {
@@ -70,7 +71,7 @@ fun DurationPicker(
 
         Box(
             modifier = Modifier
-                .size(36.dp)
+                .requiredSize(36.dp)
                 .clip(CircleShape)
                 .background(Color(0xFF40C4FF))
                 .clickable {

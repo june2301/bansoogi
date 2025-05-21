@@ -25,11 +25,11 @@ fun RoundedContainerBox(
 ) {
     Box(
         modifier = modifier
+            .fillMaxWidth()
             .padding(16.dp)
             .clip(RoundedCornerShape(cornerRadius.dp))
             .border(borderWidth.dp, borderColor, RoundedCornerShape(cornerRadius.dp))
-            .background(backgroundColor)
-            .fillMaxWidth(),
+            .background(backgroundColor),
         contentAlignment = contentAlignment
     ) {
         content()

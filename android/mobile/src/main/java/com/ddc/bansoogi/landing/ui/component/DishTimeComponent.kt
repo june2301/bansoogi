@@ -99,7 +99,8 @@ fun DishTimeComponent(
                     onToggleChanged(it)
                 },
                 colors = SwitchDefaults.colors(
-                    checkedTrackColor = Color(0xFF99CC00)
+                    checkedTrackColor = Color(0xFF99CC00),
+                    uncheckedTrackColor = Color(0xFFECECEC)
                 )
             )
         }
