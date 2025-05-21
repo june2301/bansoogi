@@ -32,6 +32,12 @@ import com.ddc.bansoogi.landing.ui.component.text.DefaultTitleText
 import com.ddc.bansoogi.landing.ui.component.NextButton
 import com.ddc.bansoogi.landing.ui.component.RoundedContainerBox
 import com.ddc.bansoogi.phoneUsage.PhoneUsagePermissionUtil
+import android.app.Activity
+import androidx.compose.runtime.rememberCoroutineScope
+import com.samsung.android.sdk.health.data.HealthDataService
+import com.samsung.android.sdk.health.data.HealthDataStore
+import com.ddc.bansoogi.common.util.health.Permissions
+import kotlinx.coroutines.launch
 
 @Composable
 fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
@@ -43,6 +49,16 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
     var currentDialogType by remember { mutableStateOf<AgreementType?>(null) }
 
     val context = LocalContext.current
+
+    val activity = (context as? Activity)
+        ?: error("TermsScreen 은 Activity 컨텍스트에서 호출되어야 합니다.")
+
+    val coroutineScope = rememberCoroutineScope()
+
+    val healthDataStore = remember {
+        HealthDataService.getStore(activity)
+    }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -133,28 +149,31 @@ fun TermsScreen(controller: LandingController, onNext: () -> Unit) {
         }
 
         NextButton(
-            // TODO: Health Data 활용 시 추가 예정
-//            enabled = serviceChecked && privacyChecked && healthChecked,
-//            onClick = {
-//                if (serviceChecked && privacyChecked && healthChecked) {
-//                    onNext()
-//                }
-//            },
             enabled = serviceChecked && privacyChecked,
             onClick = {
-                if (serviceChecked && privacyChecked) {
-                    if (!PhoneUsagePermissionUtil.hasUsageStatsPermission(context)) {
-                        Toast.makeText(context, "핸드폰 사용량 권한을 먼저 허용해 주세요.", Toast.LENGTH_SHORT).show()
-                        PhoneUsagePermissionUtil.requestUsageStatsPermission(context)
-                        return@NextButton
-                    }
+                if (!PhoneUsagePermissionUtil.hasUsageStatsPermission(context)) {
+                    PhoneUsagePermissionUtil.requestUsageStatsPermission(context)
+                    return@NextButton
+                }
 
-                    requestPermissionThenNext(onNext)
+                coroutineScope.launch {
+                    try {
+                        healthDataStore.requestPermissions(
+                            Permissions.PERMISSIONS,
+                            activity
+                        )
+                    } catch (_: Exception) { /* 무시 */ }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        onNext()
+                    }
                 }
             },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+
     }
 
     currentDialogType?.let { type ->

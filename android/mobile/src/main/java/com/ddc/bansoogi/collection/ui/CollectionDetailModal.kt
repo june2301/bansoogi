@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -80,14 +81,23 @@ fun CollectionDetailDialog(
                 context = context,
                 spriteSheetName = "${character.gifUrl}_sheet.png",
                 jsonName = "${character.imageUrl}.json",
-                modifier = Modifier.size(160.dp)
+                modifier = Modifier
+                    .size(220.dp)
+                    .padding(bottom = 0.dp)
             )
         },
         title = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier
+                    .offset(y = (-8).dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = character.title,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 )
                 character.acquisitionCount?.let {
                     Spacer(modifier = Modifier.height(8.dp))
@@ -114,7 +124,10 @@ fun CollectionDetailDialog(
             ) {
                 Text(
                     text = character.description,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 )
                 character.createdAt?.let {
                     Text(
