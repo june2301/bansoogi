@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -224,8 +225,8 @@ fun HomeContent(
             Box(
                 modifier = Modifier
                     .sizeIn(
-                        maxWidth = 240.dp,
-                        maxHeight = 240.dp
+                        maxWidth = 200.dp,
+                        maxHeight = 200.dp
                     )
                     .aspectRatio(1f), // 1:1 비율
                 contentAlignment = Alignment.Center
@@ -270,9 +271,9 @@ fun HomeContent(
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 64.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .fillMaxWidth(),
+//                .padding(horizontal = 64.dp),
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             val btnModifier = Modifier
@@ -314,8 +315,9 @@ fun HomeContent(
                         tint = if (isCoolDown.value || isInSleepRange) Color.Gray else Color(0xFF4CAF50)
                     )
                 }
-
             }
+
+            Spacer(modifier = Modifier.width(18.dp))
 
             Button(
                 onClick = {
