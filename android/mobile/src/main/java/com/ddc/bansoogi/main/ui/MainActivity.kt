@@ -92,11 +92,6 @@ class MainActivity : BaseActivity() {
         private const val UPDATE_INTERVAL = 10000L // 포그라운드: 10초
     }
 
-    // 블루투스 관련 변수들
-    private lateinit var bansoogiBluetoothManager: BansoogiBluetoothManager
-    private var bluetoothStatus by mutableStateOf("")
-    private var isBluetoothSearching by mutableStateOf(false)
-    private var showBluetoothDialog by mutableStateOf(false)
 
     // 친구 발견 알림 관련
     private var showFriendFoundNotification by mutableStateOf(false)
@@ -115,21 +110,20 @@ class MainActivity : BaseActivity() {
         val todayFormatted = CalendarUtils.toFormattedDateString(today, today.dayOfMonth)
         TodayHealthDataController().initialize(todayFormatted)
 
-        bansoogiBluetoothManager = BansoogiBluetoothManager(this)
 
-        // 친구 발견 콜백 설정
-        bansoogiBluetoothManager.onFriendFound = { friendName ->
-            currentFriendName = friendName
-            showFriendFoundNotification = true
-            Log.d("MainActivity", "새로운 반숙이 친구 발견: $friendName")
-        }
-
-        // 스캔 상태 관찰
-        lifecycleScope.launch {
-            bansoogiBluetoothManager.isScanning.collect { scanning ->
-                isBluetoothSearching = scanning
-            }
-        }
+//        // 친구 발견 콜백 설정
+//        bansoogiBluetoothManager.onFriendFound = { friendName ->
+//            currentFriendName = friendName
+//            showFriendFoundNotification = true
+//            Log.d("MainActivity", "새로운 반숙이 친구 발견: $friendName")
+//        }
+//
+//        // 스캔 상태 관찰
+//        lifecycleScope.launch {
+//            bansoogiBluetoothManager.isScanning.collect { scanning ->
+//                isBluetoothSearching = scanning
+//            }
+//        }
 
         setContent {
             MainScreen(
@@ -137,12 +131,7 @@ class MainActivity : BaseActivity() {
                 onModalOpen = { startHealthDataUpdates() },
                 onModalClose = { stopHealthDataUpdates() },
                 isFirstUser = isFirstUser,
-                bluetoothManager = bansoogiBluetoothManager,
-                bluetoothStatus = bluetoothStatus,
-                isBluetoothSearching = isBluetoothSearching,
-                showBluetoothDialog = showBluetoothDialog,
                 onBluetoothButtonClick = { handleBluetoothTrigger() },
-                onBluetoothDialogDismiss = { showBluetoothDialog = false },
                 showFriendFoundNotification = showFriendFoundNotification,
                 currentFriendName = currentFriendName,
                 onDismissFoundNotification = { showFriendFoundNotification = false }
@@ -153,60 +142,8 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun handleBluetoothTrigger() {
-        when {
-            !bansoogiBluetoothManager.isBluetoothSupported() -> {
-                bluetoothStatus = "이 기기는 블루투스를 지원하지 않아요 😢"
-            }
-            !bansoogiBluetoothManager.hasAllPermissions() -> {
-                showBluetoothDialog = true
-            }
-            !bansoogiBluetoothManager.isBluetoothEnabled() -> {
-                requestBluetoothEnable()
-            }
-            else -> {
-                // 친구 찾기 트리거 실행
-                bluetoothStatus = bansoogiBluetoothManager.triggerFriendSearch()
-
-                // 상태 메시지 자동 사라짐
-                Handler(Looper.getMainLooper()).postDelayed({
-                    bluetoothStatus = ""
-                }, 3000)
-            }
-        }
-    }
-
-    private fun requestBluetoothEnable() {
-        if (bansoogiBluetoothManager.hasAllPermissions()) {
-            try {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(enableBtIntent, 1002)
-            } catch (e: SecurityException) {
-                bluetoothStatus = "블루투스 권한이 필요해요!"
-                isBluetoothSearching = false
-            }
-        } else {
-            bluetoothStatus = "블루투스 권한이 필요해요!"
-            showBluetoothDialog = true
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 1002) { // 블루투스 활성화 요청
-            if (resultCode == RESULT_OK) {
-                if (bansoogiBluetoothManager.hasAllPermissions()) {
-                    bansoogiBluetoothManager.initializeAfterPermissionGranted()
-                    handleBluetoothTrigger()
-                } else {
-                    bluetoothStatus = "블루투스 권한이 필요해요!"
-                    showBluetoothDialog = true
-                }
-            } else {
-                bluetoothStatus = "블루투스를 켜야 친구들을 찾을 수 있어요!"
-            }
-        }
     }
 
     override fun onResume() {
@@ -290,7 +227,6 @@ fun MainScreen(
     onModalOpen: () -> Unit,
     onModalClose: () -> Unit,
     isFirstUser: Boolean,
-    bluetoothManager: BansoogiBluetoothManager,
     bluetoothStatus: String,
     isBluetoothSearching: Boolean,
     showBluetoothDialog: Boolean,
@@ -342,7 +278,6 @@ fun MainScreen(
         )
     }
 
-    val discoveredFriends by bluetoothManager.discoveredFriends.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         AnimatedContent(
