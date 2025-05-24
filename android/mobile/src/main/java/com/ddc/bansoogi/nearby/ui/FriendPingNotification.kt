@@ -1,4 +1,4 @@
-package com.ddc.bansoogi.main.bluetooth
+package com.ddc.bansoogi.nearby.ui
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
