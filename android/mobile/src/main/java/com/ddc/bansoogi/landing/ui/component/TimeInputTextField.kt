@@ -15,8 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ddc.bansoogi.common.util.time.validateTime
 
 @Composable
@@ -65,8 +68,18 @@ fun TimeInputTextField(
             .background(Color.White)
             .fillMaxWidth(),
         enabled = enabled,
+        textStyle = TextStyle(
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        ),
         placeholder = {
-            Text("00:00", color = Color.LightGray)
+            Text(
+                "00:00",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.LightGray
+            )
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,

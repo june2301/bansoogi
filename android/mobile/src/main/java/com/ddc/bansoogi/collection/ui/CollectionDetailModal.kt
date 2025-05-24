@@ -6,13 +6,13 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -40,10 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
+import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import com.ddc.bansoogi.collection.data.model.CollectionDto
 import com.ddc.bansoogi.collection.util.saveDownloadableImage
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
@@ -64,22 +62,7 @@ fun CollectionDetailDialog(
     val model = remember { MyInfoModel() }
     val scope = rememberCoroutineScope()
 
-    val gifResId = context.resources.getIdentifier(character.gifUrl, "drawable", context.packageName)
     var showConfirmDialog: Boolean by remember { mutableStateOf(false) }
-
-    val imageLoader = ImageLoader.Builder(context)
-        .components {
-            add(GifDecoder.Factory())
-            add(ImageDecoderDecoder.Factory())
-        }
-        .build()
-
-    val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(context)
-            .data(gifResId)
-            .build(),
-        imageLoader = imageLoader
-    )
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -94,18 +77,27 @@ fun CollectionDetailDialog(
             }
         },
         icon = {
-            Image(
-                painter = painter,
-                contentDescription = character.title,
+            SpriteSheetAnimation(
+                context = context,
+                spriteSheetName = "${character.gifUrl}_sheet.png",
+                jsonName = "${character.imageUrl}.json",
                 modifier = Modifier
-                    .size(160.dp)
+                    .size(220.dp)
+                    .padding(bottom = 0.dp)
             )
         },
         title = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier
+                    .offset(y = (-8).dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = character.title,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 )
                 character.acquisitionCount?.let {
                     Spacer(modifier = Modifier.height(8.dp))
@@ -132,7 +124,10 @@ fun CollectionDetailDialog(
             ) {
                 Text(
                     text = character.description,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 )
                 character.createdAt?.let {
                     Text(

@@ -85,12 +85,35 @@ object AlarmScheduler {
         )
     }
 
-    /** MyInfoDto 하나를 받아 5개 알람을 모두 예약 */
+    fun rescheduleAllDailyAlarms(context: Context, info: MyInfoDto) {
+        cancelAllDailyAlarms(context)
+        scheduleAllDailyAlarms(context, info)
+    }
+
     fun scheduleAllDailyAlarms(context: Context, info: MyInfoDto) {
         scheduleDailyAlarm(context, AlarmType.WAKE,      info.wakeUpTime)
         scheduleDailyAlarm(context, AlarmType.BREAKFAST, info.breakfastTime)
         scheduleDailyAlarm(context, AlarmType.LUNCH,     info.lunchTime)
         scheduleDailyAlarm(context, AlarmType.DINNER,    info.dinnerTime)
         scheduleDailyAlarm(context, AlarmType.SLEEP,     info.sleepTime)
+    }
+
+    fun cancelDailyAlarm(context: Context, type: AlarmType) {
+        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent   = Intent(context, DailyAlarmReceiver::class.java).apply {
+            putExtra("alarm_type", type.name)
+        }
+        val pending = PendingIntent.getBroadcast(
+            context,
+            type.requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        alarmMgr.cancel(pending)
+        pending.cancel()
+    }
+
+    fun cancelAllDailyAlarms(context: Context) {
+        AlarmType.values().forEach { cancelDailyAlarm(context, it) }
     }
 }

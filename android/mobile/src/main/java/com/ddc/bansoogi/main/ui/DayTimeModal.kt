@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,9 +30,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.ddc.bansoogi.R
+import com.ddc.bansoogi.calendar.ui.ActivityLogList
+import com.ddc.bansoogi.common.data.model.ActivityLogDto
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
-import com.samsung.android.sdk.health.data.HealthDataStore
+import com.ddc.bansoogi.common.util.mapper.ActivityLogMapper.toKoreanBehaviorState
+import kotlin.collections.forEach
 
 @Composable
 fun ModalHeader(
@@ -76,7 +77,7 @@ fun SectionHeader(
         modifier = Modifier.fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.egg_before_broken),
+            painter = painterResource(id = R.drawable.egg_before_broken_gif),
             contentDescription = "달걀",
             modifier = Modifier.size(32.dp)
         )
@@ -93,9 +94,9 @@ fun SectionHeader(
 }
 
 @Composable
-fun InfoRow(
+fun InfoTimeRow(
     label: String,
-    value: Int,
+    value: Int?,
     unit: String,
     modifier: Modifier = Modifier,
     highlightText: String? = null,
@@ -124,13 +125,70 @@ fun InfoRow(
             }
 
             Text(
-                text = value.toString(),
+                text = if ((value?:0) / 60 >0) { "${(value?:0) / 60}" } else "",
                 fontSize = 16.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = unit,
+                text = if ((value?:0) / 60 >0) { " 시간 " } else "",
+                fontSize = 12.sp,
+                color = Color.DarkGray
+            )
+            Text(
+                text = value?.let { "${it % 60}" } ?: "해당 값이 존재하지 않습니다.",
+                fontSize = 16.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = value?.let { "${unit.toString()} " }?: "",
+                fontSize = 12.sp,
+                color = Color.DarkGray
+            )
+        }
+    }
+}
+
+@Composable
+fun InfoRow(
+    label: String,
+    value: Int?,
+    unit: String,
+    modifier: Modifier = Modifier,
+    highlightText: String? = null,
+    highlightColor: Color = Color(0xFF4CAF50)
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            fontSize = 16.sp,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
+        )
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (highlightText != null) {
+                Text(
+                    text = highlightText,
+                    fontSize = 14.sp,
+                    color = highlightColor
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+            }
+
+            Text(
+                text = value?.toString() ?: "",
+                fontSize = 16.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = value?.let { "${unit.toString()} " }?: "해당 값이 존재하지 않습니다.",
                 fontSize = 12.sp,
                 color = Color.DarkGray
             )
@@ -147,6 +205,39 @@ fun Divider() {
     )
 }
 
+@Composable
+fun ActivityLogList(logs: List<ActivityLogDto>) {
+    Column {
+        logs.forEach { log ->
+            ActivityLogItem(log)
+        }
+    }
+}
+
+@Composable
+fun ActivityLogItem(log: ActivityLogDto) {
+    Row(modifier = Modifier
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = log.reactedTime,
+            fontSize = 12.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 4.dp, start = 8.dp)
+        )
+
+        val readableState = log.fromState.toKoreanBehaviorState()
+        val durationText = "${log.duration ?: 0}분 $readableState 추적"
+
+        Text(
+            text = durationText,
+            fontSize = 12.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 4.dp, start = 8.dp)
+        )
+    }
+}
 
 @Composable
 fun DayTimeModal(
@@ -173,6 +264,8 @@ fun DayTimeModal(
                 )
                 .padding(16.dp)
         ) {
+            Text(text = "${todayRecordDto.phoneOffCnt}")
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
@@ -206,7 +299,7 @@ fun DayTimeModal(
                         InfoRow(
                             label = "누워있던 시간 :",
                             value = todayRecordDto.lyingTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -214,7 +307,7 @@ fun DayTimeModal(
                         InfoRow(
                             label = "앉아있던 시간 :",
                             value = todayRecordDto.sittingTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -222,7 +315,7 @@ fun DayTimeModal(
                         InfoRow(
                             label = "휴대폰 사용 시간 :",
                             value = todayRecordDto.phoneTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         Divider()
@@ -237,24 +330,30 @@ fun DayTimeModal(
                         InfoRow(
                             label = "기상 이벤트 :",
                             value = todayRecordDto.standUpCnt,
-                            unit = "회"
+                            unit = " 회"
                         )
+
+                        ActivityLogList(todayRecordDto.standLog)
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InfoRow(
                             label = "스트레칭 이벤트 :",
-                            value = 1,
-                            unit = "회"
+                            value = todayRecordDto.stretchCnt,
+                            unit = " 회"
                         )
+
+                        ActivityLogList(todayRecordDto.stretchLog)
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InfoRow(
                             label = "휴대폰 미사용 이벤트 :",
-                            value = 0,
-                            unit = "회"
+                            value = todayRecordDto.phoneOffCnt,
+                            unit = " 회"
                         )
+
+                        ActivityLogList(todayRecordDto.phoneOffLog)
 
                         Divider()
 
@@ -266,7 +365,7 @@ fun DayTimeModal(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InfoRow(
-                            label = "총 걸음수 :",
+                            label = "총 걸음 수 :",
                             value = healthData.step.toInt(),
                             unit = " 회"
                         )
@@ -281,9 +380,17 @@ fun DayTimeModal(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        InfoRow(
+                        InfoTimeRow(
                             label = "수면 시간 :",
-                            value = healthData.sleepData.toInt(),
+                            value = healthData.sleepData,
+                            unit = " 분"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoTimeRow(
+                            label = "운동 시간 :",
+                            value = healthData.exerciseTime,
                             unit = " 분"
                         )
                     }

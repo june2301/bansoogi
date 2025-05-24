@@ -17,6 +17,7 @@ object NotificationHelper {
     const val CHANNEL_WAKE       = "channel_wake"
     const val CHANNEL_MEAL       = "channel_meal"
     const val CHANNEL_SLEEP      = "channel_sleep"
+    const val CHANNEL_REWARD        =    "channel_reward"   // ✨ 추가
 
     // Application.onCreate() 에서 딱 한 번 호출
     fun registerChannels(context: Context) {
@@ -64,7 +65,13 @@ object NotificationHelper {
                 CHANNEL_SLEEP,
                 "취침 알림",
                 NotificationManager.IMPORTANCE_HIGH
-            ).apply { description = "설정한 취침 시간에 알림 발송" }
+            ).apply { description = "설정한 취침 시간에 알림 발송" },
+
+            NotificationChannel(
+                CHANNEL_REWARD,
+                "즉시 행동 보상 알림",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply { description = "일어서기/스트레칭 성공 시 반숙이가 기뻐합니다!" }
         )
         manager.createNotificationChannels(channels)
     }

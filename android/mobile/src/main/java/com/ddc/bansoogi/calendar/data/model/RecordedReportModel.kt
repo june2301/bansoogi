@@ -1,14 +1,12 @@
 package com.ddc.bansoogi.calendar.data.model
 
+import android.util.Log
 import com.ddc.bansoogi.calendar.data.entity.RecordedReport
-import com.ddc.bansoogi.calendar.data.local.Bansoogi
 import com.ddc.bansoogi.calendar.data.local.RecordedReportDataSource
+import com.ddc.bansoogi.collection.data.model.CollectionModel
 import com.ddc.bansoogi.common.data.model.ActivityLogModel
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import io.realm.kotlin.types.RealmInstant
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import org.mongodb.kbson.ObjectId
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -28,16 +26,22 @@ class RecordedReportModel {
         todayRecordDto: TodayRecordDto,
         bansoogiIdData: Int,
         walkCountData: Int,
-        runTileData: Int,
-        exerciseTimeData: Int,
-        stairsClimbedData: Int
+        stairsClimbedData: Int,
+        sleepTimeData: Int,
+        exerciseTimeData: Int
     ) {
         val date = todayRecordDto.createdAt.toLocalDate()
+
+        val actualBansoogiId = if (todayRecordDto.energyPoint >= 80) {
+            bansoogiIdData
+        } else {
+            0
+        }
 
         dataSource.createRecordedReport(
             RecordedReport().apply {
                 finalEnergyPoint = todayRecordDto.energyPoint
-                bansoogiId = bansoogiIdData
+                bansoogiId = actualBansoogiId
 
                 standupCount = todayRecordDto.standUpCnt
                 stretchCount = todayRecordDto.stretchCnt
@@ -46,12 +50,11 @@ class RecordedReportModel {
                 lyingTime = todayRecordDto.lyingTime
                 sittingTime = todayRecordDto.sittingTime
                 phoneTime = todayRecordDto.phoneTime
-                sleepTime = todayRecordDto.sleepTime
 
                 walkCount = walkCountData
-                runTime = runTileData
-                exerciseTime = exerciseTimeData
                 stairsClimbed = stairsClimbedData
+                sleepTime = sleepTimeData
+                exerciseTime = exerciseTimeData
 
                 breakfast = todayRecordDto.breakfast
                 lunch = todayRecordDto.lunch
@@ -62,24 +65,22 @@ class RecordedReportModel {
         )
     }
 
-    fun getCalendarMarkers(): Flow<List<CalendarMarkerDto>> =
-        dataSource.getRecordedReportList().map { reportList ->
-            reportList.map { report ->
-                // 나중에 반숙이 클래스에 대한 data 함수들이 만들어진다면 그 함수들로 변경할 예정
-                val bansoogi = dataSource.getBansoogiById(report.bansoogiId)
+    fun getCalendarMarkers(): List<CalendarMarkerDto> {
+        return dataSource.getRecordedReportList().map { report ->
+            val bansoogi = CollectionModel().getBansoogiById(report.bansoogiId)
 
-                CalendarMarkerDto(
-                    date = LocalDate.parse(report.reportedDate),
-                    bansoogiAnimationId =  bansoogi?.gifUrl
-                )
-            }
+            CalendarMarkerDto(
+                date = LocalDate.parse(report.reportedDate),
+                bansoogiGifUrl =  bansoogi.gifUrl,
+                bansoogiImageUrl = bansoogi.imageUrl
+            )
         }
+    }
 
-    suspend fun getDetailReport(date: String): DetailReportDto? {
+    fun getDetailReport(date: String): DetailReportDto? {
         val report = dataSource.getRecordedReportByDate(date) ?: return null
 
-        // 반숙이 데이터 호출도 나중에 변경 예정
-        val bansoogi = dataSource.getBansoogiById(report.bansoogiId)
+        val bansoogi = CollectionModel().getBansoogiById(report.bansoogiId)
 
         // 로그 호출
         val standLog = logModel.getLogsByTypeAndDate("STANDUP", date)
@@ -91,8 +92,9 @@ class RecordedReportModel {
 
             finalEnergyPoint = report.finalEnergyPoint,
 
-            bansoogiTitle = bansoogi?.title ?: "",
-            bansoogiResource = bansoogi?.gifUrl ?: 0,
+            bansoogiTitle = bansoogi.title,
+            bansoogiGifUrl = bansoogi.gifUrl,
+            bansoogiImageUrl = bansoogi.imageUrl,
 
             standupCount = report.standupCount,
             standLog = standLog,
@@ -106,12 +108,54 @@ class RecordedReportModel {
             lyingTime = report.lyingTime,
             sittingTime = report.sittingTime,
             phoneTime = report.phoneTime,
-            sleepTime = report.sleepTime,
 
             walkCount = report.walkCount,
-            runTime = report.runTime,
-            exerciseTime =  report.exerciseTime,
             stairsClimbed = report.stairsClimbed,
+            sleepTime =  report.sleepTime,
+            exerciseTime = report.exerciseTime,
+
+            breakfast = report.breakfast,
+            lunch = report.lunch,
+            dinner = report.dinner
+        )
+    }
+
+    fun getLatestRecordedReport(): DetailReportDto {
+        val report = dataSource.getLatestRecordedReport()
+
+        val bansoogi = CollectionModel().getBansoogiById(report.bansoogiId)
+
+        // 로그 호출
+        val standLog = logModel.getLogsByTypeAndDate("STANDUP", report.reportedDate)
+        val stretchLog = logModel.getLogsByTypeAndDate("STRETCH", report.reportedDate)
+        val phoneOffLog = logModel.getLogsByTypeAndDate("PHONE_OFF", report.reportedDate)
+
+        return DetailReportDto(
+            date = report.reportedDate,
+
+            finalEnergyPoint = report.finalEnergyPoint,
+
+            bansoogiTitle = bansoogi.title,
+            bansoogiGifUrl = bansoogi.gifUrl,
+            bansoogiImageUrl = bansoogi.imageUrl,
+
+            standupCount = report.standupCount,
+            standLog = standLog,
+
+            stretchCount = report.stretchCount,
+            stretchLog = stretchLog,
+
+            phoneOffCount = report.phoneOffCount,
+            phoneOffLog = phoneOffLog,
+
+            lyingTime = report.lyingTime,
+            sittingTime = report.sittingTime,
+            phoneTime = report.phoneTime,
+
+            walkCount = report.walkCount,
+            stairsClimbed = report.stairsClimbed,
+            sleepTime =  report.sleepTime,
+            exerciseTime = report.exerciseTime,
 
             breakfast = report.breakfast,
             lunch = report.lunch,

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -22,6 +23,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
 @Composable
@@ -42,8 +44,6 @@ fun DishTimeComponent(
             .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(4.dp))
-
         Row(
             modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically,
@@ -52,6 +52,7 @@ fun DishTimeComponent(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
                 color = Color.Gray
             )
 
@@ -96,7 +97,11 @@ fun DishTimeComponent(
                 onCheckedChange = {
                     isEnabled = it
                     onToggleChanged(it)
-                }
+                },
+                colors = SwitchDefaults.colors(
+                    checkedTrackColor = Color(0xFF99CC00),
+                    uncheckedTrackColor = Color(0xFFECECEC)
+                )
             )
         }
     }

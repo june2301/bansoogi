@@ -1,59 +1,97 @@
 package com.ddc.bansoogi.main.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import com.ddc.bansoogi.R
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ddc.bansoogi.common.foreground.ForegroundUtil
+import com.ddc.bansoogi.R
+import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
 import com.ddc.bansoogi.common.navigation.AppNavGraph
 import com.ddc.bansoogi.common.navigation.NavRoutes
-import com.ddc.bansoogi.common.ui.CommonNavigationBar
+import com.ddc.bansoogi.common.ui.activity.BaseActivity
+import com.ddc.bansoogi.common.ui.component.BansoogiNavigationBar
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.common.util.health.Permissions
 import com.ddc.bansoogi.common.util.health.RealTimeHealthDataManager
+import com.ddc.bansoogi.common.wear.communication.state.HealthStateHolder
+import com.ddc.bansoogi.main.controller.TodayHealthDataController
+import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.samsung.android.sdk.health.data.HealthDataService
 import com.samsung.android.sdk.health.data.HealthDataStore
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity() {
     val activityContext = this
+    private var isFirstUser = false
     private lateinit var healthDataStore: HealthDataStore
     private lateinit var healthDataManager: RealTimeHealthDataManager
 
-    private var healthData by mutableStateOf(CustomHealthData(0L, 0, 0.0f, 0))
+    private var healthData by mutableStateOf(CustomHealthData(0L, 0, 0.0f, 0, 0))
 
     companion object {
         private const val UPDATE_INTERVAL = 10000L // 포그라운드: 10초
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         healthDataStore = HealthDataService.getStore(activityContext)
-        
+        val prefs = getSharedPreferences("bansoogi_prefs", MODE_PRIVATE)
+        isFirstUser = prefs.getBoolean("isFirstUser", false)
+
         setupHealthPermissions()
 
+        val today = LocalDate.now()
+        val todayFormatted = CalendarUtils.toFormattedDateString(today, today.dayOfMonth)
+        TodayHealthDataController().initialize(todayFormatted)
         setContent {
             MainScreen(
                 healthData,
                 onModalOpen = { startHealthDataUpdates() },
-                onModalClose = { stopHealthDataUpdates() }
+                onModalClose = { stopHealthDataUpdates() },
+                isFirstUser = isFirstUser
             )
+        }
+        if (::healthDataManager.isInitialized) {
+            healthDataManager.refreshData() // 초기 데이터 즉시 로드
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!ForegroundUtil.isServiceRunning()) {
+            ForegroundUtil.startForegroundService(activityContext)
         }
     }
 
@@ -91,14 +129,18 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             healthDataManager.healthData.collect { data ->
                 healthData = data
+
+                // 모바일로 전송을 위한 객체 관리
+                HealthStateHolder.update(healthData)
             }
         }
     }
+
     // 모달이 열릴 때 호출될 메서드
     fun startHealthDataUpdates() {
         if (::healthDataManager.isInitialized) {
             healthDataManager.setUpdateInterval(UPDATE_INTERVAL)
-            healthDataManager.refreshData() // 즉시 한 번 갱신
+//            healthDataManager.refreshData() // 즉시 한 번 갱신
             healthDataManager.startCollecting() // 데이터 수집 시작
         }
     }
@@ -110,7 +152,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     override fun onDestroy() {
         // 액티비티 종료 시 수집 중지
         if (::healthDataManager.isInitialized) {
@@ -120,11 +161,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MainScreen(
     healthData: CustomHealthData,
-    onModalOpen:  () -> Unit,
-    onModalClose: () -> Unit
+    onModalOpen: () -> Unit,
+    onModalClose: () -> Unit,
+    isFirstUser: Boolean
+
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -136,46 +180,87 @@ fun MainScreen(
         currentDestination?.hierarchy?.any { it.route == NavRoutes.CALENDAR } == true -> NavRoutes.CALENDAR
         currentDestination?.hierarchy?.any { it.route == NavRoutes.MYINFO } == true -> NavRoutes.MYINFO
         currentDestination?.hierarchy?.any { it.route == NavRoutes.MYINFOUPDATE } == true -> NavRoutes.MYINFO
+        currentDestination?.hierarchy?.any { it.route == NavRoutes.EGGMANAGER } == true -> NavRoutes.EGGMANAGER
         else -> NavRoutes.HOME
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.background_sunny_sky),
-            contentDescription = "배경 하늘",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+    var currentBackgroundResId by remember{ mutableIntStateOf(R.drawable.background_sunny_sky) }
+
+    LaunchedEffect(BansoogiStateHolder.state) {
+        currentBackgroundResId = BansoogiStateHolder.background()
+    }
+
+    val lightPosition = remember { Animatable(initialValue = -1000f) }
+    LaunchedEffect(Unit) {
+        // 빛이 위에서 아래로 내려오는 애니메이션
+        lightPosition.animateTo(
+            targetValue = 2000f,
+            animationSpec = tween(
+                durationMillis = 1500,
+                easing = FastOutSlowInEasing
+            )
         )
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AnimatedContent(
+            targetState = currentBackgroundResId,
+            transitionSpec = {
+                slideInHorizontally(
+                    animationSpec = tween(durationMillis = 1000),
+                    initialOffsetX = { -it } // 위에서 아래로 등장
+                ) togetherWith
+                        slideOutHorizontally(
+                            animationSpec = tween(durationMillis = 1000),
+                            targetOffsetX = { it }   // 아래로 밀려서 퇴장
+                        )
+            }
+
+        ) { resId ->
+            Image(
+                painter = painterResource(id = resId),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
 
         Scaffold(
-            containerColor = androidx.compose.ui.graphics.Color.Transparent,
+            containerColor = Color.Transparent,
             bottomBar = {
-                CommonNavigationBar(
-                    currentRoute = currentRoute,
-                    onNavigate = { route ->
-                        if (route != currentRoute) {
-                            navController.navigate(route) {
-                                popUpTo(NavRoutes.HOME) {
-                                    saveState = true
-                                    // HOME으로 이동할 경우, 백스택 완전히 비우기
-                                    inclusive = (route == NavRoutes.HOME)
+                if (currentRoute != NavRoutes.EGGMANAGER) {
+                    BansoogiNavigationBar(
+                        currentRoute = currentRoute,
+                        onNavigate = { route ->
+                            if (route != currentRoute) {
+                                navController.navigate(route) {
+                                    popUpTo(NavRoutes.HOME) {
+                                        saveState = true
+                                        inclusive = false
+                                    }
+                                    // 중복 방지
+                                    launchSingleTop = true
+                                    // 상태 저장
+                                    restoreState = true
                                 }
-                                // 중복 방지
-                                launchSingleTop = true
-                                // 상태 저장
-                                restoreState = true
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         ) { paddingValues ->
+            val contentMod = if (currentRoute == NavRoutes.EGGMANAGER) {
+                Modifier.fillMaxSize()
+            } else {
+                Modifier.padding(paddingValues)
+            }
             AppNavGraph(
                 navController = navController,
-                modifier = Modifier.padding(paddingValues),
+                modifier = contentMod,
                 healthData = healthData,
                 onModalOpen = onModalOpen,
-                onModalClose = onModalClose
+                onModalClose = onModalClose,
+                isFirstUser = isFirstUser
             )
         }
     }

@@ -1,5 +1,7 @@
 package com.ddc.bansoogi.myInfo.controller
 
+import android.content.Context
+import com.ddc.bansoogi.common.wear.communication.receiver.RequestHandler
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
 import com.ddc.bansoogi.myInfo.data.model.MyInfoDto
 import kotlinx.coroutines.CoroutineScope

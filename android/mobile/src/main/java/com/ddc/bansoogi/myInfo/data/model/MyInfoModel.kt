@@ -1,7 +1,9 @@
 package com.ddc.bansoogi.myInfo.data.model
 
+import com.ddc.bansoogi.common.foreground.NotificationDurationStateHolder
 import com.ddc.bansoogi.myInfo.data.entity.User
 import com.ddc.bansoogi.myInfo.data.local.MyInfoDataSource
+import com.ddc.bansoogi.myInfo.data.mapper.MyInfoMapper.toDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -17,9 +19,7 @@ class MyInfoModel {
 
     fun getMyInfoSync(): MyInfoDto? {
         val entity = dataSource.getMyInfoSync()
-        return entity?.let {
-            entity.toDomain()
-        }
+        return entity?.toDomain()
     }
 
     suspend fun updateMyInfo(input: MyInfoDto): MyInfoDto {
@@ -39,6 +39,9 @@ class MyInfoModel {
             effectSoundEnabled   = input.effectSoundEnabled
         }
         dataSource.updateUser(entity)
+
+        NotificationDurationStateHolder.update(input.notificationDuration)
+
         return input
     }
 
@@ -46,6 +49,19 @@ class MyInfoModel {
         dataSource.updateProfileBansoogiId(bansoogiId)
         val updated = dataSource.getMyInfo().first()
         return updated.toDomain()
+    }
+
+    /** 첫번째 사용자 여부 **/
+    fun isFirstUser(context: android.content.Context): Boolean {
+        return dataSource.isFirstUser(context)
+    }
+
+    fun markAsFirstUser(context: android.content.Context) {
+        dataSource.setFirstUserTrue(context)
+    }
+
+    fun markNotFirstUser(context: android.content.Context) {
+        dataSource.setFirstUserFalse(context)
     }
 
     /** 토글: DB 반영 후 최신값(domain) 리턴 */
@@ -65,20 +81,4 @@ class MyInfoModel {
         return updatedEntity.toDomain()
     }
 
-    /** Entity → Domain 매핑 */
-    private fun User.toDomain(): MyInfoDto = MyInfoDto(
-        userId               = this.userId.toHexString(),
-        nickname             = this.nickname,
-        birthDate            = this.birthDate,
-        profileBansoogiId    = this.profileBansoogiId,
-        wakeUpTime           = this.wakeUpTime,
-        sleepTime            = this.sleepTime,
-        breakfastTime        = this.breakfastTime,
-        lunchTime            = this.lunchTime,
-        dinnerTime           = this.dinnerTime,
-        notificationDuration = this.notificationDuration,
-        notificationEnabled  = this.notificationEnabled,
-        bgSoundEnabled       = this.bgSoundEnabled,
-        effectSoundEnabled   = this.effectSoundEnabled
-    )
 }

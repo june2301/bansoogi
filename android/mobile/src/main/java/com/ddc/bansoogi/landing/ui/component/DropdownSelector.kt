@@ -3,6 +3,7 @@ package com.ddc.bansoogi.landing.ui.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -28,13 +30,14 @@ import androidx.compose.ui.unit.sp
 fun DropdownSelector(
     label: String,
     options: List<Int>,
-    selectedOption: MutableState<Int>
+    selectedOption: MutableState<Int>,
+    modifier: Modifier = Modifier
 ) {
 
     var expanded by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
             .background(Color.Transparent)
@@ -46,6 +49,7 @@ fun DropdownSelector(
                 contentColor = Color(0xFF4CABFD)
             ),
             shape = RoundedCornerShape(12.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
             modifier = Modifier
                 .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
         ) {
@@ -59,6 +63,8 @@ fun DropdownSelector(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
+            containerColor = Color(0xFFFFFFFF),
+            offset = DpOffset(x = -12.dp, y = 0.dp),
             modifier = Modifier.heightIn(max = 300.dp)
         ) {
             options.forEach { value ->
@@ -79,4 +85,3 @@ fun DropdownSelector(
         }
     }
 }
-

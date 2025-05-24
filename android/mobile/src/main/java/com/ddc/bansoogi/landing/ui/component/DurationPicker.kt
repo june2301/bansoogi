@@ -6,10 +6,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -32,12 +37,12 @@ fun DurationPicker(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .border(1.dp, Color.Black, RoundedCornerShape(12.dp))
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+            .padding(horizontal = 8.dp, vertical = 8.dp)
     ) {
         Box(
             modifier = Modifier
-                .size(36.dp)
+                .requiredSize(36.dp)
                 .clip(CircleShape)
                 .background(Color(0xFFFF6F61))
                 .clickable {
@@ -46,13 +51,18 @@ fun DurationPicker(
                 },
             contentAlignment = Alignment.Center
         ) {
-            Text("-", color = Color.White, fontWeight = FontWeight.Bold)
+            Icon(
+                imageVector = Icons.Filled.Remove,
+                contentDescription = "감소",
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
         }
 
         Box(
             modifier = Modifier
                 .width(48.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             DefaultBodyText(
                 "${durationState.value}"
@@ -61,7 +71,7 @@ fun DurationPicker(
 
         Box(
             modifier = Modifier
-                .size(36.dp)
+                .requiredSize(36.dp)
                 .clip(CircleShape)
                 .background(Color(0xFF40C4FF))
                 .clickable {
@@ -70,7 +80,12 @@ fun DurationPicker(
                 },
             contentAlignment = Alignment.Center
         ) {
-            Text("+", color = Color.White, fontWeight = FontWeight.Bold)
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = "증가",
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }

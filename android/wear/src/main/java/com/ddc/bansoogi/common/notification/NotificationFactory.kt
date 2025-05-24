@@ -1,25 +1,22 @@
 package com.ddc.bansoogi.common.notification
 
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.core.net.toUri
 import com.ddc.bansoogi.R
 
 object NotificationFactory {
     private fun baseBuilder(context: Context, channelId: String) =
         NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.cookie)
+            .setSmallIcon(R.drawable.ic_watch_home)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
     fun mealOnWatch(context: Context, type: AlarmType): NotificationCompat.Builder {
         val text = when (type) {
-            AlarmType.BREAKFAST -> "아침 식사 시간이에요"
-            AlarmType.LUNCH     -> "점심 식사 시간이에요"
-            AlarmType.DINNER    -> "저녁 식사 시간이에요"
-            else                -> "식사 시간이에요"
+            AlarmType.BREAKFAST -> "아침 시간~"
+            AlarmType.LUNCH     -> "점심 먹고 가자~"
+            AlarmType.DINNER    -> "맛있는거 먹자!"
+            else                -> "밥 먹어! 밥!"
         }
         val pi = buildWatchDeepLinkPendingIntent(
             context,
@@ -27,7 +24,7 @@ object NotificationFactory {
             type.requestCode
         )
         return baseBuilder(context, NotificationHelper.CHANNEL_MEAL)
-            .setContentTitle("식사 알림")
+            .setContentTitle("밥 먹자!")
             .setContentText(text)
             .setContentIntent(pi)
     }
@@ -39,8 +36,8 @@ object NotificationFactory {
             AlarmType.WAKE.requestCode
         )
         return baseBuilder(context, NotificationHelper.CHANNEL_WAKE)
-            .setContentTitle("기상 알림")
-            .setContentText("상쾌한 하루를 시작해 볼까요?")
+            .setContentTitle("일어날 시간이야!")
+            .setContentText("오늘 하루도 화이팅!")
             .setContentIntent(pi)
     }
 
@@ -51,8 +48,8 @@ object NotificationFactory {
             AlarmType.SLEEP.requestCode
         )
         return baseBuilder(context, NotificationHelper.CHANNEL_SLEEP)
-            .setContentTitle("취침 알림")
-            .setContentText("하루를 마무리하고 푹 쉬세요!")
+            .setContentTitle("잘 시간이야")
+            .setContentText("수고했어! 오늘도!")
             .setContentIntent(pi)
     }
 }

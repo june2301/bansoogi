@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,12 +49,12 @@ fun TimeSettingScreen(controller: LandingController, onFinish: () -> Unit) {
     Column {
         RoundedContainerBox(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxWidth(),
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 20.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -62,11 +63,12 @@ fun TimeSettingScreen(controller: LandingController, onFinish: () -> Unit) {
                 ) {
                     Column(
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         SubTitleText("기상 희망 시간")
                         Spacer(Modifier.padding(4.dp))
-                        Column() {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             TimeInputTextField(
                                 timeState = wakeUpTimeState,
                             )
@@ -74,20 +76,23 @@ fun TimeSettingScreen(controller: LandingController, onFinish: () -> Unit) {
                         }
                     }
 
-                    Spacer(Modifier.padding(12.dp))
+                    Spacer(Modifier.width(12.dp))
                     Column(
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         SubTitleText("취침 희망 시간")
                         Spacer(Modifier.padding(4.dp))
-                        Column() {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             TimeInputTextField(timeState = bedTimeState)
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
                 }
-                Column {
+                Column(
+                    modifier = Modifier.padding(start = 12.dp, end = 8.dp)
+                ) {
                     SubTitleText("식사 희망 시간")
                     Spacer(Modifier.padding(4.dp))
                     Row {
@@ -138,8 +143,8 @@ fun TimeSettingScreen(controller: LandingController, onFinish: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
-                    SubTitleText("상태 지속 시간")
-                    Spacer(Modifier.weight(1f))
+                    SubTitleText("활동 알림 주기")
+                    Spacer(Modifier.width(12.dp))
                     DurationPicker(durationState = durationTimeState)
                 }
             }

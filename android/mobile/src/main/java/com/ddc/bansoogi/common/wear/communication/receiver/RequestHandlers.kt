@@ -4,6 +4,7 @@ import android.content.Context
 import com.ddc.bansoogi.common.data.model.TodayRecordModel
 import com.ddc.bansoogi.common.wear.communication.sender.WearMyInfoSender
 import com.ddc.bansoogi.common.wear.communication.sender.WearTodayRecordSender
+import com.ddc.bansoogi.common.wear.communication.state.HealthStateHolder
 import com.ddc.bansoogi.common.wear.data.mapper.WearDtoMapper
 import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +26,7 @@ class RequestHandler(
     fun handleTodayRecordRequest() {
         handleDataRequest(
             getData = { TodayRecordModel().getTodayRecordSync() },
-            mapData = { WearDtoMapper.toWearReport(it) },
+            mapData = { WearDtoMapper.toWearReportWithHealthData(it) },
             sendData = { WearTodayRecordSender.send(context, it) },
             scope = scope
         )

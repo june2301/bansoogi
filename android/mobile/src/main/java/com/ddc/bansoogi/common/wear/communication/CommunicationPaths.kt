@@ -8,6 +8,8 @@ object CommunicationPaths {
         const val ENERGY_DATA = "$PREFIX/data/energy" // 에너지 데이터를 웨어로 전송
         const val TODAY_RECORD_DATA = "$PREFIX/data/today_record" // 데이터를 웨어로 전송
         const val MY_INFO_DATA = "$PREFIX/data/my_info" // 데이터를 웨어로 전송
+
+        const val BANSOOGI_ANIMATION = "$PREFIX/state/bansoogi_animation" // 반숙이 현재 상태 전송
     }
 
     // WearOS에서 Mobile로 전송하는 메세지 경로 -> 모바일에서는 리시브에서 사용되는 경로
@@ -18,10 +20,18 @@ object CommunicationPaths {
         const val TODAY_RECORD_REQUEST = "${PREFIX}/request/today_record" // 데이터 전송 요청을 받음
         const val MT_INFO_REQUEST = "${PREFIX}/request/my_info" // 데이터 전송 요청을 받음
 
+        const val BANSOOGI_ANIMATION = "$PREFIX/state/bansoogi_animation" // 반숙이 현재 상태 전송
+
         const val INTERACTION_TRIGGER = "${PREFIX}/trigger/interaction" // 상호작용 트리거 전송
 
         const val NOTIFICATION_CHANGE_TRIGGER = "${PREFIX}/trigger/change/notification" // 알림 설정 변경
         const val BG_SOUND_CHANGE_TRIGGER = "${PREFIX}/trigger/change/bg_sound" // 배경음 설정 변경
         const val EFFECT_SOUND_CHANGE_TRIGGER = "${PREFIX}/trigger/change/effect_sound" // 효과음 설정 변경
+
+        const val MEAL_CHECK_TRIGGER = "${PREFIX}/trigger/meal_check" // 식사 이벤트 수행
+
+        const val STATIC_WARN        = "/static/warn"        // SITTING_LONG / LYING_LONG
+        const val STATIC_BREAK       = "/static/break"       // STANDUP_REWARD / STRETCH_REWARD
+        const val STATIC_ACCUM_TIME  = "/static/accum_time"  // ΔlyingTime / ΔsittingTime
     }
 }

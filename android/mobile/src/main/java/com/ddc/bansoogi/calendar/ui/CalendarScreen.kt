@@ -41,7 +41,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import com.ddc.bansoogi.calendar.controller.CalendarController
 import com.ddc.bansoogi.calendar.data.model.CalendarMarkerDto
 import com.ddc.bansoogi.calendar.ui.component.YearMonthPickerDialog
@@ -49,10 +51,11 @@ import com.ddc.bansoogi.calendar.ui.state.CalendarContentUiState
 import com.ddc.bansoogi.calendar.ui.state.CalendarUiState
 import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
 import com.ddc.bansoogi.calendar.view.CalendarView
-import com.ddc.bansoogi.common.ui.component.BansoogiAnimation
+import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun loadCalendarData(): CalendarUiState {
@@ -313,13 +316,13 @@ fun CalendarGrid(viewDate: LocalDate, today: LocalDate, calendarMarkers: List<Ca
                             // day가 0보다 클 때만
                             if (day > 0) {
                                 val cellDate = CalendarUtils.withDayOfMonth(viewDate, day);
-                                val matchedHistory = calendarMarkers.find { it.date == cellDate }
+                                val cellMarker = calendarMarkers.find { it.date == cellDate }
 
                                 CalendarDayCell(
                                     day = day,
                                     isCurrentDay = day == currentDay,
                                     dayOfWeek = index, // 0=일요일, 6=토요일
-                                    bansoogiResource = matchedHistory?.bansoogiAnimationId,
+                                    cellMarker = cellMarker,
                                     onCellClick = { onDayClick(day) }
                                 )
                             }
@@ -367,7 +370,15 @@ fun DaysHeader() {
 }
 
 @Composable
-fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1, bansoogiResource: Int?, onCellClick: () -> Unit) {
+fun CalendarDayCell(
+    day: Int,
+    isCurrentDay: Boolean = false,
+    dayOfWeek: Int = -1,
+    cellMarker: CalendarMarkerDto?,
+    onCellClick: () -> Unit
+) {
+        val context = LocalContext.current
+
         // 셀 클릭 시, 회색 창 제거
         val interactionSource = remember { MutableInteractionSource() }
 
@@ -418,7 +429,7 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
 
             // 이미지는 중앙에 배치
             // 현재는 무조건 보이지만, 나중에는 반숙이 데이터가 존재하는 경우에만 출력s
-            if (bansoogiResource != null) {
+            if (cellMarker != null) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
@@ -426,10 +437,13 @@ fun CalendarDayCell(day: Int, isCurrentDay: Boolean = false, dayOfWeek: Int = -1
                         .align(Alignment.Center),
                     contentAlignment = Alignment.Center
                 ) {
-                    BansoogiAnimation(
-                        resource = bansoogiResource,
-                        description = "달력에 표시하는 반숙이 리소스",
+                    SpriteSheetAnimation(
+                        context = context,
+                        spriteSheetName = "${cellMarker.bansoogiGifUrl}_sheet.png",
+                        jsonName = "${cellMarker.bansoogiImageUrl}.json",
                         modifier = Modifier
+                            .size(160.dp)
+                            .scale(1.3f)
                     )
                 }
             }

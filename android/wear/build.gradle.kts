@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.realm.kotlin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -11,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.ddc.bansoogi"
-        minSdk = 29
+        minSdk = 30
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -62,10 +63,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.tiles.tooling)
-    wearApp(project(":wear"))
 
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
+
+    // SAMSUNG HEALTH SENSOR SDK
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
 
     // coil
     implementation(libs.coil.compose)
@@ -79,4 +82,11 @@ dependencies {
 
     // 워치에 데이터 캐시 저장
     implementation(libs.androidx.datastore.preferences)
+
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
+
+    // JSON 파싱용
+    implementation(libs.kotlinx.serialization.json)
+
 }

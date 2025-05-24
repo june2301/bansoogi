@@ -2,14 +2,34 @@ package com.ddc.bansoogi.calendar.controller
 
 import com.ddc.bansoogi.calendar.data.model.DetailReportDto
 import com.ddc.bansoogi.calendar.data.model.RecordedReportModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.ddc.bansoogi.common.data.model.TodayRecordDto
 
 class RecordedController {
     private val model = RecordedReportModel()
-    private val scope = CoroutineScope(Dispatchers.Main)
 
-    suspend fun getDetailReport(date: String): DetailReportDto? {
+    fun getDetailReport(date: String): DetailReportDto? {
         return model.getDetailReport(date)
+    }
+
+    fun getLatestRecordedReport(): DetailReportDto {
+        return model.getLatestRecordedReport()
+    }
+
+    suspend fun createRecordedReport(
+        todayRecordDto: TodayRecordDto,
+        bansoogiIdData: Int,
+        walkCountData: Int,
+        stairsClimbedData: Int,
+        sleepTimeData: Int,
+        exerciseTimeData: Int
+    ) {
+        model.createRecordedReport(
+            todayRecordDto,
+            bansoogiIdData,
+            walkCountData,
+            stairsClimbedData,
+            sleepTimeData,
+            exerciseTimeData
+        )
     }
 }

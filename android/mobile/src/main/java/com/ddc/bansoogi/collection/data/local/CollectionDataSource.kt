@@ -1,6 +1,7 @@
 package com.ddc.bansoogi.collection.data.local
 
 import android.content.Context
+import com.ddc.bansoogi.calendar.data.entity.RecordedReport
 import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.collection.data.entity.UnlockedCharacter
 import com.ddc.bansoogi.common.data.local.RealmManager
@@ -22,8 +23,19 @@ class CollectionDataSource {
             .asFlow()
             .map { it.list }
 
+    fun getBansoogiById(bansoogiId: Int): Character {
+        return realm.query<Character>("bansoogiId == $0", bansoogiId)
+                .first()
+                .find() ?: Character().apply {
+                title = "반숙이"
+                imageUrl = "bansoogi_default_profile"
+                silhouetteImageUrl = "unknown"
+                gifUrl = "bansoogi_basic"
+                description = "우리의 반숙이입니다."
+        }
+    }
+
     fun getImageResourceIdForBansoogiId(context: Context, bansoogiId: Int): Int {
-        val realm = RealmManager.realm
         val imageUrl = realm.query<Character>("bansoogiId == $0", bansoogiId)
             .first()
             .find()
@@ -33,8 +45,6 @@ class CollectionDataSource {
     }
 
     suspend fun insertDummyCharactersWithUnlock() {
-        val realm = RealmManager.realm
-
         val alreadyExists = realm.query<Character>().find().isNotEmpty()
         if (alreadyExists) return
 
@@ -201,32 +211,228 @@ class CollectionDataSource {
             }
         )
 
-        // MARK: 임시 데이터 추가
-//        val unlockList: List<UnlockedCharacter> = listOf(
-//            UnlockedCharacter().apply {
-//                bansoogiId = 2
-//                acquisitionCount = 3
-//                createdAt = RealmInstant.now()
-//                updatedAt = RealmInstant.now()
-//            },
-//            UnlockedCharacter().apply {
-//                bansoogiId = 7
-//                acquisitionCount = 1
-//                createdAt = RealmInstant.now()
-//                updatedAt = RealmInstant.now()
-//            },
-//            UnlockedCharacter().apply {
-//                bansoogiId = 32
-//                acquisitionCount = 1
-//                createdAt = RealmInstant.now()
-//                updatedAt = RealmInstant.now()
-//            }
-//        )
-        val unlockList: List<UnlockedCharacter> = emptyList()
-
         realm.write {
             characterList.forEach { copyToRealm(it) }
-            unlockList.forEach { copyToRealm(it) }
         }
+    }
+
+    suspend fun saveUnlockedCharacter(character: Character) {
+        val bansoogiId = character.bansoogiId
+        realm.write {
+            val existing = query<UnlockedCharacter>("bansoogiId == $0", bansoogiId).first().find()
+            if (existing != null) {
+                findLatest(existing)?.apply {
+                    acquisitionCount += 1
+                    updatedAt = RealmInstant.now()
+                }
+            } else {
+                copyToRealm(
+                    UnlockedCharacter().apply {
+                        this.bansoogiId = bansoogiId
+                        this.acquisitionCount = 1
+                        this.createdAt = RealmInstant.now()
+                        this.updatedAt = RealmInstant.now()
+                    }
+                )
+            }
+        }
+    }
+
+    suspend fun dummyData() {
+        if (true) {
+            realm.write {
+                // 5월 2일 - 반숙이 ID 11
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 11
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-02 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-02 00:00:00")
+                })
+
+                // 5월 3일 - 반숙이 ID 13
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 13
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-03 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-03 00:00:00")
+                })
+
+                // 5월 4일 - 반숙이 ID 31
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 31
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-04 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-04 00:00:00")
+                })
+
+                // 5월 5일 - 반숙이 ID 32
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 32
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-05 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-05 00:00:00")
+                })
+
+                // 5월 6일 - 반숙이 ID 33
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 33
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-06 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-06 00:00:00")
+                })
+
+                // 5월 7일 - 반숙이 ID 5
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 5
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-07 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-07 00:00:00")
+                })
+
+                // 5월 8일 - 반숙이 ID 31
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 31
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-08 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-08 00:00:00")
+                })
+
+                // 5월 9일 - 반숙이 ID 7
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 7
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-09 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-09 00:00:00")
+                })
+
+                // 5월 10일 - 반숙이 ID 8
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 8
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-10 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-10 00:00:00")
+                })
+
+                // 5월 11일 - 반숙이 ID 11 (acquisition+1 처리)
+                val existingBansoogi11 = query<UnlockedCharacter>("bansoogiId == $0", 11).first().find()
+                if (existingBansoogi11 != null) {
+                    findLatest(existingBansoogi11)?.apply {
+                        acquisitionCount += 1
+                        updatedAt = toRealmInstant("2025-05-11 00:00:00")
+                    }
+                } else {
+                    copyToRealm(UnlockedCharacter().apply {
+                        bansoogiId = 11
+                        acquisitionCount = 1
+                        createdAt = toRealmInstant("2025-05-11 00:00:00")
+                        updatedAt = toRealmInstant("2025-05-11 00:00:00")
+                    })
+                }
+
+                // 5월 12일 - 반숙이 ID 12
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 12
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-12 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-12 00:00:00")
+                })
+
+                // 5월 14일 - 반숙이 ID 12
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 12
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-14 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-14 00:00:00")
+                })
+
+                // 5월 15일 - 반숙이 ID 15
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 15
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-15 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-15 00:00:00")
+                })
+
+                // 5월 17일 - 반숙이 ID 4
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 4
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-17 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-17 00:00:00")
+                })
+
+                // 5월 18일 - 반숙이 ID 7 (acquisition+1 처리)
+                val existingBansoogi7 = query<UnlockedCharacter>("bansoogiId == $0", 7).first().find()
+                if (existingBansoogi7 != null) {
+                    findLatest(existingBansoogi7)?.apply {
+                        acquisitionCount += 1
+                        updatedAt = toRealmInstant("2025-05-18 00:00:00")
+                    }
+                } else {
+                    copyToRealm(UnlockedCharacter().apply {
+                        bansoogiId = 7
+                        acquisitionCount = 1
+                        createdAt = toRealmInstant("2025-05-18 00:00:00")
+                        updatedAt = toRealmInstant("2025-05-18 00:00:00")
+                    })
+                }
+
+                // 5월 19일 - 반숙이 ID 13 (acquisition+1 처리)
+                val existingBansoogi13 = query<UnlockedCharacter>("bansoogiId == $0", 13).first().find()
+                if (existingBansoogi13 != null) {
+                    findLatest(existingBansoogi13)?.apply {
+                        acquisitionCount += 1
+                        updatedAt = toRealmInstant("2025-05-19 00:00:00")
+                    }
+                } else {
+                    copyToRealm(UnlockedCharacter().apply {
+                        bansoogiId = 13
+                        acquisitionCount = 1
+                        createdAt = toRealmInstant("2025-05-19 00:00:00")
+                        updatedAt = toRealmInstant("2025-05-19 00:00:00")
+                    })
+                }
+
+                // 5월 20일 - 반숙이 ID 15 (acquisition+1 처리)
+                val existingBansoogi15 = query<UnlockedCharacter>("bansoogiId == $0", 15).first().find()
+                if (existingBansoogi15 != null) {
+                    findLatest(existingBansoogi15)?.apply {
+                        acquisitionCount += 1
+                        updatedAt = toRealmInstant("2025-05-20 00:00:00")
+                    }
+                } else {
+                    copyToRealm(UnlockedCharacter().apply {
+                        bansoogiId = 15
+                        acquisitionCount = 1
+                        createdAt = toRealmInstant("2025-05-20 00:00:00")
+                        updatedAt = toRealmInstant("2025-05-20 00:00:00")
+                    })
+                }
+
+                // 5월 21일 - 반숙이 ID 32 (acquisition+1 처리)
+                val existingBansoogi32 = query<UnlockedCharacter>("bansoogiId == $0", 32).first().find()
+                if (existingBansoogi32 != null) {
+                    findLatest(existingBansoogi32)?.apply {
+                        acquisitionCount += 1
+                        updatedAt = toRealmInstant("2025-05-21 00:00:00")
+                    }
+                } else {
+                    copyToRealm(UnlockedCharacter().apply {
+                        bansoogiId = 32
+                        acquisitionCount = 1
+                        createdAt = toRealmInstant("2025-05-21 00:00:00")
+                        updatedAt = toRealmInstant("2025-05-21 00:00:00")
+                    })
+                }
+            }
+        }
+    }
+
+    // RealmInstant 변환 헬퍼 함수
+    private fun toRealmInstant(dateTimeString: String): RealmInstant {
+        val format = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
+        val date = format.parse(dateTimeString)
+        val epochSeconds = date.time / 1000
+        return RealmInstant.from(epochSeconds, 0)
     }
 }

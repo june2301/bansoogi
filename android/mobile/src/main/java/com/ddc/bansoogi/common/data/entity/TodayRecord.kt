@@ -21,6 +21,8 @@ class TodayRecord() : RealmObject{
     var lunch: Boolean = false
     var dinner: Boolean = false
     var interactionCnt: Int = 0
+    var interactionLatestTime: RealmInstant? = null
+    var isViewed: Boolean = false
     var isClosed: Boolean = false
     var createdAt: RealmInstant = RealmInstant.now()
     var updatedAt: RealmInstant = RealmInstant.now()

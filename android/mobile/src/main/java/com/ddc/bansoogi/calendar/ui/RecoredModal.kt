@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.calendar.ui
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,7 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -48,7 +50,9 @@ import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.controller.RecordedController
 import com.ddc.bansoogi.calendar.data.model.DetailReportDto
 import com.ddc.bansoogi.common.data.model.ActivityLogDto
-import com.ddc.bansoogi.common.ui.component.BansoogiAnimation
+import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
+import com.ddc.bansoogi.main.ui.InfoRow
+import com.ddc.bansoogi.main.ui.SectionHeader
 import com.ddc.bansoogi.common.util.mapper.ActivityLogMapper.toKoreanBehaviorState
 import kotlin.String
 
@@ -64,8 +68,7 @@ fun RecordedModal(
         report = controller.getDetailReport(selectedDate)
 
         if (report == null) {
-            onDismissRequest()
-            return@LaunchedEffect
+            onDismissRequest
         }
     }
 
@@ -89,7 +92,7 @@ fun ModalHeader(
         modifier = Modifier.fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.egg_before_broken),
+            painter = painterResource(id = R.drawable.egg_before_broken_gif),
             contentDescription = "아이콘",
             modifier = Modifier.size(32.dp)
         )
@@ -117,7 +120,7 @@ fun SectionHeader(
         modifier = Modifier.fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.egg_before_broken),
+            painter = painterResource(id = R.drawable.egg_before_broken_gif),
             contentDescription = "달걀",
             modifier = Modifier.size(32.dp)
         )
@@ -200,6 +203,8 @@ fun RecordContent(
     onDismissRequest: () -> Unit,
     report: DetailReportDto
 ) {
+    val context = LocalContext.current
+
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -262,12 +267,13 @@ fun RecordContent(
                                     .clip(RoundedCornerShape(12.dp))
                                     .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, RoundedCornerShape(12.dp))
                                 ) {
-                                    BansoogiAnimation(
-                                        resource = report.bansoogiResource,
-                                        description = "행동 기록 모달에 출력하는 반숙이 리소스",
+                                    SpriteSheetAnimation(
+                                        context = context,
+                                        spriteSheetName = "${report.bansoogiGifUrl}_sheet.png",
+                                        jsonName = "${report.bansoogiImageUrl}.json",
                                         modifier = Modifier
-                                            .size(100.dp)
-                                            .offset(x = 20.dp, y = (-8).dp) // 중앙이 안 맞아서 조절
+                                            .size(160.dp)
+                                            .scale(1.3f)
                                     )
                                 }
                             }
@@ -331,7 +337,7 @@ fun RecordContent(
                         InfoRow(
                             label = "누워있던 시간 :",
                             value = report.lyingTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         VerticalSpacer()
@@ -339,7 +345,7 @@ fun RecordContent(
                         InfoRow(
                             label = "앉아있던 시간 :",
                             value = report.sittingTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         VerticalSpacer()
@@ -347,7 +353,7 @@ fun RecordContent(
                         InfoRow(
                             label = "휴대폰 사용 시간 :",
                             value = report.phoneTime,
-                            unit = "분"
+                            unit = " 분"
                         )
 
                         Divider()
@@ -362,17 +368,17 @@ fun RecordContent(
                         InfoRow(
                             label = "기상 이벤트 :",
                             value = report.standupCount,
-                            unit = "회"
+                            unit = " 회"
                         )
 
                         ActivityLogList(report.standLog)
 
-                       VerticalSpacer()
+                        VerticalSpacer()
 
                         InfoRow(
                             label = "스트레칭 이벤트 :",
                             value = report.stretchCount,
-                            unit = "회"
+                            unit = " 회"
                         )
 
                         ActivityLogList(report.stretchLog)
@@ -382,10 +388,49 @@ fun RecordContent(
                         InfoRow(
                             label = "휴대폰 미사용 이벤트 :",
                             value = report.phoneOffCount,
-                            unit = "회"
+                            unit = " 회"
                         )
 
                         ActivityLogList(report.phoneOffLog)
+
+                        Divider()
+
+                        // 건강 정보 섹션
+                        SectionHeader(
+                            title = "건강 정보"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "총 걸음 수 :",
+                            value = report.walkCount,
+                            unit = " 회"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "총 계단 수 :",
+                            value = report.stairsClimbed.toInt(),
+                            unit = " 계단"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "수면 시간 :",
+                            value = report.sleepTime,
+                            unit = " 분"
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        InfoRow(
+                            label = "운동 시간 :",
+                            value = report.exerciseTime,
+                            unit = " 분"
+                        )
                     }
                 }
             }
@@ -434,10 +479,11 @@ fun RecordedModalPreview() {
         onDismissRequest = { },
         report = DetailReportDto (
             date = "2025-05-01",
-            finalEnergyPoint =90,
+            finalEnergyPoint = 90,
 
             bansoogiTitle = "임시 반숙이",
-            bansoogiResource = 1,
+            bansoogiGifUrl = "1",
+            bansoogiImageUrl = "1",
 
             standupCount = 1,
             standLog = emptyList(),
@@ -451,12 +497,11 @@ fun RecordedModalPreview() {
             lyingTime = 10,
             sittingTime = 20,
             phoneTime = 30,
-            sleepTime = 40,
 
             walkCount = 100,
-            runTime = 200,
-            exerciseTime = 300,
-            stairsClimbed = 400,
+            stairsClimbed = 200,
+            sleepTime = 300,
+            exerciseTime = 400,
 
             breakfast = false,
             lunch = false,

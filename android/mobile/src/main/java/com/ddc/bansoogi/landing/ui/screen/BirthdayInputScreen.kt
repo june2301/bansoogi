@@ -72,13 +72,13 @@ fun BirthInputScreen(controller: LandingController, onNext: () -> Unit) {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("년", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(12.dp))
 
                     DropdownSelector("월", monthList, selectedMonth)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("월", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(12.dp))
 
                     DropdownSelector("일", dayList, selectedDay)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -93,7 +93,7 @@ fun BirthInputScreen(controller: LandingController, onNext: () -> Unit) {
             onClick = {
                 val calendar = Calendar.getInstance().apply {
                     set(Calendar.YEAR, selectedYear.value)
-                    set(Calendar.MONTH, selectedMonth.value)
+                    set(Calendar.MONTH, selectedMonth.value - 1)
                     set(Calendar.DAY_OF_MONTH, selectedDay.value)
                 }
                 controller.profileModel.birthDate = calendar.time

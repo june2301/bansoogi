@@ -6,4 +6,5 @@ object NavRoutes {
     const val CALENDAR = "calender"
     const val MYINFO = "myInfo"
     const val MYINFOUPDATE = "myInfoUpdate"
+    const val EGGMANAGER  = "eggManager"
 }
