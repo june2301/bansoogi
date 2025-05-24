@@ -1,0 +1,35 @@
+@startuml
+left to right direction
+skinparam componentStyle rectangle
+
+'--- Mobile App 영역 ---
+package "Mobile App" {
+  [UI & Logic] <<component>>
+  [ML Posture Classifier\n(앉음/누움/서있음 분류)] <<component>>
+  [UsageStats & NotificationListener] <<component>>
+  [Data Storage\n(Room DB / SharedPref)] <<component>>
+  [SAP + BLE Communication (Mobile)] <<component>>
+}
+
+'--- Watch App 영역 ---
+package "Watch App" {
+  [Sensor & Character UI] <<component>>
+  [SAP + BLE Communication (Watch)] <<component>>
+}
+
+'--- 백업 컴포넌트 ---  
+package Backup {
+  [Play Store Auto Backup] <<component>>
+  [Optional: Google Drive Backup] <<component>>
+}
+
+'--- 관계 정의 ---
+[UI & Logic] --> [ML Posture Classifier\n(앉음/누움/서있음 분류)] : 센서 데이터 → 자세 분류 요청
+[ML Posture Classifier\n(앉음/누움/서있음 분류)] --> [Data Storage\n(Room DB / SharedPref)] : 분류 결과 캐싱
+[UsageStats & NotificationListener] --> [Data Storage\n(Room DB / SharedPref)] : 활동·알림 로그 저장
+
+[SAP + BLE Communication (Mobile)] <--> [SAP + BLE Communication (Watch)] : 센서/상태 동기화
+
+[Data Storage\n(Room DB / SharedPref)] --> [Play Store Auto Backup]      : 시스템 레벨 자동 백업
+[Data Storage\n(Room DB / SharedPref)] --> [Optional: Google Drive Backup] : 선택적 Drive 업로드
+@enduml

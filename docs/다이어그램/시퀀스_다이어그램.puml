@@ -1,0 +1,71 @@
+@startuml
+participant User
+participant "App UI" as UI
+participant OnboardingController
+participant MonitoringService
+participant SleepService
+participant ActivityService
+participant NotificationService
+participant SettlementService
+participant RewardService
+participant CalendarDB
+participant CollectionService
+
+== 온보딩 == 
+User -> UI : 앱 실행
+UI -> OnboardingController : isFirstRun?
+OnboardingController --> UI : show Onboarding 화면
+User -> UI : 프로필·취침시간 설정
+UI -> OnboardingController : save settings
+OnboardingController --> UI : 설정 완료
+
+== 백그라운드 모니터링 & 알림 (병렬 loop) ==
+loop 매 상태_체크_간격
+    MonitoringService -> MonitoringService : 상태 감지 (앉음/누움/폰사용)
+    alt 임계시간 초과
+        MonitoringService -> NotificationService : sendAlert(state)
+        NotificationService -> UI : display Alert(state)
+        UI --> User : 알림 표시
+        User -> UI : 행동 변화
+        UI -> MonitoringService : notifyBehaviorChanged
+    end
+end
+
+== 정해진 취침 시각 도달 시 결산 호출 ==
+SleepService -> SettlementService : triggerSettlement()
+SettlementService -> ActivityService : fetchActivityScores()
+SettlementService -> SleepService : fetchSleepQuality()
+SettlementService -> RewardService : calculateEggType(scores, quality)
+RewardService -> CalendarDB : recordEgg(user, eggType)
+RewardService --> UI : show 결산 요약 (eggType, 점수)
+UI --> User : 결산 알림
+
+== 흰 알 깨기 플로우 ==
+User -> UI : 터치 흰 알
+UI -> RewardService : shakeEgg()
+loop 터치횟수 < 3
+    RewardService --> UI : 흔들기 애니메이션
+end
+RewardService --> UI : 에기 등장 애니메이션 + 초기 에너지
+
+== 캐릭터 상호작용 플로우 ==
+User -> UI : 터치 캐릭터
+UI -> RewardService : interactCharacter()
+loop 터치횟수 < 6
+    RewardService --> UI : 반응 애니메이션 + 에너지+5
+end
+RewardService --> UI : 쿨다운 1시간
+
+== 컬렉션 조회 ==
+User -> UI : 컬렉션 탭 열기
+UI -> CollectionService : getUserCollection()
+CollectionService -> CalendarDB : queryEggRecords(user)
+CollectionService --> UI : return 컬렉션 목록
+UI --> User : 컬렉션 UI 표시
+alt 에기 선택
+    User -> UI : click EggDetail
+    UI -> CollectionService : getEggDetail(id)
+    CollectionService --> UI : return 상세정보
+    UI --> User : 상세정보 표시
+end
+@enduml

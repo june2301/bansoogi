@@ -1,0 +1,65 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor User
+
+package "행동 알림" {
+  usecase "장시간 앉아있음\n모니터링"        as UC1
+  usecase "장시간 폰 사용\n모니터링"        as UC2
+  usecase "장시간 누워있음\n모니터링"        as UC3
+  usecase "알림 발송"                     as UC4
+}
+User --> UC1
+User --> UC2
+User --> UC3
+UC1 --> UC4
+UC2 --> UC4
+UC3 --> UC4
+
+package "온보딩" {
+  usecase "App 다운로드"                  as UC5
+  usecase "회원가입/로그인"               as UC6
+  usecase "취침 시간 설정"                as UC7
+}
+User --> UC5
+User --> UC6
+User --> UC7
+
+package "수면 관리" {
+  usecase "수면 추적"                     as UC8
+  usecase "수면 질 평가"                  as UC9
+  usecase "달걀 생성"                     as UC10
+  usecase "후라이 랜덤 수령"              as UC11
+}
+User --> UC8
+UC8 --> UC9
+UC9 --> UC10
+UC10 --> UC11
+
+package "활동 점수 계산" {
+  usecase "계단 점수"                     as UC12
+  usecase "식사 로그"                     as UC13
+  usecase "운동 점수"                     as UC14
+  usecase "달리기 점수"                   as UC15
+  usecase "걷기 점수"                     as UC16
+}
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC16
+
+package "결산 & 보상" {
+  usecase "컬렉션 확인"                   as UC17
+  usecase "결산 시점 처리"                as UC18
+  usecase "달력에 표시"                   as UC19
+  usecase "완성형 Eggi (>=80%)"           as UC20
+  usecase "Golden Eggi (100%)"            as UC21
+}
+User --> UC17
+User --> UC18
+UC18 --> UC19
+UC18 .> UC20 : <<include>>
+UC18 .> UC21 : <<extend>>
+@enduml
