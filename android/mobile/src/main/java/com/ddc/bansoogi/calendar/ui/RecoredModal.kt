@@ -1,6 +1,5 @@
 package com.ddc.bansoogi.calendar.ui
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,11 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,6 +49,7 @@ import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
 import com.ddc.bansoogi.main.ui.InfoRow
 import com.ddc.bansoogi.main.ui.SectionHeader
 import com.ddc.bansoogi.common.util.mapper.ActivityLogMapper.toKoreanBehaviorState
+import com.google.accompanist.pager.*
 import kotlin.String
 
 @Composable
@@ -109,101 +105,20 @@ fun ModalHeader(
 }
 
 @Composable
-fun SectionHeader(
-    title: String,
-    fontSize: TextUnit = 20.sp,
-    fontWeight: FontWeight = FontWeight.Bold,
-    textColor: Color = Color.DarkGray
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.egg_before_broken_gif),
-            contentDescription = "달걀",
-            modifier = Modifier.size(32.dp)
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(
-            text = title,
-            fontSize = fontSize,
-            color = textColor,
-            fontWeight = fontWeight
-        )
-    }
-}
-
-@Composable
-fun InfoRow(
-    label: String,
-    value: Int,
-    unit: String,
-    modifier: Modifier = Modifier,
-    highlightText: String? = null,
-    highlightColor: Color = Color(0xFF4CAF50)
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = label,
-            fontSize = 16.sp,
-            color = Color.Black,
-            fontWeight = FontWeight.Bold
-        )
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            if (highlightText != null) {
-                Text(
-                    text = highlightText,
-                    fontSize = 14.sp,
-                    color = highlightColor
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-            }
-
-            Text(
-                text = value.toString(),
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = unit,
-                fontSize = 12.sp,
-                color = Color.DarkGray
-            )
-        }
-    }
-}
-
-@Composable
-fun Divider() {
-    androidx.compose.material3.Divider(
-        modifier = Modifier.padding(vertical = 16.dp),
-        color = Color.LightGray,
-        thickness = 1.dp
-    )
-}
-
-@Composable
 fun VerticalSpacer(
     height: Dp = 8.dp
 ) {
     Spacer(modifier = Modifier.height(height))
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun RecordContent(
     onDismissRequest: () -> Unit,
     report: DetailReportDto
 ) {
     val context = LocalContext.current
+    val pagerState = rememberPagerState()
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -216,225 +131,181 @@ fun RecordContent(
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .fillMaxHeight(0.7f)
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(16.dp)
-                )
+                .fillMaxHeight(0.5f)
+                .background(Color.White, RoundedCornerShape(16.dp))
                 .padding(16.dp)
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start
-            ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // 1. 헤더 고정
+                ModalHeader(title = "${report.date.split("-")[1]}월 ${report.date.split("-")[2]}일 행동 기록")
 
-                // 날짜 문자열에서 년, 월, 일 추출
-                val (year, month, day) = report.date.split("-").map { it.toInt() }
+                VerticalSpacer(height = 16.dp)
 
-                Box(modifier = Modifier.weight(0.1f)) {
-                    ModalHeader(
-                        title = "${month}월 ${day}일 행동 기록"
-                    )
-                }
-
-                Box(
+                // 2. 에너지 및 반숙이 정보 고정
+                Row(
                     modifier = Modifier
-                        .weight(0.8f)
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFFBD752))
+                        .padding(vertical = 12.dp, horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(
+                    // 이미지 왼쪽 배치
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()), // 넘쳤을 때, 스크롤
-                        // 일정한 간격 설정
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                            .weight(1f)
+                            .padding(end = 12.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        // 획득한 반숙이 정보
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                        Box(modifier = Modifier
+                            .size(120.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0xE6FFFFFF))
+                            .border(3.dp, Color(0xFF725554), RoundedCornerShape(12.dp))
                         ) {
-                            // 이미지 왼쪽 배치
-                            Box(
+                            SpriteSheetAnimation(
+                                context = context,
+                                spriteSheetName = "${report.bansoogiGifUrl}_sheet.png",
+                                jsonName = "${report.bansoogiImageUrl}.json",
                                 modifier = Modifier
-                                    .weight(1f) // 전체 너비의 1/2 차지
-                                    .fillMaxHeight(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Box(modifier = Modifier
-                                    .size(120.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, RoundedCornerShape(12.dp))
-                                ) {
-                                    SpriteSheetAnimation(
-                                        context = context,
-                                        spriteSheetName = "${report.bansoogiGifUrl}_sheet.png",
-                                        jsonName = "${report.bansoogiImageUrl}.json",
-                                        modifier = Modifier
-                                            .size(160.dp)
-                                            .scale(1.3f)
-                                    )
-                                }
-                            }
-
-                            // 텍스트를 오른쪽 절반에 배치하고 중앙 정렬
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f) // 전체 너비의 1/2 차지
-                                    .fillMaxHeight(),
-                                contentAlignment = Alignment.Center // 내부 콘텐츠 중앙 정렬
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Text(
-                                        text = buildAnnotatedString {
-                                            append("에너지 : ")
-                                            // 점수만 다른 색상으로 표기
-                                            withStyle(
-                                                style = SpanStyle(
-                                                    color = Color(0xFF2E616A),  // 색상 변경
-                                                )
-                                            ) {
-                                                append("${report.finalEnergyPoint}")
-                                            }
-                                            append(" / 100")
-                                        },
-                                        fontSize = 20.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-
-                                    VerticalSpacer(height = 20.dp)
-
-                                    Text(
-                                        text = report.bansoogiTitle,
-                                        fontSize = 20.sp,
-                                        textAlign = TextAlign.Center,
-                                        fontWeight = FontWeight.Bold
-                                    )
-
-                                    Text(
-                                        text = "획득!",
-                                        fontSize = 16.sp,
-                                        textAlign = TextAlign.Center,
-                                        color = Color.Gray
-                                    )
-                                }
-                            }
+                                    .size(160.dp)
+                                    .scale(1.3f)
+                            )
                         }
+                    }
 
-                        VerticalSpacer()
+                    // 텍스트를 오른쪽 절반에 배치하고 중앙 정렬
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp),
+                        contentAlignment = Alignment.Center // 내부 콘텐츠 중앙 정렬
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = buildAnnotatedString {
+                                    append("에너지 : ")
+                                    // 점수만 다른 색상으로 표기
+                                    withStyle(
+                                        style = SpanStyle(
+                                            color = Color(0xFF2E616A),  // 색상 변경
+                                        )
+                                    ) {
+                                        append("${report.finalEnergyPoint}")
+                                    }
+                                    append(" / 100")
+                                },
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
 
-                        // 행동 기록 섹션
-                        SectionHeader(
-                            title = "행동 기록"
-                        )
+                            VerticalSpacer(height = 20.dp)
 
-                        VerticalSpacer()
+                            Text(
+                                text = report.bansoogiTitle,
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold
+                            )
 
-                        InfoRow(
-                            label = "누워있던 시간 :",
-                            value = report.lyingTime,
-                            unit = " 분"
-                        )
-
-                        VerticalSpacer()
-
-                        InfoRow(
-                            label = "앉아있던 시간 :",
-                            value = report.sittingTime,
-                            unit = " 분"
-                        )
-
-                        VerticalSpacer()
-
-                        InfoRow(
-                            label = "휴대폰 사용 시간 :",
-                            value = report.phoneTime,
-                            unit = " 분"
-                        )
-
-                        Divider()
-
-                        // 이벤트 행동 변화 섹션
-                        SectionHeader(
-                            title = "이벤트 행동 변화"
-                        )
-
-                        VerticalSpacer()
-
-                        InfoRow(
-                            label = "기상 이벤트 :",
-                            value = report.standupCount,
-                            unit = " 회"
-                        )
-
-                        ActivityLogList(report.standLog)
-
-                        VerticalSpacer()
-
-                        InfoRow(
-                            label = "스트레칭 이벤트 :",
-                            value = report.stretchCount,
-                            unit = " 회"
-                        )
-
-                        ActivityLogList(report.stretchLog)
-
-                        VerticalSpacer()
-
-                        InfoRow(
-                            label = "휴대폰 미사용 이벤트 :",
-                            value = report.phoneOffCount,
-                            unit = " 회"
-                        )
-
-                        ActivityLogList(report.phoneOffLog)
-
-                        Divider()
-
-                        // 건강 정보 섹션
-                        SectionHeader(
-                            title = "건강 정보"
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        InfoRow(
-                            label = "총 걸음 수 :",
-                            value = report.walkCount,
-                            unit = " 회"
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        InfoRow(
-                            label = "총 계단 수 :",
-                            value = report.stairsClimbed.toInt(),
-                            unit = " 계단"
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        InfoRow(
-                            label = "수면 시간 :",
-                            value = report.sleepTime,
-                            unit = " 분"
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        InfoRow(
-                            label = "운동 시간 :",
-                            value = report.exerciseTime,
-                            unit = " 분"
-                        )
+                            Text(
+                                text = "획득!",
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray
+                            )
+                        }
                     }
                 }
+
+                VerticalSpacer(height = 16.dp)
+
+                // 3. Pager 내용
+                HorizontalPager(
+                    count = 3,
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f) // 높이 고정 비율
+                ) { page ->
+                    when (page) {
+                        0 -> PageBehaviorLogs(report)
+                        1 -> PageEventLogs(report)
+                        2 -> PageHealthInfo(report)
+                    }
+                }
+
+                // 4. 인디케이터
+                HorizontalPagerIndicator(
+                    pagerState = pagerState,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 8.dp),
+                    activeColor = Color(0xFFEEC530),
+                    inactiveColor = Color(0xFFD9D9D9)
+                )
             }
         }
+    }
+}
+
+@Composable
+fun PageBehaviorLogs(report: DetailReportDto) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        SectionHeader(title = "가만히 보낸 시간")
+        VerticalSpacer(height = 16.dp)
+        InfoRow(label = "누워있던 시간", value = report.lyingTime, unit = " 분")
+        VerticalSpacer()
+        InfoRow(label = "앉아있던 시간", value = report.sittingTime, unit = " 분")
+        VerticalSpacer()
+        InfoRow(label = "휴대폰 사용 시간", value = report.phoneTime, unit = " 분")
+    }
+}
+
+@Composable
+fun PageEventLogs(report: DetailReportDto) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        SectionHeader(title = "특별 보너스")
+        VerticalSpacer(height = 16.dp)
+        InfoRow(label = "기상", value = report.standupCount, unit = " 회")
+        ActivityLogList(report.standLog)
+        VerticalSpacer()
+        InfoRow(label = "휴대폰 미사용", value = report.phoneOffCount, unit = " 회")
+        ActivityLogList(report.phoneOffLog)
+    }
+}
+
+@Composable
+fun PageHealthInfo(report: DetailReportDto) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        SectionHeader(title = "건강하게 보낸 시간")
+        VerticalSpacer(height = 16.dp)
+        InfoRow(label = "총 걸음 수", value = report.walkCount, unit = " 회")
+        VerticalSpacer()
+        InfoRow(label = "총 계단 수", value = report.stairsClimbed.toInt(), unit = " 계단")
+        VerticalSpacer()
+        InfoRow(label = "수면 시간", value = report.sleepTime, unit = " 분")
+        VerticalSpacer()
+        InfoRow(label = "운동 시간", value = report.exerciseTime, unit = " 분")
     }
 }
 

@@ -88,6 +88,10 @@ dependencies {
     // 화면 스크롤 페이저
     implementation(libs.androidx.foundation)
 
+    // 화면 pager
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
+
     // 생명주기 감지
     implementation(libs.lifecycle.process)
 

@@ -41,8 +41,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
@@ -134,7 +137,81 @@ fun HomeContent(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(100.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color.White.copy(alpha = 0.9f))
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            val today = remember { LocalDate.now() }
+            val year = today.year.toString()
+            val month = today.monthValue.toString()
+            val day = today.dayOfMonth.toString()
+
+            val dateText = buildAnnotatedString {
+                append(year)
+                withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 년  ") }
+
+                append(month)
+                withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 월  ") }
+
+                append(day)
+                withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 일") }
+            }
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = dateText,
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    repeat(7) {
+                        Box(
+                            modifier = Modifier
+                                .size(42.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(Color(0xFFFFD966))
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                val randomMessages = remember(todayRecordDto, healthData) {
+                    listOfNotNull(
+                        todayRecordDto.lyingTime?.let { "오늘은 ${it}분 동안 누워 있었네!" },
+                        todayRecordDto.sittingTime?.let { "오늘은 ${it}분 동안 앉아 있었네!" },
+                        todayRecordDto.phoneTime?.let { "오늘은 휴대폰을 ${it}분 봤네!" },
+                        healthData.step.toInt().let { "오늘은 ${it}보를 걸었어" },
+                        healthData.floorsClimbed.toInt().let { "오늘은 ${it}계단을 올랐구나!" },
+                        healthData.sleepData?.let { "오늘은 ${it}분 동안 잤구나!" },
+                        healthData.exerciseTime?.let { "오늘은 ${it}분 동안 운동했어!" }
+                    )
+                }
+                val selectedMessage = remember(randomMessages) {
+                    if (randomMessages.isNotEmpty()) randomMessages.random() else "아직 데이터가 없어"
+                }
+
+                Text(
+                    text = selectedMessage,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF2E616A)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         Box(
             modifier = Modifier
@@ -172,7 +249,7 @@ fun HomeContent(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 30.dp),
+                .padding(horizontal = 16.dp, vertical = 24.dp),
             contentAlignment = Alignment.CenterEnd
         ) {
             Column(
