@@ -12,6 +12,33 @@
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- Android 12+ (API 31+) 새로운 블루투스 권한 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:maxSdkVersion="32" />
+
+    <!-- 위치 권한 (Android 11 이하에서 BLE 스캔에 필요) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="30" />
+
+    <!-- BLE 지원 기능 요구사항 -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <!-- 블루투스 지원 기능 요구사항 -->
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="true" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
