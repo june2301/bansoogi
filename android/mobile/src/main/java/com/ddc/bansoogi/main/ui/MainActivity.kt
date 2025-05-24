@@ -68,7 +68,6 @@ import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.common.util.health.Permissions
 import com.ddc.bansoogi.common.util.health.RealTimeHealthDataManager
 import com.ddc.bansoogi.common.wear.communication.state.HealthStateHolder
-import com.ddc.bansoogi.main.bluetooth.BansoogiBluetoothManager
 import com.ddc.bansoogi.main.bluetooth.BluetoothFloatingButton
 import com.ddc.bansoogi.main.bluetooth.BluetoothPermissionDialog
 import com.ddc.bansoogi.main.bluetooth.BluetoothPermissionManager
