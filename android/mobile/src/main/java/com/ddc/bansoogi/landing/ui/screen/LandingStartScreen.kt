@@ -38,7 +38,7 @@ fun LandingStartScreen(onNext: () -> Unit) {
             )
 
             GifImage(
-                R.drawable.bansoogi_walk_stop,
+                R.drawable.bansoogi_walk,
                 "landing bansoogi",
                 Modifier.aspectRatio(ratio = 1f)
                 .height(256.dp)
