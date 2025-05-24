@@ -1,0 +1,35 @@
+package com.ddc.bansoogi.common.mobile.communication.sender
+
+import android.content.Context
+import com.ddc.bansoogi.common.mobile.communication.CommunicationPaths
+
+object MobileTodayRecordSender {
+    fun sendEnergyRequest(context: Context) {
+        WearToMobileMessageSender.sendReqeust(
+            context,
+            CommunicationPaths.WearToMobile.ENERGY_REQUEST
+        )
+    }
+
+    fun send(context: Context) {
+        WearToMobileMessageSender.sendReqeust(
+            context,
+            CommunicationPaths.WearToMobile.TODAY_RECORD_REQUEST
+        )
+    }
+
+    fun sendInteractionTrigger(context: Context) {
+        WearToMobileMessageSender.sendReqeust(
+            context,
+            CommunicationPaths.WearToMobile.INTERACTION_TRIGGER
+        )
+    }
+
+    fun sendMealTrigger(context: Context, mealType: String) {
+        WearToMobileMessageSender.sendData(
+            context,
+            mealType,
+            CommunicationPaths.WearToMobile.MEAL_CHECK_TRIGGER
+        )
+    }
+}
