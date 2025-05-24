@@ -118,11 +118,12 @@ class ActivityStateProcessor(
                 prolongedMonitor.onStatic(
                     isSitting = latestStatic == StaticType.SITTING,
                     isLying   = latestStatic == StaticType.LYING
-                            )
-                delay(300_000L)
-                }
+                )
+
+                delay(10_000L)
             }
         }
+    }
 
     private fun collectOffBody() = sensorManager.isOffBody
         .onEach { offBody ->

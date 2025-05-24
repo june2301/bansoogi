@@ -68,7 +68,9 @@ class SlidingWindowStaticTracker(
 
     // ─────────────────────── Helpers ───────────────────────
     private fun evictOld(now: Long) {
-        while (states.isNotEmpty() && now - states.first.first > windowDurationMs) {
+        val windowStart = now - windowDurationMs
+        // 최소 1개는 남기고 제거 (윈도우가 완전히 비워지는 것 방지)
+        while (states.size > 1 && states.first.first < windowStart) {
             states.removeFirst()
         }
     }
