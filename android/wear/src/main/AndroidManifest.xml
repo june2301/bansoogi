@@ -12,6 +12,9 @@
     <uses-permission android:name="com.google.android.gms.permission.BIND_LISTENER" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission
+        android:name="android.permission.USE_EXACT_ALARM"
+        tools:targetApi="34" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission
         android:name="android.permission.FOREGROUND_SERVICE_HEALTH"
@@ -106,6 +109,9 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
+        <meta-data
+            android:name="com.google.android.wearable.notificationBridgeMode"
+            android:value="BRIDGING" />
 
         <activity
             android:name=".presentation.MainActivity"
