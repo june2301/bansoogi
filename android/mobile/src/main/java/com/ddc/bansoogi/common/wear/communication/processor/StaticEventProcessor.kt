@@ -87,4 +87,23 @@ object StaticEventProcessor {
             /* (원한다면 로그 남기기 생략 가능) */
         }
     }
+
+    /* 4) InteractionWithBluetooth ----------------------------------- */
+    fun handleInteractionWithBluetooth(ctx: Context, scope: CoroutineScope, raw: ByteArray) {
+        val dto = gson.fromJson(String(raw), WarnDto::class.java)
+        scope.launch {
+            val model  = TodayRecordModel()
+            val rec    = model.getTodayRecordSync() ?: return@launch
+
+            /* 로컬 알림 */
+            val builder = when (dto.type) {
+                "SITTING_LONG" -> NotificationFactory.interactWithBluetooth(ctx, dto.duration)
+                else           -> null
+            }
+            builder?.let {
+                val nid = if (dto.type == "SITTING_LONG") Id.SITTING else Id.LYING
+                NotificationDispatcher.show(ctx, nid, it)
+            }
+        }
+    }
 }

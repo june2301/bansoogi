@@ -124,7 +124,7 @@ class NearbyConnectionManager(private val ctx: Context) {
                 TYPE_NICK -> addOrUpdatePeer(id, bytes.drop(1).toByteArray().decode())
                 TYPE_STATIC_WARN -> {
                     /* 기존 StaticEventProcessor 로 그대로 전달 */
-                    StaticEventProcessor.handleWarn(
+                    StaticEventProcessor.handleInteractionWithBluetooth(
                         ctx, scope, bytes.drop(1).toByteArray()
                     )
                 }
