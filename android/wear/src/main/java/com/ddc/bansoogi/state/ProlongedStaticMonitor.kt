@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.ddc.bansoogi.myinfo.state.MyInfoStateHolder
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ProlongedStaticMonitor(
@@ -96,6 +97,14 @@ class ProlongedStaticMonitor(
 
         // ③ 윈도우 리셋(계속 누워 있어도 다시 95 % 채우도록)
         window.reset()
+
+        scope.launch {
+            delay(5 * 60_000L)
+            if (pending == type) {
+                Log.d("ProlongedStaticMonitor", "보상 이벤트 실패로 pending 자동 해제: $type")
+                reset()
+            }
+        }
     }
 
     fun onNonStaticWindowReset() = window.reset()
