@@ -48,13 +48,13 @@ import com.ddc.bansoogi.nearby.NearbyPermissionManager
 import com.ddc.bansoogi.nearby.data.BansoogiFriend
 import com.ddc.bansoogi.nearby.ui.FriendFoundNotification
 import com.ddc.bansoogi.nearby.ui.NearbyFloatingButton
+import com.ddc.bansoogi.person.data.local.PersonDataSource
+import com.ddc.bansoogi.person.data.model.PersonModel
 import com.samsung.android.sdk.health.data.HealthDataService
 import com.samsung.android.sdk.health.data.HealthDataStore
-import io.realm.kotlin.types.RealmInstant
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 
 /* ─────────────────────────────────── */
 
@@ -75,6 +75,9 @@ class MainActivity : BaseActivity() {
     private var friendName       by mutableStateOf("")
     private var showPermDialog   by mutableStateOf(false)
     private var isFirstUser      by mutableStateOf(false)
+
+    /* ---------- Nickname --------- */
+    private var userNickname by mutableStateOf("엄윤준")
 
     private val UPDATE_INTERVAL  = 10_000L
 
@@ -208,7 +211,7 @@ class MainActivity : BaseActivity() {
 
         // 권한 OK → 실제 토글
         isSearching = !isSearching
-        if (isSearching) nearbyMgr.start(getNickname())
+        if (isSearching) nearbyMgr.start(userNickname)
         else             nearbyMgr.stop()
     }
 
@@ -249,11 +252,6 @@ class MainActivity : BaseActivity() {
         super.onResume()
         if (!ForegroundUtil.isServiceRunning()) ForegroundUtil.startForegroundService(this)
     }
-
-    /* ------------------------- Helper ---------------------------- */
-    private fun getNickname() =
-        getSharedPreferences("bansoogi_prefs", MODE_PRIVATE)
-            .getString("user_nickname", "반숙이") ?: "반숙이"
 
     override fun onDestroy() {
         if (::healthMgr.isInitialized) healthMgr.stopCollecting()
@@ -381,7 +379,8 @@ private fun MainScreen(
                     friendName,
                     showFriendBanner,
                     dismissBanner,
-                    Modifier.align(Alignment.TopCenter)
+                    Modifier
+                        .align(Alignment.TopCenter)
                         .zIndex(1f)                    // z축에서 높은 우선순위
                 )
                 if (peers.isNotEmpty()) {
@@ -468,7 +467,7 @@ private fun NearbyStatusBanner(
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-        visible = true,
+        visible = isSearching || peers.isNotEmpty(),
         enter = fadeIn(tween(300)),
         exit  = fadeOut(tween(300)),
         modifier = modifier

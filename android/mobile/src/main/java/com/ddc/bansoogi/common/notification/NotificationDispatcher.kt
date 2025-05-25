@@ -16,7 +16,9 @@ object NotificationDispatcher {
     /** 알림 ID를 enum 등으로 관리하면 업데이트·취소할 때도 편리합니다. */
     enum class Id(val value: Int) {
         PHONE(1001), SITTING(1002), LYING(1003), SUMMARY(1004),
-        WAKE(1005), SLEEP(1006), MEAL(1007), REWARD(1008) }
+        WAKE(1005), SLEEP(1006), MEAL(1007), REWARD(1008),
+        BLUETOOTH(1009),
+    }
 
     @Volatile private var notificationEnabled = true
 
