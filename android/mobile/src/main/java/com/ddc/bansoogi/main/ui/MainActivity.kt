@@ -325,8 +325,8 @@ private fun MainScreen(
     val permLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { result ->
-        onPermDismiss()                                 // 다이얼로그 닫기
-        if (result.values.all { it }) toggleNearby()    // ✅ 재시도
+        onPermDismiss()
+        if (result.values.all { it }) toggleNearby()
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -491,7 +491,7 @@ private fun NearbyStatusBanner(
         exit  = fadeOut(tween(300)),
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 8.dp)
+            .padding(top = 28.dp)
     ) {
         Surface(
             color = if (isSearching) Color(0xFF4CAF50) else Color(0xFF9E9E9E),
