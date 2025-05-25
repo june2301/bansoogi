@@ -124,7 +124,7 @@ object NotificationFactory {
     fun interactWithBluetooth(context: Context, nickname: String): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_BLUETOOTH)
             .setContentTitle("${nickname}의 메시지")
-            .setContentText("뭐행?!")
+            .setContentText("똑똑! 움직여!")
             .setContentIntent(
                 buildDeepLinkPendingIntent(
                     context,
