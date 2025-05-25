@@ -31,7 +31,8 @@ object PhoneUsageMonitor {
                     // 기준 이상 사용 확인
                     if (PhoneUsageAnalyzer.isPhoneUsedOverThreshold(NotificationDurationStateHolder.notificationDuration)) {
                         // 핸드폰 사용 시간
-                        val time = PhoneUsageAnalyzer.getPhoneUsageMinutes()
+//                        val time = PhoneUsageAnalyzer.getPhoneUsageMinutes()
+                        val time = 1 // 시연용 시간 알림 출력용 시간 설정
 
                         // 측정 시간 리셋
                         PhoneUsageAnalyzer.resetUsageStartTime()
