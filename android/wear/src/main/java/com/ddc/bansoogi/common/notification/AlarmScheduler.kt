@@ -65,18 +65,19 @@ object AlarmScheduler {
                 add(Calendar.DAY_OF_YEAR, 1)
         }.timeInMillis
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            !alarmMgr.canScheduleExactAlarms()
-        ) {
-            val req = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(req)
-            alarmMgr.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP, nextTime, AlarmManager.INTERVAL_DAY, pending
-            )
-        } else {
+        try {
             alarmMgr.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP, nextTime, pending
+                AlarmManager.RTC_WAKEUP,
+                nextTime,
+                pending
+            )
+        } catch (e: SecurityException) {
+            Log.w("WatchSched", "Exact alarm not allowed, fallback to inexact", e)
+            alarmMgr.setInexactRepeating(
+                AlarmManager.RTC_WAKEUP,
+                nextTime,
+                AlarmManager.INTERVAL_DAY,
+                pending
             )
         }
     }
