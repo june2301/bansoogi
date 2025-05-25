@@ -48,7 +48,15 @@ object PhoneUsageMonitor {
 
                         // 핸드폰 off 모니터링 시작
                         PhoneUsageFinishTracker.startMonitoring(context, scope) {
+                            // 에너지 증가
                             PhoneUsageEnergyUtil.addEnergy(time)
+
+                            // 알림 발생
+                            NotificationDispatcher.show(
+                                context,
+                                NotificationDispatcher.Id.REWARD,
+                                NotificationFactory.cheer(context)
+                            )
                         }
 
                         // 워치로 결과 전송
