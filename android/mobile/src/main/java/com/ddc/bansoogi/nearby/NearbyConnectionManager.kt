@@ -94,6 +94,12 @@ class NearbyConnectionManager(private val ctx: Context) {
     /* ======================================================================== */
     private val endpointDiscoveryCb = object : EndpointDiscoveryCallback() {
         override fun onEndpointFound(id: String, info: DiscoveredEndpointInfo) {
+            // ★ 자신의 닉네임과 같으면 연결하지 않음
+            if (info.endpointName == myNickname) {
+                Log.d(TAG, "Skipping self: $id (${info.endpointName})")
+                return
+            }
+
             if (pendingConnect.contains(id) || _peers.value.any { it.endpointId == id }) return
             Log.d(TAG, "Found $id (${info.endpointName})")
             pendingConnect += id
