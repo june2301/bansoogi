@@ -421,7 +421,7 @@ private fun FriendList(peers: List<BansoogiFriend>, nearbyMgr: NearbyConnectionM
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
                     .clickable {
-                        nearbyMgr.sendStaticWarnTo(p.endpointId, "SITTING_LONG", 60)
+                        nearbyMgr.sendStaticWarnTo(p.endpointId, "SITTING_LONG", "hello")
                     }
             ) {
                 Column(Modifier.padding(12.dp)) {
