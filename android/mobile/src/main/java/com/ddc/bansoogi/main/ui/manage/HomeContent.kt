@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
@@ -34,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.motionEventSpy
@@ -55,6 +57,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.ui.RecordedModal
+import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.common.data.enum.MealType
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import com.ddc.bansoogi.common.util.health.CustomHealthData
@@ -77,6 +80,8 @@ fun HomeContent(
     isInSleepRange: Boolean,
     healthData: CustomHealthData,
 ) {
+    val context = LocalContext.current
+
     val scope = rememberCoroutineScope()
     var showModal by remember { mutableStateOf(false) }
 
@@ -89,6 +94,11 @@ fun HomeContent(
             currentTime.value = LocalTime.now()
             delay(60_000L)
         }
+    }
+
+    val characterListState = remember { mutableStateOf<List<Character?>>(emptyList()) }
+    LaunchedEffect(Unit) {
+        characterListState.value = todayRecordController.getCurrentWeekDetailReports()
     }
 
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
@@ -162,26 +172,74 @@ fun HomeContent(
                 withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 일") }
             }
 
+            val daysOfWeek = listOf("일", "월", "화", "수", "목", "금", "토")
+
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = dateText,
-                    fontSize = 32.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    repeat(7) {
-                        Box(
-                            modifier = Modifier
-                                .size(42.dp)
-                                .clip(RoundedCornerShape(50))
-                                .background(Color(0xFFFFD966))
-                        )
+                    characterListState.value.forEachIndexed { index, character ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = daysOfWeek.get(index),
+                                textAlign = TextAlign.Center,
+                                fontSize = 16.sp
+                            )
+
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            if (character == null) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(42.dp)
+                                        .clip(RoundedCornerShape(50))
+                                        .background(Color.LightGray)
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .size(42.dp)
+                                        .clip(RoundedCornerShape(50))
+                                        .background(Color(0x50FFD966))
+                                ) {
+                                    val imageLoader = remember {
+                                        ImageLoader.Builder(context)
+                                            .components {
+                                                add(GifDecoder.Factory())
+                                                add(ImageDecoderDecoder.Factory())
+                                            }
+                                            .build()
+                                    }
+
+                                    val resId = context.resources.getIdentifier(character.imageUrl, "drawable", context.packageName)
+
+                                    Image(
+                                        painter = rememberAsyncImagePainter(
+                                            ImageRequest.Builder(context)
+                                                .data(resId)
+                                                .build(),
+                                            imageLoader = imageLoader
+                                        ),
+                                        contentDescription = "반숙이",
+                                        modifier = Modifier
+                                            .scale(1.2f)
+                                            .fillMaxSize(),
+                                        contentScale = ContentScale.Fit
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -249,7 +307,7 @@ fun HomeContent(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 24.dp),
+                .padding(horizontal = 16.dp, vertical = 20.dp),
             contentAlignment = Alignment.CenterEnd
         ) {
             Column(
@@ -295,8 +353,7 @@ fun HomeContent(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
-                .padding(horizontal = 16.dp),
+                .weight(1f),
             contentAlignment = Alignment.Center
         ) {
             Box(
@@ -305,6 +362,7 @@ fun HomeContent(
                         maxWidth = 200.dp,
                         maxHeight = 200.dp
                     )
+                    .offset(y = (-40).dp)
                     .aspectRatio(1f), // 1:1 비율
                 contentAlignment = Alignment.Center
             ) {

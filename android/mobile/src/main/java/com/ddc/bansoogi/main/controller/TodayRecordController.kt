@@ -11,12 +11,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import android.content.Context
+import com.ddc.bansoogi.calendar.data.model.RecordedReportModel
 import com.ddc.bansoogi.common.wear.communication.receiver.RequestHandler
 import com.ddc.bansoogi.common.util.health.CustomHealthData
 import com.ddc.bansoogi.common.util.health.EnergyUtil
 import com.ddc.bansoogi.common.wear.data.mapper.WearDtoMapper
 import com.ddc.bansoogi.main.data.model.TodayHealthDataDto
 import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
+import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.main.ui.handle.handleMeal
 import java.time.LocalDate
 import org.mongodb.kbson.ObjectId
@@ -26,6 +28,7 @@ class TodayRecordController(
     private val context: Context
 ) {
     private val model = TodayRecordModel()
+    private val reportModel = RecordedReportModel()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     private suspend fun refreshTodayRecord() {
@@ -61,6 +64,10 @@ class TodayRecordController(
 
             sendToWatch()
         }
+    }
+
+    fun getCurrentWeekDetailReports(): List<Character?> {
+        return reportModel.getCurrentWeekDetailReports()
     }
 
     fun onInteract(todayRecord: TodayRecordDto, isInSleepRange: Boolean) {

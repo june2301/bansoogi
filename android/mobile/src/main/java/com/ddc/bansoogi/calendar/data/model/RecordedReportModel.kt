@@ -3,23 +3,44 @@ package com.ddc.bansoogi.calendar.data.model
 import android.util.Log
 import com.ddc.bansoogi.calendar.data.entity.RecordedReport
 import com.ddc.bansoogi.calendar.data.local.RecordedReportDataSource
+import com.ddc.bansoogi.collection.data.entity.Character
 import com.ddc.bansoogi.collection.data.model.CollectionModel
 import com.ddc.bansoogi.common.data.model.ActivityLogModel
 import com.ddc.bansoogi.common.data.model.TodayRecordDto
 import io.realm.kotlin.types.RealmInstant
+import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 import kotlin.Int
 
 class RecordedReportModel {
     private val dataSource = RecordedReportDataSource()
     private val logModel = ActivityLogModel()
+    private val collectionModel = CollectionModel()
 
     // 더미데이터용 추후 삭제 예정
     suspend fun initialize() {
         dataSource.initialize()
         logModel.initialize()
+    }
+
+    fun getCurrentWeekDetailReports(): List<Character?> {
+        val today = LocalDate.now()
+        val startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
+
+        return (0..6).map { offset ->
+            val date = startOfWeek.plusDays(offset.toLong())
+            val dateStr = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+            val report = dataSource.getRecordedReportByDate(dateStr)
+
+            report?.let {
+                collectionModel.getBansoogiById(it.bansoogiId)
+            }
+        }
     }
 
     suspend fun createRecordedReport(
@@ -67,7 +88,7 @@ class RecordedReportModel {
 
     fun getCalendarMarkers(): List<CalendarMarkerDto> {
         return dataSource.getRecordedReportList().map { report ->
-            val bansoogi = CollectionModel().getBansoogiById(report.bansoogiId)
+            val bansoogi = collectionModel.getBansoogiById(report.bansoogiId)
 
             CalendarMarkerDto(
                 date = LocalDate.parse(report.reportedDate),
@@ -80,7 +101,7 @@ class RecordedReportModel {
     fun getDetailReport(date: String): DetailReportDto? {
         val report = dataSource.getRecordedReportByDate(date) ?: return null
 
-        val bansoogi = CollectionModel().getBansoogiById(report.bansoogiId)
+        val bansoogi = collectionModel.getBansoogiById(report.bansoogiId)
 
         // 로그 호출
         val standLog = logModel.getLogsByTypeAndDate("STANDUP", date)

@@ -107,9 +107,10 @@ fun MyInfoContent(
 
         InfoSection(
             items = listOf(
-                { ToggleRow("모바일 알림 설정", myInfo.notificationEnabled, notificationToggleClick) },
-                { ToggleRow("배경음 설정", myInfo.bgSoundEnabled, bgSoundToggleClick) },
-                { ToggleRow("효과음 설정", myInfo.effectSoundEnabled, effectSoundClick) }
+                { InfoRow("활동 알림 주기", myInfo.notificationDuration, unit = "분") },
+                { ToggleRow("알림 설정", myInfo.notificationEnabled, notificationToggleClick) },
+//                { ToggleRow("배경음 설정", myInfo.bgSoundEnabled, bgSoundToggleClick) },
+//                { ToggleRow("효과음 설정", myInfo.effectSoundEnabled, effectSoundClick) }
             )
         )
 
