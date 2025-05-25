@@ -43,6 +43,7 @@ import com.ddc.bansoogi.common.util.health.*
 import com.ddc.bansoogi.common.wear.communication.state.HealthStateHolder
 import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
+import com.ddc.bansoogi.myInfo.data.local.MyInfoDataSource
 import com.ddc.bansoogi.nearby.NearbyConnectionManager
 import com.ddc.bansoogi.nearby.NearbyPermissionManager
 import com.ddc.bansoogi.nearby.data.BansoogiFriend
@@ -76,8 +77,9 @@ class MainActivity : BaseActivity() {
     private var showPermDialog   by mutableStateOf(false)
     private var isFirstUser      by mutableStateOf(false)
 
-    /* ---------- Nickname --------- */
-    private var userNickname by mutableStateOf("엄윤준")
+    /* ---------- User Info --------- */
+    private lateinit var myInfoDataSource: MyInfoDataSource
+    private var userNickname by mutableStateOf("기본값")
 
     private val UPDATE_INTERVAL  = 10_000L
 
@@ -85,6 +87,16 @@ class MainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        /* MyInfo DataSource 초기화 */
+        myInfoDataSource = MyInfoDataSource()
+
+        /* User nickname 로드 */
+        lifecycleScope.launch {
+            myInfoDataSource.getMyInfo().collect { user ->
+                userNickname = if (user.nickname.isNotEmpty()) user.nickname else "기본값"
+            }
+        }
 
         /* Samsung Health 권한 */
         healthStore = HealthDataService.getStore(this)
@@ -137,7 +149,8 @@ class MainActivity : BaseActivity() {
                 friendName       = friendName,
                 dismissBanner    = { showFriendBanner = false },
                 showPermDialog   = showPermDialog,
-                onPermDismiss    = { showPermDialog = false }
+                onPermDismiss    = { showPermDialog = false },
+                userNickname     = userNickname
             )
         }
         /* 초기 권한이 이미 있었다면 즉시 한 번 로드 */
@@ -276,7 +289,8 @@ private fun MainScreen(
     friendName: String,
     dismissBanner: () -> Unit,
     showPermDialog: Boolean,
-    onPermDismiss: () -> Unit
+    onPermDismiss: () -> Unit,
+    userNickname: String
 ) {
     val navController = rememberNavController()
     val navBack by navController.currentBackStackEntryAsState()
@@ -385,7 +399,7 @@ private fun MainScreen(
                 )
                 if (peers.isNotEmpty()) {
                     FriendList(
-                        peers, nearbyMgr, Modifier
+                        peers, nearbyMgr, userNickname, Modifier
                             .align(Alignment.BottomStart)
                             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 48.dp) // ← 추가됨
                     )
@@ -411,7 +425,12 @@ private fun MainScreen(
 //        .atZone(ZoneId.systemDefault()).toLocalDate()
 
 @Composable
-private fun FriendList(peers: List<BansoogiFriend>, nearbyMgr: NearbyConnectionManager, modifier: Modifier = Modifier) {
+private fun FriendList(
+    peers: List<BansoogiFriend>,
+    nearbyMgr: NearbyConnectionManager,
+    userNickname: String,
+    modifier: Modifier = Modifier
+) {
     val show = peers.take(3)
     LazyColumn(modifier.widthIn(max = 300.dp)) {
         items(show.size) { idx ->
@@ -421,7 +440,7 @@ private fun FriendList(peers: List<BansoogiFriend>, nearbyMgr: NearbyConnectionM
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
                     .clickable {
-                        nearbyMgr.sendStaticWarnTo(p.endpointId, "SITTING_LONG", "hello")
+                        nearbyMgr.sendStaticWarnTo(p.endpointId, "SITTING_LONG", userNickname)
                     }
             ) {
                 Column(Modifier.padding(12.dp)) {
