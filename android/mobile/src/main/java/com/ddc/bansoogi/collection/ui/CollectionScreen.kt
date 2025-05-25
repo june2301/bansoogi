@@ -25,6 +25,7 @@ import com.ddc.bansoogi.collection.data.model.CollectionDto
 import com.ddc.bansoogi.collection.controller.CollectionController
 import com.ddc.bansoogi.collection.view.CollectionView
 import com.ddc.bansoogi.R
+import java.nio.file.WatchEvent
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Preview
@@ -138,15 +139,15 @@ fun CollectionScreen() {
             }
         }
 
-        item {
-            selected?.let {
-                CollectionDetailDialog(
-                    character = it,
-                    fullList = collectionDtoState,
-                    onDismiss = { controller.dismissCharacterDetail() }
-                )
-            }
-        }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+    }
+
+    selected?.let {
+        CollectionDetailDialog(
+            character = it,
+            fullList = collectionDtoState,
+            onDismiss = { controller.dismissCharacterDetail() }
+        )
     }
 }
 
