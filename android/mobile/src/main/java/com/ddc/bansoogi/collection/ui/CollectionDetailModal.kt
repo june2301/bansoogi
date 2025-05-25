@@ -7,6 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -39,6 +42,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil.ImageLoader
 import coil.request.ImageRequest
 import com.ddc.bansoogi.common.ui.component.SpriteSheetAnimation
@@ -64,34 +69,35 @@ fun CollectionDetailDialog(
 
     var showConfirmDialog: Boolean by remember { mutableStateOf(false) }
 
-    AlertDialog(
+    Dialog(
         onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    "닫기",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        },
-        icon = {
-            SpriteSheetAnimation(
-                context = context,
-                spriteSheetName = "${character.gifUrl}_sheet.png",
-                jsonName = "${character.imageUrl}.json",
-                modifier = Modifier
-                    .size(220.dp)
-                    .padding(bottom = 0.dp)
-            )
-        },
-        title = {
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true,
+            usePlatformDefaultWidth = false
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+//                .wrapContentHeight()
+                .background(Color.White, RoundedCornerShape(16.dp)),
+//                .padding(vertical = 4.dp, horizontal = 4.dp),
+            contentAlignment = Alignment.Center
+        ) {
             Column(
-                modifier = Modifier
-                    .offset(y = (-8).dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
+                SpriteSheetAnimation(
+                    context = context,
+                    spriteSheetName = "${character.gifUrl}_sheet.png",
+                    jsonName = "${character.imageUrl}.json",
+                    modifier = Modifier
+                        .size(220.dp)
+                        .padding(bottom = 0.dp)
+                )
+
                 Text(
                     text = character.title,
                     style = MaterialTheme.typography.titleLarge.copy(
@@ -99,6 +105,9 @@ fun CollectionDetailDialog(
                         fontWeight = FontWeight.Bold
                     )
                 )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
                 character.acquisitionCount?.let {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -107,37 +116,34 @@ fun CollectionDetailDialog(
                         modifier = Modifier
                             .background(
                                 color = Color(0xFFFBD752),
-                                shape = RoundedCornerShape(16.dp)
+                                shape = RoundedCornerShape(20.dp)
                             )
                             .padding(horizontal = 12.dp, vertical = 4.dp),
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge,
+                        fontSize = 20.sp
                     )
                 }
-            }
-        },
-        text = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.CenterHorizontally),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
                     text = character.description,
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 16.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                 )
+
                 character.createdAt?.let {
                     Text(
                         text = "${formatDate(it)} 획득",
                         style = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier.padding(top = 4.dp)
+                        modifier = Modifier.padding(top = 4.dp),
+                        fontSize = 16.sp
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 OutlinedButton(
                     onClick = {
@@ -145,7 +151,8 @@ fun CollectionDetailDialog(
                     },
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp)
+                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp),
+                    modifier = Modifier.fillMaxWidth(0.6f)
                 ) {
                     Icon(
                         Icons.Default.Edit,
@@ -154,7 +161,7 @@ fun CollectionDetailDialog(
                     )
                     Text(
                         " 프로필 사진 등록",
-                        fontSize = 20.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF888888)
                     )
@@ -200,6 +207,7 @@ fun CollectionDetailDialog(
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
+
                 OutlinedButton(
                     onClick = {
                         val activity = context as? ComponentActivity ?: return@OutlinedButton
@@ -230,7 +238,8 @@ fun CollectionDetailDialog(
                     },
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp)
+                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp),
+                    modifier = Modifier.fillMaxWidth(0.6f)
                 ) {
                     Icon(
                         Icons.Default.Download,
@@ -239,14 +248,16 @@ fun CollectionDetailDialog(
                     )
                     Text(
                         " 사진 다운로드",
-                        fontSize = 20.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF888888)
                     )
                 }
+
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
-    )
+    }
 }
 
 fun formatDate(instant: RealmInstant): String {
