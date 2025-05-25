@@ -124,7 +124,7 @@ class StaticClassifier(
             // 새 후보 등장 → 리셋 & 타이머 시작
             candidatePosture = newCandidate
             candidateStartTime = now
-//            Log.d(TAG, "▶ NEW CANDIDATE  $candidatePosture  (timer start)")
+            Log.d(TAG, "▶ NEW CANDIDATE  $candidatePosture  (timer start)")
             return
         }
 
