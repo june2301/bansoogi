@@ -1,10 +1,13 @@
 package com.ddc.bansoogi.main.controller
 
+import com.ddc.bansoogi.calendar.data.model.RecordedReportModel
+import com.ddc.bansoogi.collection.data.model.CollectionModel
 import com.ddc.bansoogi.main.data.model.TodayHealthDataDto
 import com.ddc.bansoogi.main.data.model.TodayHealthDataModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.intellij.lang.annotations.JdkConstants
 
 class TodayHealthDataController() {
     private val model = TodayHealthDataModel()
@@ -13,6 +16,9 @@ class TodayHealthDataController() {
     fun initialize(date: String) {
         coroutineScope.launch {
             model.initialize(date)
+
+            CollectionModel().initialize()
+            RecordedReportModel().initialize()
         }
     }
 

@@ -9,6 +9,10 @@ import kotlinx.coroutines.flow.combine
 class CollectionModel {
     private val dataSource = CollectionDataSource()
 
+    suspend fun initialize() {
+        dataSource.insertDummyCharactersWithUnlock()
+    }
+
     fun getBansoogiById(bansoogiId: Int): Character {
         if (bansoogiId == 0) {
             return Character().apply {

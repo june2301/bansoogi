@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -195,14 +196,14 @@ fun DayTimeModal(
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .fillMaxHeight(0.5f)
+                .wrapContentHeight()
                 .background(
                     color = Color.White,
                     shape = RoundedCornerShape(16.dp)
                 )
                 .padding(16.dp)
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier) {
                 // 1. 헤더 고정
                 ModalHeader(title = "오늘 기록")
                 VerticalSpacer(height = 16.dp)
@@ -252,7 +253,7 @@ fun DayTimeModal(
                     state = pagerState,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .height(200.dp)
                 ) { page ->
                     when (page) {
                         0 -> PageBehaviorLogs(todayRecordDto)
@@ -303,10 +304,12 @@ fun PageEventLogs(todayRecordDto: TodayRecordDto) {
         SectionHeader(title = "특별 보너스")
         VerticalSpacer(height = 16.dp)
         InfoRow("기상", todayRecordDto.standUpCnt, "회")
-        todayRecordDto.standLog.forEach { ActivityLogItem(it) }
+//        todayRecordDto.standLog.forEach { ActivityLogItem(it) }
+        VerticalSpacer()
+        InfoRow("스트레칭", todayRecordDto.stretchCnt, "회")
         VerticalSpacer()
         InfoRow("휴대폰 미사용", todayRecordDto.phoneOffCnt, "회")
-        todayRecordDto.phoneOffLog.forEach { ActivityLogItem(it) }
+//        todayRecordDto.phoneOffLog.forEach { ActivityLogItem(it) }
     }
 }
 

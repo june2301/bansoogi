@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -131,11 +132,11 @@ fun RecordContent(
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .fillMaxHeight(0.5f)
+                .wrapContentHeight()
                 .background(Color.White, RoundedCornerShape(16.dp))
                 .padding(16.dp)
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier) {
                 // 1. 헤더 고정
                 ModalHeader(title = "${report.date.split("-")[1]}월 ${report.date.split("-")[2]}일 행동 기록")
 
@@ -230,7 +231,7 @@ fun RecordContent(
                     state = pagerState,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f) // 높이 고정 비율
+                        .height(200.dp)
                 ) { page ->
                     when (page) {
                         0 -> PageBehaviorLogs(report)
@@ -282,10 +283,12 @@ fun PageEventLogs(report: DetailReportDto) {
         SectionHeader(title = "특별 보너스")
         VerticalSpacer(height = 16.dp)
         InfoRow(label = "기상", value = report.standupCount, unit = " 회")
-        ActivityLogList(report.standLog)
+//        ActivityLogList(report.standLog)
+        VerticalSpacer()
+        InfoRow(label = "스트레칭", value = report.stretchCount, unit = " 회")
         VerticalSpacer()
         InfoRow(label = "휴대폰 미사용", value = report.phoneOffCount, unit = " 회")
-        ActivityLogList(report.phoneOffLog)
+//        ActivityLogList(report.phoneOffLog)
     }
 }
 

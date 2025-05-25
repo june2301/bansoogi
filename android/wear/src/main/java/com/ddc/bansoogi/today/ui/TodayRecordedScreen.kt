@@ -96,7 +96,7 @@ fun TodayRecordedContent(report: ReportDto) {
         InfoSection(
             items = listOf(
                 { InfoRow("기상", report.standupCount, unit = "회") },
-//                { InfoRow("스트레칭 이벤트", report.stretchCount, unit = "회") },
+                { InfoRow("스트레칭 이벤트", report.stretchCount, unit = "회") },
                 { InfoRow("휴대폰 미사용", report.phoneOffCount, unit = "회") }
             )
         )
