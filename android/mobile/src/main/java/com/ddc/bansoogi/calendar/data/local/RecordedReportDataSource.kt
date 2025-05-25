@@ -81,26 +81,9 @@ class RecordedReportDataSource {
                         reportedDate = "2025-04-%02d".format(day + 20)
                     })
                 }
-
-                copyToRealm(RecordedReport().apply {
-                    finalEnergyPoint = 90
-                    bansoogiId = 11
-                    standupCount = 3
-                    stretchCount = 2
-                    phoneOffCount = 1
-                    lyingTime = 180
-                    sittingTime = 600
-                    phoneTime = 200
-                    walkCount = 5000
-                    stairsClimbed = 300
-                    sleepTime = 5
-                    exerciseTime = 30
-                    breakfast = true
-                    lunch = true
-                    dinner = true
-                    reportedDate = "2025-05-01"
-                })
             }
+
+            dummyData()
         }
     }
 
@@ -507,7 +490,7 @@ class RecordedReportDataSource {
                     reportedDate = "2025-05-20"
                 })
 
-                // 5월 21일 (오늘) - 88점
+                // 5월 21일 - 88점
                 copyToRealm(RecordedReport().apply {
                     finalEnergyPoint = 88
                     bansoogiId = 32
@@ -525,6 +508,106 @@ class RecordedReportDataSource {
                     lunch = true
                     dinner = false
                     reportedDate = "2025-05-21"
+                })
+
+                // 5월 22일 - 88점
+                copyToRealm(RecordedReport().apply {
+                    finalEnergyPoint = 88
+                    bansoogiId = 10
+                    standupCount = 4
+                    stretchCount = 2
+                    phoneOffCount = 2
+                    lyingTime = 155
+                    sittingTime = 545
+                    phoneTime = 180
+                    walkCount = 6300
+                    stairsClimbed = 335
+                    sleepTime = 428
+                    exerciseTime = 35
+                    breakfast = true
+                    lunch = true
+                    dinner = false
+                    reportedDate = "2025-05-22"
+                })
+
+                // 5월 23일
+                copyToRealm(RecordedReport().apply {
+                    finalEnergyPoint = 78 // 80점 미만
+                    bansoogiId = 0
+                    standupCount = 2
+                    stretchCount = 2
+                    phoneOffCount = 1
+                    lyingTime = 200
+                    sittingTime = 630
+                    phoneTime = 240
+                    walkCount = 3200
+                    stairsClimbed = 210
+                    sleepTime = 360
+                    exerciseTime = 10
+                    breakfast = false
+                    lunch = true
+                    dinner = false
+                    reportedDate = "2025-05-23"
+                })
+
+                // 5월 24일
+                copyToRealm(RecordedReport().apply {
+                    finalEnergyPoint = 89
+                    bansoogiId = 6
+                    standupCount = 4
+                    stretchCount = 3
+                    phoneOffCount = 2
+                    lyingTime = 150
+                    sittingTime = 520
+                    phoneTime = 170
+                    walkCount = 6400
+                    stairsClimbed = 350
+                    sleepTime = 430
+                    exerciseTime = 40
+                    breakfast = true
+                    lunch = true
+                    dinner = false
+                    reportedDate = "2025-05-24"
+                })
+
+                // 5월 25일
+                copyToRealm(RecordedReport().apply {
+                    finalEnergyPoint = 100
+                    bansoogiId = 7
+                    standupCount = 5
+                    stretchCount = 4
+                    phoneOffCount = 3
+                    lyingTime = 120
+                    sittingTime = 480
+                    phoneTime = 150
+                    walkCount = 8000
+                    stairsClimbed = 400
+                    sleepTime = 450
+                    exerciseTime = 60
+                    breakfast = true
+                    lunch = true
+                    dinner = true
+                    reportedDate = "2025-05-25"
+                })
+
+                // 5월 26일
+                copyToRealm(RecordedReport().apply {
+                    finalEnergyPoint = 85
+                    bansoogiId = 33
+                    standupCount = 4
+                    stretchCount = 2
+                    phoneOffCount = 2
+                    lyingTime = 160
+                    sittingTime = 550
+                    phoneTime = 185
+                    walkCount = 6100
+                    stairsClimbed = 325
+                    sleepTime = 420
+                    exerciseTime = 32
+                    breakfast = true
+                    lunch = true
+                    dinner = false
+                    reportedDate = "2025-05-26"
                 })
             }
         }
