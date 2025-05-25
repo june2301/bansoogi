@@ -67,6 +67,7 @@ import com.ddc.bansoogi.main.ui.util.BansoogiState
 import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
+import com.ddc.bansoogi.nearby.ui.FriendFoundNotification
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -79,6 +80,9 @@ fun HomeContent(
     todayRecordController: TodayRecordController,
     isInSleepRange: Boolean,
     healthData: CustomHealthData,
+    showFriendBanner: Boolean = false,
+    friendName: String = "",
+    onDismissFriendBanner: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -153,7 +157,7 @@ fun HomeContent(
                 .padding(horizontal = 16.dp, vertical = 16.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(Color.White.copy(alpha = 0.9f))
-                .padding(16.dp),
+                .padding(horizontal = 4.dp, vertical = 16.dp),
             contentAlignment = Alignment.Center
         ) {
             val today = remember { LocalDate.now() }
@@ -184,11 +188,15 @@ fun HomeContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     characterListState.value.forEachIndexed { index, character ->
                         Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 2.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
@@ -202,14 +210,14 @@ fun HomeContent(
                             if (character == null) {
                                 Box(
                                     modifier = Modifier
-                                        .size(42.dp)
+                                        .size(40.dp)
                                         .clip(RoundedCornerShape(50))
                                         .background(Color.LightGray)
                                 )
                             } else {
                                 Box(
                                     modifier = Modifier
-                                        .size(42.dp)
+                                        .size(40.dp)
                                         .clip(RoundedCornerShape(50))
                                         .background(Color(0x50FFD966))
                                 ) {
@@ -347,6 +355,17 @@ fun HomeContent(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
                 )
+
+                if (showFriendBanner) {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    FriendFoundNotification(
+                        friendName = friendName,
+                        isVisible = showFriendBanner,
+                        onDismiss = onDismissFriendBanner,
+                        modifier = Modifier
+                    )
+                }
             }
         }
 

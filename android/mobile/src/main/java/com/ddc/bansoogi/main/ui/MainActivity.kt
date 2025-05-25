@@ -364,11 +364,6 @@ private fun MainScreen(
                         }
                     )
                 }
-            },
-            floatingActionButton = {
-                if (currentRoute == NavRoutes.HOME) {
-                    NearbyFloatingButton(isSearching, toggleNearby)
-                }
             }
         ) { padding ->
             val mod = if (currentRoute == NavRoutes.EGGMANAGER)
@@ -381,7 +376,10 @@ private fun MainScreen(
                 healthData    = healthData,
                 onModalOpen   = onModalOpen,
                 onModalClose  = onModalClose,
-                isFirstUser   = isFirstUser
+                isFirstUser   = isFirstUser,
+                showFriendBanner = showFriendBanner,
+                friendName = friendName,
+                onDismissFriendBanner = dismissBanner
             )
 
             /* 친구 배너 + 리스트 (Home 화면) */
@@ -389,22 +387,23 @@ private fun MainScreen(
                 NearbyStatusBanner(isSearching = isSearching, peers = peers,
                     modifier = Modifier.align(Alignment.TopCenter))
 
-                FriendFoundNotification(
-                    friendName,
-                    showFriendBanner,
-                    dismissBanner,
-                    Modifier
-                        .align(Alignment.TopCenter)
-                        .zIndex(1f)                    // z축에서 높은 우선순위
-                )
                 if (peers.isNotEmpty()) {
                     FriendList(
                         peers, nearbyMgr, userNickname, Modifier
                             .align(Alignment.BottomStart)
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 48.dp) // ← 추가됨
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 88.dp) // ← 추가됨
                     )
                 }
             }
+        }
+        if (currentRoute == NavRoutes.HOME) {
+            NearbyFloatingButton(
+                isSearching,
+                toggleNearby,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 350.dp) // bottom 값을 조정해서 위로 올리기
+            )
         }
     }
 

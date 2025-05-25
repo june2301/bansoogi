@@ -31,7 +31,10 @@ fun AppNavGraph(
     healthData: CustomHealthData,
     onModalOpen: () -> Unit,
     onModalClose: () -> Unit,
-    isFirstUser: Boolean
+    isFirstUser: Boolean,
+    showFriendBanner: Boolean = false,
+    friendName: String = "",
+    onDismissFriendBanner: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -61,7 +64,10 @@ fun AppNavGraph(
                 healthData,
                 onModalOpen = onModalOpen,
                 onModalClose = onModalClose,
-                navController = navController
+                navController = navController,
+                showFriendBanner = showFriendBanner,
+                friendName = friendName,
+                onDismissFriendBanner = onDismissFriendBanner
             )
         }
 
