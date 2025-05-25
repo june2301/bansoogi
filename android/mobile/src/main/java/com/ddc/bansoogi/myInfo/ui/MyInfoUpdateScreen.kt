@@ -102,7 +102,7 @@ fun MyInfoUpdateScreen(navController: NavController) {
         val dinnerEnabled   = remember { mutableStateOf(initial.dinnerTime.isNotBlank()) }
 
         val notificationDuration = remember {
-            mutableStateOf(initial.notificationDuration.coerceIn(15, 180))
+            mutableStateOf(initial.notificationDuration.coerceIn(1, 180))
         }
 
         var showResetButton by remember { mutableStateOf(false) }
