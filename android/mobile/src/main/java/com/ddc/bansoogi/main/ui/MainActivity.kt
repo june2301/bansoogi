@@ -1,119 +1,177 @@
 package com.ddc.bansoogi.main.ui
 
+/* ───────── Android / Kotlin ───────── */
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ddc.bansoogi.common.foreground.ForegroundUtil
 import com.ddc.bansoogi.R
 import com.ddc.bansoogi.calendar.ui.util.CalendarUtils
+import com.ddc.bansoogi.common.foreground.ForegroundUtil
 import com.ddc.bansoogi.common.navigation.AppNavGraph
 import com.ddc.bansoogi.common.navigation.NavRoutes
 import com.ddc.bansoogi.common.ui.activity.BaseActivity
 import com.ddc.bansoogi.common.ui.component.BansoogiNavigationBar
-import com.ddc.bansoogi.common.util.health.CustomHealthData
-import com.ddc.bansoogi.common.util.health.Permissions
-import com.ddc.bansoogi.common.util.health.RealTimeHealthDataManager
+import com.ddc.bansoogi.common.util.health.*
 import com.ddc.bansoogi.common.wear.communication.state.HealthStateHolder
 import com.ddc.bansoogi.main.controller.TodayHealthDataController
 import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
+import com.ddc.bansoogi.myInfo.data.local.MyInfoDataSource
+import com.ddc.bansoogi.nearby.NearbyConnectionManager
+import com.ddc.bansoogi.nearby.NearbyPermissionManager
+import com.ddc.bansoogi.nearby.data.BansoogiFriend
+import com.ddc.bansoogi.nearby.ui.FriendFoundNotification
+import com.ddc.bansoogi.nearby.ui.NearbyFloatingButton
+import com.ddc.bansoogi.person.data.local.PersonDataSource
+import com.ddc.bansoogi.person.data.model.PersonModel
 import com.samsung.android.sdk.health.data.HealthDataService
 import com.samsung.android.sdk.health.data.HealthDataStore
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+/* ─────────────────────────────────── */
+
 class MainActivity : BaseActivity() {
-    val activityContext = this
-    private var isFirstUser = false
-    private lateinit var healthDataStore: HealthDataStore
-    private lateinit var healthDataManager: RealTimeHealthDataManager
 
-    private var healthData by mutableStateOf(CustomHealthData(0L, 0, 0.0f, 0, 0))
+    /* ---------- Health ---------- */
+    private lateinit var healthStore: HealthDataStore
+    private lateinit var healthMgr: RealTimeHealthDataManager
+    private var healthData by mutableStateOf(CustomHealthData(0L, 0, 0f, 0, 0))
 
-    companion object {
-        private const val UPDATE_INTERVAL = 10000L // 포그라운드: 10초
-    }
+    /* ---------- Nearby ---------- */
+    private lateinit var nearbyMgr: NearbyConnectionManager
+    private var isSearching by mutableStateOf(false)
+    private lateinit var nearbyPermLauncher: ActivityResultLauncher<Array<String>>
 
+    /* ---------- States ---------- */
+    private var showFriendBanner by mutableStateOf(false)
+    private var friendName       by mutableStateOf("")
+    private var showPermDialog   by mutableStateOf(false)
+    private var isFirstUser      by mutableStateOf(false)
+
+    /* ---------- User Info --------- */
+    private lateinit var myInfoDataSource: MyInfoDataSource
+    private var userNickname by mutableStateOf("기본값")
+
+    private val UPDATE_INTERVAL  = 10_000L
+
+    /* =================================================================== */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        healthDataStore = HealthDataService.getStore(activityContext)
-        val prefs = getSharedPreferences("bansoogi_prefs", MODE_PRIVATE)
-        isFirstUser = prefs.getBoolean("isFirstUser", false)
 
-        setupHealthPermissions()
+        /* MyInfo DataSource 초기화 */
+        myInfoDataSource = MyInfoDataSource()
 
-        val today = LocalDate.now()
-        val todayFormatted = CalendarUtils.toFormattedDateString(today, today.dayOfMonth)
-        TodayHealthDataController().initialize(todayFormatted)
+        /* User nickname 로드 */
+        lifecycleScope.launch {
+            myInfoDataSource.getMyInfo().collect { user ->
+                userNickname = if (user.nickname.isNotEmpty()) user.nickname else "기본값"
+            }
+        }
+
+        /* Samsung Health 권한 */
+        healthStore = HealthDataService.getStore(this)
+        checkHealthPermissions()
+
+        /* 첫 사용자 여부 */
+        isFirstUser = getSharedPreferences("bansoogi_prefs", MODE_PRIVATE)
+            .getBoolean("isFirstUser", false)
+
+        /* 오늘 데이터 초기화 */
+        TodayHealthDataController().initialize(
+            CalendarUtils.toFormattedDateString(LocalDate.now(), LocalDate.now().dayOfMonth)
+        )
+
+        /* ② Nearby 런타임 권한 런처 등록 */
+        nearbyPermLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { granted ->
+            val allGranted = granted.values.all { it }
+            if (allGranted) {
+                toggleNearby()       // 권한 승인 후 바로 탐색 시작
+            } else {
+                Log.e("MainActivity",(  "근거리 탐색 권한이 거부되었습니다."))
+            }
+        }
+
+        /* Nearby 매니저 */
+        nearbyMgr = NearbyConnectionManager(this).apply {
+            lifecycleScope.launch {
+                peers.collect { list ->
+                    if (list.isNotEmpty()) {
+                        friendName = list.last().nickname
+                        showFriendBanner = true
+                    }
+                }
+            }
+        }
+
+        /* Compose */
         setContent {
             MainScreen(
-                healthData,
-                onModalOpen = { startHealthDataUpdates() },
-                onModalClose = { stopHealthDataUpdates() },
-                isFirstUser = isFirstUser
+                healthData       = healthData,
+                onModalOpen      = { startHealthUpdates() },
+                onModalClose     = { stopHealthUpdates() },
+                isFirstUser      = isFirstUser,
+                isSearching      = isSearching,
+                toggleNearby     = { toggleNearby() },
+                nearbyMgr        = nearbyMgr,
+                showFriendBanner = showFriendBanner,
+                friendName       = friendName,
+                dismissBanner    = { showFriendBanner = false },
+                showPermDialog   = showPermDialog,
+                onPermDismiss    = { showPermDialog = false },
+                userNickname     = userNickname
             )
         }
-        if (::healthDataManager.isInitialized) {
-            healthDataManager.refreshData() // 초기 데이터 즉시 로드
-        }
+        /* 초기 권한이 이미 있었다면 즉시 한 번 로드 */
+        if (::healthMgr.isInitialized) healthMgr.refreshData()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (!ForegroundUtil.isServiceRunning()) {
-            ForegroundUtil.startForegroundService(activityContext)
-        }
-    }
-
-    /**
-     * setupHealthPermission: health 앱에 대한 권한이 있는 지 체크
-     */
-    private fun setupHealthPermissions() {
+    /* ------------------------- Health 권한 ------------------------ */
+    private fun checkHealthPermissions() {
         lifecycleScope.launch {
             try {
-                val grantedPermissions =
-                    healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS)
+                val granted = healthStore.getGrantedPermissions(Permissions.PERMISSIONS)
 
-                if (grantedPermissions.size != Permissions.PERMISSIONS.size) {
-                    val result = healthDataStore.requestPermissions(
-                        Permissions.PERMISSIONS,
-                        this@MainActivity
-                    )
-                }
-
-                // 모든 권한이 있으면 실시간 데이터 매니저 초기화 및 시작
-                if (healthDataStore.getGrantedPermissions(Permissions.PERMISSIONS).size == Permissions.PERMISSIONS.size) {
-                    initializeHealthDataManager()
+                if (granted.size == Permissions.PERMISSIONS.size) {
+                    initHealthMgr()                    // ✅ 이미 허용된 경우 바로 초기화
+                } else {
+                    healthStore.requestPermissions(Permissions.PERMISSIONS, this@MainActivity)
+                    // 재확인 → 모두 획득되면 초기화
+                    if (healthStore.getGrantedPermissions(Permissions.PERMISSIONS).size ==
+                        Permissions.PERMISSIONS.size) {
+                        initHealthMgr()
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("STEPS", "Error with Samsung Health permissions: ${e.message}", e)
@@ -121,106 +179,171 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun initializeHealthDataManager() {
-        // 실시간 데이터 매니저 초기화
-        healthDataManager = RealTimeHealthDataManager(healthDataStore)
-
-        // Flow 수집 시작
+    private fun initHealthMgr() {
+        healthMgr = RealTimeHealthDataManager(healthStore)
         lifecycleScope.launch {
-            healthDataManager.healthData.collect { data ->
+            healthMgr.healthData.collect { data ->
                 healthData = data
-
-                // 모바일로 전송을 위한 객체 관리
-                HealthStateHolder.update(healthData)
+                HealthStateHolder.update(data)
             }
         }
-    }
-
-    // 모달이 열릴 때 호출될 메서드
-    fun startHealthDataUpdates() {
-        if (::healthDataManager.isInitialized) {
-            healthDataManager.setUpdateInterval(UPDATE_INTERVAL)
-//            healthDataManager.refreshData() // 즉시 한 번 갱신
-            healthDataManager.startCollecting() // 데이터 수집 시작
+        /* ▶ 권한 획득 직후 즉시 1회 데이터 로드 */
+        try {
+            healthMgr.refreshData()
+        } catch (e: Exception) {
+            Log.e("MainActivity", "refreshData() error: ${e.message}", e)
         }
     }
-
-    // 모달이 닫힐 때 호출될 메서드
-    fun stopHealthDataUpdates() {
-        if (::healthDataManager.isInitialized) {
-            healthDataManager.stopCollecting() // 데이터 수집 중지
+    private fun startHealthUpdates() {
+        if (::healthMgr.isInitialized) {
+            healthMgr.setUpdateInterval(UPDATE_INTERVAL)
+            healthMgr.startCollecting()
         }
+    }
+    private fun stopHealthUpdates() {
+        if (::healthMgr.isInitialized) healthMgr.stopCollecting()
+    }
+
+    /* ------------------------- Nearby 토글 ------------------------ */
+    /* 요청-부족 → 다이얼로그 표시 */
+    private fun toggleNearby() {
+        if (!isSearching) {                      // “탐색 시작” 직전에만 권한 검사
+            val lacking = requiredNearbyPermissions()
+                .filterNot { perm ->
+                    ContextCompat.checkSelfPermission(this, perm) ==
+                            PackageManager.PERMISSION_GRANTED
+                }
+
+            if (lacking.isNotEmpty()) {
+                // 설명용 다이얼로그를 띄웠다면 그곳에서 launch() 호출,
+                // 아니면 바로 요청해도 무방
+                nearbyPermLauncher.launch(lacking.toTypedArray())
+                return
+            }
+        }
+
+        // 권한 OK → 실제 토글
+        isSearching = !isSearching
+        if (isSearching) nearbyMgr.start(userNickname)
+        else             nearbyMgr.stop()
+    }
+
+
+    /**
+     * OS 버전에 맞춰 필요한 권한 목록을 돌려줍니다.
+     */
+    private fun requiredNearbyPermissions(): List<String> {
+        val perms = mutableListOf<String>()
+
+        /* 위치 권한 */
+        perms += Manifest.permission.ACCESS_COARSE_LOCATION
+        perms += Manifest.permission.ACCESS_FINE_LOCATION
+
+        /* Wi-Fi 권한 */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            perms += Manifest.permission.NEARBY_WIFI_DEVICES
+        } else {
+            perms += Manifest.permission.ACCESS_WIFI_STATE
+            perms += Manifest.permission.CHANGE_WIFI_STATE
+        }
+
+        /* Bluetooth 권한 */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {          // Android 12 +
+            perms += Manifest.permission.BLUETOOTH_SCAN
+            perms += Manifest.permission.BLUETOOTH_ADVERTISE
+            perms += Manifest.permission.BLUETOOTH_CONNECT
+        } else {                                                       // Android 11 이하
+            perms += Manifest.permission.BLUETOOTH_ADMIN
+        }
+
+        return perms
+    }
+
+
+    /* ------------------------- Foreground 재시동 ------------------ */
+    override fun onResume() {
+        super.onResume()
+        if (!ForegroundUtil.isServiceRunning()) ForegroundUtil.startForegroundService(this)
     }
 
     override fun onDestroy() {
-        // 액티비티 종료 시 수집 중지
-        if (::healthDataManager.isInitialized) {
-            healthDataManager.stopCollecting()
-        }
-        super.onDestroy()
+        if (::healthMgr.isInitialized) healthMgr.stopCollecting()
+        nearbyMgr.stop(); super.onDestroy()
     }
 }
 
+/* =================================================================== */
+/*                            MainScreen                               */
+/* =================================================================== */
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun MainScreen(
+private fun MainScreen(
     healthData: CustomHealthData,
     onModalOpen: () -> Unit,
     onModalClose: () -> Unit,
-    isFirstUser: Boolean
-
+    isFirstUser: Boolean,
+    isSearching: Boolean,
+    toggleNearby: () -> Unit,
+    nearbyMgr: NearbyConnectionManager,
+    showFriendBanner: Boolean,
+    friendName: String,
+    dismissBanner: () -> Unit,
+    showPermDialog: Boolean,
+    onPermDismiss: () -> Unit,
+    userNickname: String
 ) {
     val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
+    val navBack by navController.currentBackStackEntryAsState()
+    val currentDest = navBack?.destination
     val currentRoute = when {
-        currentDestination?.hierarchy?.any { it.route == NavRoutes.HOME } == true -> NavRoutes.HOME
-        currentDestination?.hierarchy?.any { it.route == NavRoutes.COLLECTION } == true -> NavRoutes.COLLECTION
-        currentDestination?.hierarchy?.any { it.route == NavRoutes.CALENDAR } == true -> NavRoutes.CALENDAR
-        currentDestination?.hierarchy?.any { it.route == NavRoutes.MYINFO } == true -> NavRoutes.MYINFO
-        currentDestination?.hierarchy?.any { it.route == NavRoutes.MYINFOUPDATE } == true -> NavRoutes.MYINFO
-        currentDestination?.hierarchy?.any { it.route == NavRoutes.EGGMANAGER } == true -> NavRoutes.EGGMANAGER
+        currentDest?.hierarchy?.any { it.route == NavRoutes.HOME } == true -> NavRoutes.HOME
+        currentDest?.hierarchy?.any { it.route == NavRoutes.COLLECTION } == true -> NavRoutes.COLLECTION
+        currentDest?.hierarchy?.any { it.route == NavRoutes.CALENDAR } == true -> NavRoutes.CALENDAR
+        currentDest?.hierarchy?.any { it.route == NavRoutes.MYINFO } == true -> NavRoutes.MYINFO
+        currentDest?.hierarchy?.any { it.route == NavRoutes.MYINFOUPDATE } == true -> NavRoutes.MYINFO
+        currentDest?.hierarchy?.any { it.route == NavRoutes.EGGMANAGER } == true -> NavRoutes.EGGMANAGER
         else -> NavRoutes.HOME
     }
 
-    var currentBackgroundResId by remember{ mutableIntStateOf(R.drawable.background_sunny_sky) }
+    /* 동적 배경 */
+    var currentBg by remember { mutableIntStateOf(R.drawable.background_sunny_sky) }
+    LaunchedEffect(BansoogiStateHolder.state) { currentBg = BansoogiStateHolder.background() }
 
-    LaunchedEffect(BansoogiStateHolder.state) {
-        currentBackgroundResId = BansoogiStateHolder.background()
-    }
-
-    val lightPosition = remember { Animatable(initialValue = -1000f) }
+    /* 빛 애니메이션 */
+    val lightPos = remember { Animatable(-1000f) }
     LaunchedEffect(Unit) {
-        // 빛이 위에서 아래로 내려오는 애니메이션
-        lightPosition.animateTo(
-            targetValue = 2000f,
-            animationSpec = tween(
-                durationMillis = 1500,
-                easing = FastOutSlowInEasing
-            )
+        lightPos.animateTo(
+            2000f, animationSpec = tween(1500, easing = FastOutSlowInEasing)
         )
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    /* 친구 목록 Flow */
+    val peers by nearbyMgr.peers.collectAsState()
+
+    /* 권한 런처 */
+    /* Launcher → 권한 성공 시 기존 로직 재시도 */
+    val permLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+        onPermDismiss()
+        if (result.values.all { it }) toggleNearby()
+    }
+
+    Box(Modifier.fillMaxSize()) {
         AnimatedContent(
-            targetState = currentBackgroundResId,
+            targetState = currentBg,
             transitionSpec = {
                 slideInHorizontally(
-                    animationSpec = tween(durationMillis = 1000),
-                    initialOffsetX = { -it } // 위에서 아래로 등장
-                ) togetherWith
-                        slideOutHorizontally(
-                            animationSpec = tween(durationMillis = 1000),
-                            targetOffsetX = { it }   // 아래로 밀려서 퇴장
-                        )
+                    tween(1000), { -it }
+                ) togetherWith slideOutHorizontally(
+                    tween(1000), { it }
+                )
             }
-
         ) { resId ->
             Image(
-                painter = painterResource(id = resId),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
+                painterResource(resId),
+                null,
+                Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
         }
@@ -234,34 +357,166 @@ fun MainScreen(
                         onNavigate = { route ->
                             if (route != currentRoute) {
                                 navController.navigate(route) {
-                                    popUpTo(NavRoutes.HOME) {
-                                        saveState = true
-                                        inclusive = false
-                                    }
-                                    // 중복 방지
-                                    launchSingleTop = true
-                                    // 상태 저장
-                                    restoreState = true
+                                    popUpTo(NavRoutes.HOME) { saveState = true }
+                                    launchSingleTop = true; restoreState = true
                                 }
                             }
                         }
                     )
                 }
             }
-        ) { paddingValues ->
-            val contentMod = if (currentRoute == NavRoutes.EGGMANAGER) {
-                Modifier.fillMaxSize()
-            } else {
-                Modifier.padding(paddingValues)
-            }
+        ) { padding ->
+            val mod = if (currentRoute == NavRoutes.EGGMANAGER)
+                Modifier.fillMaxSize() else Modifier.padding(padding)
+
+            /* Nav Graph */
             AppNavGraph(
                 navController = navController,
-                modifier = contentMod,
-                healthData = healthData,
-                onModalOpen = onModalOpen,
-                onModalClose = onModalClose,
-                isFirstUser = isFirstUser
+                modifier      = mod,
+                healthData    = healthData,
+                onModalOpen   = onModalOpen,
+                onModalClose  = onModalClose,
+                isFirstUser   = isFirstUser,
+                showFriendBanner = showFriendBanner,
+                friendName = friendName,
+                onDismissFriendBanner = dismissBanner
             )
+
+            /* 친구 배너 + 리스트 (Home 화면) */
+            if (currentRoute == NavRoutes.HOME) {
+                NearbyStatusBanner(isSearching = isSearching, peers = peers,
+                    modifier = Modifier.align(Alignment.TopCenter))
+
+                if (peers.isNotEmpty()) {
+                    FriendList(
+                        peers, nearbyMgr, userNickname, Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 88.dp) // ← 추가됨
+                    )
+                }
+            }
+        }
+        if (currentRoute == NavRoutes.HOME) {
+            NearbyFloatingButton(
+                isSearching,
+                toggleNearby,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 350.dp) // bottom 값을 조정해서 위로 올리기
+            )
+        }
+    }
+
+    /* 권한 설명 다이얼로그 */
+    if (showPermDialog) {
+        PermissionDialog(
+            onConfirm = { permLauncher.launch(NearbyPermissionManager.requiredPermissions()) },
+            onDismiss = onPermDismiss
+        )
+    }
+}
+
+/* =================================================================== */
+/*                  Home 관련 보조 로직 (FriendList 등)                */
+/* =================================================================== */
+//private fun RealmInstant.toLocalDate(): LocalDate =
+//    Instant.ofEpochSecond(epochSeconds, nanosecondsOfSecond.toLong())
+//        .atZone(ZoneId.systemDefault()).toLocalDate()
+
+@Composable
+private fun FriendList(
+    peers: List<BansoogiFriend>,
+    nearbyMgr: NearbyConnectionManager,
+    userNickname: String,
+    modifier: Modifier = Modifier
+) {
+    val show = peers.take(3)
+    LazyColumn(modifier.widthIn(max = 300.dp)) {
+        items(show.size) { idx ->
+            val p = show[idx]
+            Card(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+                    .clickable {
+                        nearbyMgr.sendStaticWarnTo(p.endpointId, "SITTING_LONG", userNickname)
+                    }
+            ) {
+                Column(Modifier.padding(12.dp)) {
+                    Text("🥚 ${p.nickname}", fontWeight = FontWeight.Bold)
+                    p.distanceRssi?.let {
+                        Text("신호세기: ${it}dBm", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
+        }
+        if (peers.size > 3) item {
+            Card(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+            ) {
+                Text(
+                    "... 외 ${peers.size - 3}명",
+                    Modifier.padding(12.dp),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+    }
+}
+
+/* 권한 다이얼로그 (재사용) */
+@Composable
+fun PermissionDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("근거리 권한 필요") },
+        text  = { Text("주변 친구를 찾으려면 블루투스·Wi-Fi 권한이 필요합니다.") },
+        confirmButton = { TextButton(onConfirm) { Text("권한 허용") } },
+        dismissButton = { TextButton(onDismiss) { Text("취소") } }
+    )
+}
+
+@Composable
+private fun NearbyStatusBanner(
+    isSearching: Boolean,
+    peers: List<BansoogiFriend>,
+    modifier: Modifier = Modifier
+) {
+    AnimatedVisibility(
+        visible = isSearching || peers.isNotEmpty(),
+        enter = fadeIn(tween(300)),
+        exit  = fadeOut(tween(300)),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 28.dp)
+    ) {
+        Surface(
+            color = if (isSearching) Color(0xFF4CAF50) else Color(0xFF9E9E9E),
+            tonalElevation = 4.dp,
+            shadowElevation = 2.dp,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = if (isSearching) "탐색 중…" else "탐색 중지됨",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = "친구 ${peers.size}명",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
         }
     }
 }

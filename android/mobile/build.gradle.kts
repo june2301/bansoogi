@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.play.services.nearby)
 
     // Compose 디버그 툴링
     debugImplementation(libs.androidx.ui.tooling)

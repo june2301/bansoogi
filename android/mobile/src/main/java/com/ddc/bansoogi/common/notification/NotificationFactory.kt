@@ -121,6 +121,18 @@ object NotificationFactory {
                 )
             )
 
+    fun interactWithBluetooth(context: Context, nickname: String): NotificationCompat.Builder =
+        baseBuilder(context, NotificationHelper.CHANNEL_BLUETOOTH)
+            .setContentTitle("${nickname}의 메시지")
+            .setContentText("똑똑! 움직여!")
+            .setContentIntent(
+                buildDeepLinkPendingIntent(
+                    context,
+                    "bansoogi://home",
+                    NotificationDispatcher.Id.BLUETOOTH.value
+                )
+            )
+
     /* 공통 속성을 모아 둔 private 메서드 */
     private fun baseBuilder(context: Context, channelId: String) =
         NotificationCompat.Builder(context, channelId)

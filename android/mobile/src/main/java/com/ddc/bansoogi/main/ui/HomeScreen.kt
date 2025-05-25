@@ -47,7 +47,10 @@ fun HomeScreen(
     healthData: CustomHealthData,
     onModalOpen: () -> Unit,
     onModalClose: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    showFriendBanner: Boolean = false,
+    friendName: String = "",
+    onDismissFriendBanner: () -> Unit = {}
 ) {
     val context = LocalContext.current
     var todayRecordDtoState = remember { mutableStateOf<TodayRecordDto?>(null) }
@@ -174,7 +177,10 @@ fun HomeScreen(
             todayRecord,
             todayRecordController,
             isInSleepRange.value,
-            healthData
+            healthData,
+            showFriendBanner = showFriendBanner,
+            friendName = friendName,
+            onDismissFriendBanner = onDismissFriendBanner
         )
     } ?: Box(
         modifier = Modifier.fillMaxSize(),
