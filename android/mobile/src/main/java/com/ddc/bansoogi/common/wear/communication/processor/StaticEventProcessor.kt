@@ -19,6 +19,7 @@ object StaticEventProcessor {
     private data class WarnDto  (val type: String, val duration: Int)
     private data class BreakDto (val type: String)            // energy 필드 삭제
     private data class AccumDto (val lying: Int?, val sitting: Int?)
+    private data class BluetoothDto  (val type: String, val nickname: String)
 
     /* 1) STATIC_WARN ----------------------------------------- */
     fun handleWarn(ctx: Context, scope: CoroutineScope, raw: ByteArray) {
@@ -90,14 +91,14 @@ object StaticEventProcessor {
 
     /* 4) InteractionWithBluetooth ----------------------------------- */
     fun handleInteractionWithBluetooth(ctx: Context, scope: CoroutineScope, raw: ByteArray) {
-        val dto = gson.fromJson(String(raw), WarnDto::class.java)
+        val dto = gson.fromJson(String(raw), BluetoothDto::class.java)
         scope.launch {
             val model  = TodayRecordModel()
             val rec    = model.getTodayRecordSync() ?: return@launch
 
             /* 로컬 알림 */
             val builder = when (dto.type) {
-                "SITTING_LONG" -> NotificationFactory.interactWithBluetooth(ctx, dto.duration)
+                "SITTING_LONG" -> NotificationFactory.interactWithBluetooth(ctx, dto.nickname)
                 else           -> null
             }
             builder?.let {

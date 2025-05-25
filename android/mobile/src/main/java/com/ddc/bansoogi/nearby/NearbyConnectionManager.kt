@@ -60,8 +60,8 @@ class NearbyConnectionManager(private val ctx: Context) {
     }
 
     /** ★ UI → 특정 피어로 STATIC_WARN JSON 전송 */
-    fun sendStaticWarnTo(endpointId: String, type: String, duration: Int) {
-        val json = gson.toJson(WarnDto(type, duration))
+    fun sendStaticWarnTo(endpointId: String, type: String, nickname: String) {
+        val json = gson.toJson(BluetoothDto(type, nickname))
         val payload = Payload.fromBytes(byteArrayOf(TYPE_STATIC_WARN) + json.encode())
         client.sendPayload(endpointId, payload)
     }
@@ -138,7 +138,7 @@ class NearbyConnectionManager(private val ctx: Context) {
     /* ======================================================================== */
     /*                                 Helpers                                  */
     /* ======================================================================== */
-    private data class WarnDto(val type: String, val duration: Int)
+    private data class BluetoothDto(val type: String, val nickname: String)
 
     private fun sendNickname(endpointId: String) = client.sendPayload(
         endpointId,
