@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
@@ -84,447 +85,470 @@ fun HomeContent(
     friendName: String = "",
     onDismissFriendBanner: () -> Unit = {}
 ) {
-    val context = LocalContext.current
+    // 1) HomeContent 최상단에 Box 추가
+    Box(modifier = Modifier.fillMaxSize()) {
 
-    val scope = rememberCoroutineScope()
-    var showModal by remember { mutableStateOf(false) }
-
-    val myInfoController = remember { MyInfoController() }
-    val myInfo by myInfoController.myInfoFlow().collectAsState(initial = null)
-
-    val currentTime = remember { mutableStateOf(LocalTime.now()) }
-    LaunchedEffect(Unit) {
-        while (true) {
-            currentTime.value = LocalTime.now()
-            delay(60_000L)
+        // 2) Box 안 최상단에 알림 호출
+        if (showFriendBanner) {
+            FriendFoundNotification(
+                friendName = friendName,
+                isVisible = showFriendBanner,
+                onDismiss = onDismissFriendBanner,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 24.dp)
+                    .zIndex(10f)      // zIndex 높여서 최상단에 렌더링
+            )
         }
-    }
 
-    val characterListState = remember { mutableStateOf<List<Character?>>(emptyList()) }
-    LaunchedEffect(Unit) {
-        characterListState.value = todayRecordController.getCurrentWeekDetailReports()
-    }
+        val context = LocalContext.current
 
-    val formatter = DateTimeFormatter.ofPattern("HH:mm")
-    val mealTimesWithType = remember(myInfo) {
-        listOfNotNull(
-            myInfo?.breakfastTime?.let { MealType.BREAKFAST to it },
-            myInfo?.lunchTime    ?.let { MealType.LUNCH     to it },
-            myInfo?.dinnerTime   ?.let { MealType.DINNER    to it }
-        ).mapNotNull { (type, str) ->
-            runCatching { LocalTime.parse(str, formatter) }
-                .getOrNull()?.let { time -> type to time }
-        }
-    }
+        val scope = rememberCoroutineScope()
+        var showModal by remember { mutableStateOf(false) }
 
-    val currentMealTypes by remember(currentTime.value, mealTimesWithType) {
-        derivedStateOf {
-            mealTimesWithType.filter { (_, time) ->
-                val start = time.minusMinutes(30)
-                val end   = time.plusMinutes(30)
-                !currentTime.value.isBefore(start) && !currentTime.value.isAfter(end)
-            }.map { it.first }
-        }
-    }
+        val myInfoController = remember { MyInfoController() }
+        val myInfo by myInfoController.myInfoFlow().collectAsState(initial = null)
 
-    val pendingMealTypes by remember(currentMealTypes, todayRecordDto) {
-        derivedStateOf {
-            currentMealTypes.filter { type ->
-                when (type) {
-                    MealType.BREAKFAST -> !todayRecordDto.breakfast
-                    MealType.LUNCH     -> !todayRecordDto.lunch
-                    MealType.DINNER    -> !todayRecordDto.dinner
-                }
+        val currentTime = remember { mutableStateOf(LocalTime.now()) }
+        LaunchedEffect(Unit) {
+            while (true) {
+                currentTime.value = LocalTime.now()
+                delay(60_000L)
             }
         }
-    }
 
-    val mealEnabled = pendingMealTypes.isNotEmpty()
+        val characterListState = remember { mutableStateOf<List<Character?>>(emptyList()) }
+        LaunchedEffect(Unit) {
+            characterListState.value = todayRecordController.getCurrentWeekDetailReports()
+        }
 
-    // 상호 작용 애니메이션
-    var triggerInteraction by remember { mutableStateOf(false) }
-
-    // 식사 애니메이션
-    var triggerMeal by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color.White.copy(alpha = 0.9f))
-                .padding(horizontal = 4.dp, vertical = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            val today = remember { LocalDate.now() }
-            val year = today.year.toString()
-            val month = today.monthValue.toString()
-            val day = today.dayOfMonth.toString()
-
-            val dateText = buildAnnotatedString {
-                append(year)
-                withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 년  ") }
-
-                append(month)
-                withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 월  ") }
-
-                append(day)
-                withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 일") }
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+        val mealTimesWithType = remember(myInfo) {
+            listOfNotNull(
+                myInfo?.breakfastTime?.let { MealType.BREAKFAST to it },
+                myInfo?.lunchTime?.let { MealType.LUNCH to it },
+                myInfo?.dinnerTime?.let { MealType.DINNER to it }
+            ).mapNotNull { (type, str) ->
+                runCatching { LocalTime.parse(str, formatter) }
+                    .getOrNull()?.let { time -> type to time }
             }
+        }
 
-            val daysOfWeek = listOf("일", "월", "화", "수", "목", "금", "토")
+        val currentMealTypes by remember(currentTime.value, mealTimesWithType) {
+            derivedStateOf {
+                mealTimesWithType.filter { (_, time) ->
+                    val start = time.minusMinutes(30)
+                    val end = time.plusMinutes(30)
+                    !currentTime.value.isBefore(start) && !currentTime.value.isAfter(end)
+                }.map { it.first }
+            }
+        }
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = dateText,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    characterListState.value.forEachIndexed { index, character ->
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 2.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = daysOfWeek.get(index),
-                                textAlign = TextAlign.Center,
-                                fontSize = 16.sp
-                            )
-
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            if (character == null) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(RoundedCornerShape(50))
-                                        .background(Color.LightGray)
-                                )
-                            } else {
-                                Box(
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(RoundedCornerShape(50))
-                                        .background(Color(0x50FFD966))
-                                ) {
-                                    val imageLoader = remember {
-                                        ImageLoader.Builder(context)
-                                            .components {
-                                                add(GifDecoder.Factory())
-                                                add(ImageDecoderDecoder.Factory())
-                                            }
-                                            .build()
-                                    }
-
-                                    val resId = context.resources.getIdentifier(character.imageUrl, "drawable", context.packageName)
-
-                                    Image(
-                                        painter = rememberAsyncImagePainter(
-                                            ImageRequest.Builder(context)
-                                                .data(resId)
-                                                .build(),
-                                            imageLoader = imageLoader
-                                        ),
-                                        contentDescription = "반숙이",
-                                        modifier = Modifier
-                                            .scale(1.2f)
-                                            .fillMaxSize(),
-                                        contentScale = ContentScale.Fit
-                                    )
-                                }
-                            }
-                        }
+        val pendingMealTypes by remember(currentMealTypes, todayRecordDto) {
+            derivedStateOf {
+                currentMealTypes.filter { type ->
+                    when (type) {
+                        MealType.BREAKFAST -> !todayRecordDto.breakfast
+                        MealType.LUNCH -> !todayRecordDto.lunch
+                        MealType.DINNER -> !todayRecordDto.dinner
                     }
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                val randomMessages = remember(todayRecordDto, healthData) {
-                    listOfNotNull(
-                        todayRecordDto.lyingTime?.let { "오늘은 ${it}분 동안 누워 있었네!" },
-                        todayRecordDto.sittingTime?.let { "오늘은 ${it}분 동안 앉아 있었네!" },
-                        todayRecordDto.phoneTime?.let { "오늘은 휴대폰을 ${it}분 봤네!" },
-                        healthData.step.toInt().let { "오늘은 ${it}보를 걸었어" },
-                        healthData.floorsClimbed.toInt().let { "오늘은 ${it}계단을 올랐구나!" },
-                        healthData.sleepData?.let { "오늘은 ${it}분 동안 잤구나!" },
-                        healthData.exerciseTime?.let { "오늘은 ${it}분 동안 운동했어!" }
-                    )
-                }
-                val selectedMessage = remember(randomMessages) {
-                    if (randomMessages.isNotEmpty()) randomMessages.random() else "아직 데이터가 없어"
-                }
-
-                Text(
-                    text = selectedMessage,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF2E616A)
-                )
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        val mealEnabled = pendingMealTypes.isNotEmpty()
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .padding(horizontal = 16.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
-                .border(
-                    width = 2.dp,
-                    color = Color.DarkGray,
-                    shape = RoundedCornerShape(16.dp)
-                )
+        // 상호 작용 애니메이션
+        var triggerInteraction by remember { mutableStateOf(false) }
+
+        // 식사 애니메이션
+        var triggerMeal by remember { mutableStateOf(false) }
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(32.dp)
-                    .background(Color(0xFFEEEEEE))
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(todayRecordDto.energyPoint / 100f)
-                    .height(32.dp)
-                    .background(Color.Green)
-            )
-            Text(
-                text = "${todayRecordDto.energyPoint} / 100",
-                modifier = Modifier.align(Alignment.Center),
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-                fontSize = 12.sp
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 20.dp),
-            contentAlignment = Alignment.CenterEnd
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val context = LocalContext.current
-                val imageLoader = remember {
-                    ImageLoader.Builder(context)
-                        .components {
-                            add(GifDecoder.Factory())
-                            add(ImageDecoderDecoder.Factory())
-                        }
-                        .build()
-                }
-
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest.Builder(context)
-                            .data(R.drawable.ic_today)
-                            .build(),
-                        imageLoader = imageLoader
-                    ),
-                    contentDescription = "버튼 이미지",
-                    modifier = Modifier
-                        .width(55.dp)
-                        .height(55.dp)
-                        .clickable {
-                            showModal = true
-                        },
-                    contentScale = ContentScale.Fit
-                )
-
-                Text(
-                    text = "Today",
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                if (showFriendBanner) {
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    FriendFoundNotification(
-                        friendName = friendName,
-                        isVisible = showFriendBanner,
-                        onDismiss = onDismissFriendBanner,
-                        modifier = Modifier
-                    )
-                }
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .sizeIn(
-                        maxWidth = 200.dp,
-                        maxHeight = 200.dp
-                    )
-                    .offset(y = (-40).dp)
-                    .aspectRatio(1f), // 1:1 비율
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.White.copy(alpha = 0.9f))
+                    .padding(horizontal = 4.dp, vertical = 16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (triggerInteraction) {
-                    BansoogiAnimation(
-                        state = BansoogiState.SMILE,
-                        loop = false,
-                        loopCouont = 3,
-                        onAnimationEnd = {
-                            triggerInteraction = false
-                        }
+                val today = remember { LocalDate.now() }
+                val year = today.year.toString()
+                val month = today.monthValue.toString()
+                val day = today.dayOfMonth.toString()
+
+                val dateText = buildAnnotatedString {
+                    append(year)
+                    withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 년  ") }
+
+                    append(month)
+                    withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 월  ") }
+
+                    append(day)
+                    withStyle(style = SpanStyle(fontSize = 18.sp)) { append(" 일") }
+                }
+
+                val daysOfWeek = listOf("일", "월", "화", "수", "목", "금", "토")
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = dateText,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
                     )
-                } else if (triggerMeal) {
-                    BansoogiAnimation(
-                        state = BansoogiState.EAT,
-                        loop = false,
-                        loopCouont = 1,
-                        onAnimationEnd = {
-                            triggerMeal = false
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        characterListState.value.forEachIndexed { index, character ->
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 2.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = daysOfWeek.get(index),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 16.sp
+                                )
+
+                                Spacer(modifier = Modifier.height(4.dp))
+
+                                if (character == null) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .clip(RoundedCornerShape(50))
+                                            .background(Color.LightGray)
+                                    )
+                                } else {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .clip(RoundedCornerShape(50))
+                                            .background(Color(0x50FFD966))
+                                    ) {
+                                        val imageLoader = remember {
+                                            ImageLoader.Builder(context)
+                                                .components {
+                                                    add(GifDecoder.Factory())
+                                                    add(ImageDecoderDecoder.Factory())
+                                                }
+                                                .build()
+                                        }
+
+                                        val resId = context.resources.getIdentifier(
+                                            character.imageUrl,
+                                            "drawable",
+                                            context.packageName
+                                        )
+
+                                        Image(
+                                            painter = rememberAsyncImagePainter(
+                                                ImageRequest.Builder(context)
+                                                    .data(resId)
+                                                    .build(),
+                                                imageLoader = imageLoader
+                                            ),
+                                            contentDescription = "반숙이",
+                                            modifier = Modifier
+                                                .scale(1.2f)
+                                                .fillMaxSize(),
+                                            contentScale = ContentScale.Fit
+                                        )
+                                    }
+                                }
+                            }
                         }
-                    )
-                } else {
-                    BansoogiAnimation(
-                        state = BansoogiStateHolder.state
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    val randomMessages = remember(todayRecordDto, healthData) {
+                        listOfNotNull(
+                            todayRecordDto.lyingTime?.let { "오늘은 ${it}분 동안 누워 있었네!" },
+                            todayRecordDto.sittingTime?.let { "오늘은 ${it}분 동안 앉아 있었네!" },
+                            todayRecordDto.phoneTime?.let { "오늘은 휴대폰을 ${it}분 봤네!" },
+                            healthData.step.toInt().let { "오늘은 ${it}보를 걸었어" },
+                            healthData.floorsClimbed.toInt().let { "오늘은 ${it}계단을 올랐구나!" },
+                            healthData.sleepData?.let { "오늘은 ${it}분 동안 잤구나!" },
+                            healthData.exerciseTime?.let { "오늘은 ${it}분 동안 운동했어!" }
+                        )
+                    }
+                    val selectedMessage = remember(randomMessages) {
+                        if (randomMessages.isNotEmpty()) randomMessages.random() else "아직 데이터가 없어"
+                    }
+
+                    Text(
+                        text = selectedMessage,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF2E616A)
                     )
                 }
             }
-        }
 
-        val buttonShape = RoundedCornerShape(30.dp)
-        val isCoolDown = remember { mutableStateOf(true) }
+            Spacer(modifier = Modifier.height(12.dp))
 
-        LaunchedEffect(todayRecordDto.interactionLatestTime) {
-            val remainingTime = InteractionUtil.getRemainingCooldownMillis(todayRecordDto.interactionLatestTime)
-            if (remainingTime > 0) {
-                isCoolDown.value = true
-                delay(remainingTime)
-            }
-            isCoolDown.value = false
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-//                .padding(horizontal = 64.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val btnModifier = Modifier
-                .padding(vertical = 10.dp)
-                .width(120.dp)
-                .height(100.dp)
-                .border(4.dp, Color.DarkGray, buttonShape)
-
-            Button(
-                onClick = {
-                    triggerInteraction = true
-
-                    todayRecordController.onInteract(todayRecordDto, isInSleepRange)
-                },
-                modifier = btnModifier,
-                shape = buttonShape,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color(0xFF2E616A)
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.85f)
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color.White)
+                    .border(
+                        width = 2.dp,
+                        color = Color.DarkGray,
+                        shape = RoundedCornerShape(16.dp)
+                    )
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .height(32.dp)
+                        .background(Color(0xFFEEEEEE))
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(todayRecordDto.energyPoint / 100f)
+                        .height(32.dp)
+                        .background(Color.Green)
+                )
+                Text(
+                    text = "${todayRecordDto.energyPoint} / 100",
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 12.sp
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 20.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    val context = LocalContext.current
+                    val imageLoader = remember {
+                        ImageLoader.Builder(context)
+                            .components {
+                                add(GifDecoder.Factory())
+                                add(ImageDecoderDecoder.Factory())
+                            }
+                            .build()
+                    }
+
                     Image(
-                        painter = painterResource(id = R.drawable.ic_home),
-                        contentDescription = "상호작용 아이콘",
-                        modifier = Modifier.size(60.dp)
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(context)
+                                .data(R.drawable.ic_today)
+                                .build(),
+                            imageLoader = imageLoader
+                        ),
+                        contentDescription = "버튼 이미지",
+                        modifier = Modifier
+                            .width(55.dp)
+                            .height(55.dp)
+                            .clickable {
+                                showModal = true
+                            },
+                        contentScale = ContentScale.Fit
                     )
 
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.schedule_vector),
-                        contentDescription = "스케줄 아이콘",
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .size(20.dp),
-                        tint = if (isCoolDown.value || isInSleepRange) Color.Gray else Color(0xFF4CAF50)
+                    Text(
+                        text = "Today",
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
                     )
+
+//                if (showFriendBanner) {
+//                    Spacer(modifier = Modifier.height(8.dp))
+//
+//                    FriendFoundNotification(
+//                        friendName = friendName,
+//                        isVisible = showFriendBanner,
+//                        onDismiss = onDismissFriendBanner,
+//                        modifier = Modifier
+//                    )
+//                }
                 }
             }
 
-            Spacer(modifier = Modifier.width(18.dp))
-
-            Button(
-                onClick = {
-                    triggerMeal = true
-
-                    pendingMealTypes.firstOrNull()?.let { type ->
-                        todayRecordController.checkMeal(todayRecordDto, type)
-                    }
-                },
-                enabled = mealEnabled,
-                modifier = btnModifier,
-                shape = buttonShape,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = if (mealEnabled) Color(0xFF2E616A) else Color.Gray
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
             ) {
                 Box(
-                    Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .sizeIn(
+                            maxWidth = 200.dp,
+                            maxHeight = 200.dp
+                        )
+                        .offset(y = (-40).dp)
+                        .aspectRatio(1f), // 1:1 비율
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_bread),
-                        contentDescription = "식사 아이콘",
-                        modifier = Modifier.size(120.dp),
-                        alpha = if (mealEnabled) 1f else 0.4f
-                    )
+                    if (triggerInteraction) {
+                        BansoogiAnimation(
+                            state = BansoogiState.SMILE,
+                            loop = false,
+                            loopCouont = 3,
+                            onAnimationEnd = {
+                                triggerInteraction = false
+                            }
+                        )
+                    } else if (triggerMeal) {
+                        BansoogiAnimation(
+                            state = BansoogiState.EAT,
+                            loop = false,
+                            loopCouont = 1,
+                            onAnimationEnd = {
+                                triggerMeal = false
+                            }
+                        )
+                    } else {
+                        BansoogiAnimation(
+                            state = BansoogiStateHolder.state
+                        )
+                    }
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(32.dp))
-    }
 
-    if (showModal) {
-        if (!isInSleepRange) {
-            DayTimeModal(
-                todayRecordDto = todayRecordDto,
-                onDismissRequest = {
-                    showModal = false
-                },
-                onNavigateToToday = {
-                    // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
-                    showModal = false
-                },
-                healthData = healthData,
-            )
+            val buttonShape = RoundedCornerShape(30.dp)
+            val isCoolDown = remember { mutableStateOf(true) }
+
+            LaunchedEffect(todayRecordDto.interactionLatestTime) {
+                val remainingTime =
+                    InteractionUtil.getRemainingCooldownMillis(todayRecordDto.interactionLatestTime)
+                if (remainingTime > 0) {
+                    isCoolDown.value = true
+                    delay(remainingTime)
+                }
+                isCoolDown.value = false
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+//                .padding(horizontal = 64.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val btnModifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .width(120.dp)
+                    .height(100.dp)
+                    .border(4.dp, Color.DarkGray, buttonShape)
+
+                Button(
+                    onClick = {
+                        triggerInteraction = true
+
+                        todayRecordController.onInteract(todayRecordDto, isInSleepRange)
+                    },
+                    modifier = btnModifier,
+                    shape = buttonShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = Color(0xFF2E616A)
+                    )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_home),
+                            contentDescription = "상호작용 아이콘",
+                            modifier = Modifier.size(60.dp)
+                        )
+
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.schedule_vector),
+                            contentDescription = "스케줄 아이콘",
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .size(20.dp),
+                            tint = if (isCoolDown.value || isInSleepRange) Color.Gray else Color(
+                                0xFF4CAF50
+                            )
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(18.dp))
+
+                Button(
+                    onClick = {
+                        triggerMeal = true
+
+                        pendingMealTypes.firstOrNull()?.let { type ->
+                            todayRecordController.checkMeal(todayRecordDto, type)
+                        }
+                    },
+                    enabled = mealEnabled,
+                    modifier = btnModifier,
+                    shape = buttonShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = if (mealEnabled) Color(0xFF2E616A) else Color.Gray
+                    )
+                ) {
+                    Box(
+                        Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_bread),
+                            contentDescription = "식사 아이콘",
+                            modifier = Modifier.size(120.dp),
+                            alpha = if (mealEnabled) 1f else 0.4f
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(32.dp))
         }
-        else {
-            val formatDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            RecordedModal(
-                onDismissRequest = { showModal = false },
-                selectedDate = formatDate
-            )
+
+        if (showModal) {
+            if (!isInSleepRange) {
+                DayTimeModal(
+                    todayRecordDto = todayRecordDto,
+                    onDismissRequest = {
+                        showModal = false
+                    },
+                    onNavigateToToday = {
+                        // TODO: 콜백 호출 -> (데이터) 필요한 작업 수행
+                        showModal = false
+                    },
+                    healthData = healthData,
+                )
+            } else {
+                val formatDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                RecordedModal(
+                    onDismissRequest = { showModal = false },
+                    selectedDate = formatDate
+                )
+            }
         }
     }
 }
