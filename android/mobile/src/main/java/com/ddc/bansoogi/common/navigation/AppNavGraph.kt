@@ -22,6 +22,8 @@ import com.ddc.bansoogi.main.ui.manage.EggManagerScreen
 import com.ddc.bansoogi.main.view.TodayRecordView
 import com.ddc.bansoogi.myInfo.ui.MyInfoScreen
 import com.ddc.bansoogi.myInfo.ui.MyInfoUpdateScreen
+import com.ddc.bansoogi.nearby.NearbyConnectionManager
+import com.ddc.bansoogi.nearby.data.BansoogiFriend
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -32,6 +34,12 @@ fun AppNavGraph(
     onModalOpen: () -> Unit,
     onModalClose: () -> Unit,
     isFirstUser: Boolean,
+    // ← NEW:
+    isSearching: Boolean,
+    toggleNearby: () -> Unit,
+    peers: List<BansoogiFriend>,
+    nearbyMgr: NearbyConnectionManager,
+    userNickname: String,
     showFriendBanner: Boolean = false,
     friendName: String = "",
     onDismissFriendBanner: () -> Unit = {}
@@ -64,7 +72,12 @@ fun AppNavGraph(
                 healthData,
                 onModalOpen = onModalOpen,
                 onModalClose = onModalClose,
-                navController = navController,
+                navController = navController,// ← PASS THE NEW ONES THROUGH:
+                isSearching          = isSearching,
+                toggleNearby         = toggleNearby,
+                peers                = peers,
+                nearbyMgr            = nearbyMgr,
+                userNickname         = userNickname,
                 showFriendBanner = showFriendBanner,
                 friendName = friendName,
                 onDismissFriendBanner = onDismissFriendBanner
