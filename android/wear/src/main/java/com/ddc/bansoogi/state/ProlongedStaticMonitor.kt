@@ -23,6 +23,11 @@ class ProlongedStaticMonitor(
     private var window       = SlidingWindowStaticTracker(40_000L)
     private val threshold    = 0.95
 
+    // 시연용
+    fun simulateWarn(type: Pending) {
+        warn(type)
+    }
+
     // ────────────────────────────────────────────────
     /** 항상 최신 notificationDuration(분) 반환 */
     private fun latestDurationMin(): Int =
@@ -58,11 +63,11 @@ class ProlongedStaticMonitor(
             else      -> Pending.NONE
         }
 
-        if (pending == Pending.NONE                       // 아직 경고 안 보냈고
-            && window.staticRatio() >= threshold          // 비율 충족
-        ) {
-            warn(newType)
-        }
+//        if (pending == Pending.NONE                       // 아직 경고 안 보냈고
+//            && window.staticRatio() >= threshold          // 비율 충족
+//        ) {
+//            warn(newType)
+//        }
     }
 
     /** 동적 전이·오프바디 등 → 상태 초기화 */

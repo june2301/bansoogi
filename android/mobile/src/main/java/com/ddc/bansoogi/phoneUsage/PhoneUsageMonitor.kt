@@ -6,6 +6,7 @@ import com.ddc.bansoogi.common.foreground.NotificationDurationStateHolder
 import com.ddc.bansoogi.common.notification.NotificationDispatcher
 import com.ddc.bansoogi.common.notification.NotificationFactory
 import com.ddc.bansoogi.common.wear.communication.receiver.RequestHandler
+import com.ddc.bansoogi.common.wear.communication.sender.SimulateStaticSender
 import com.ddc.bansoogi.main.ui.util.BansoogiState
 import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import kotlinx.coroutines.CoroutineScope
@@ -58,6 +59,14 @@ object PhoneUsageMonitor {
                                 NotificationDispatcher.Id.REWARD,
                                 NotificationFactory.cheer(context)
                             )
+
+                            SimulateStaticSender.simulateStatic(
+                                context = context,
+                                scope   = scope,
+                                type    = "LYING",
+                                delayMs = 8_000L,
+                            )
+
                         }
 
                         // 워치로 결과 전송

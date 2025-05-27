@@ -12,6 +12,8 @@ object CommunicationPaths {
         const val MY_INFO_DATA = "$PREFIX/data/my_info" // 데이터를 웨어로 전송
 
         const val BANSOOGI_ANIMATION = "$PREFIX/state/bansoogi_animation" // 반숙이 현재 상태 전송
+
+        const val SIMULATE = "$PREFIX/simulate"
     }
 
     // WearOS에서 Mobile로 전송하는 메세지 경로 -> 모바일에서는 리시브에서 사용되는 경로

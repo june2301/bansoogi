@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -109,10 +110,14 @@ fun HomeContent(
     userNickname: String,
     showFriendBanner: Boolean = false,
     friendName: String = "",
-    onDismissFriendBanner: () -> Unit = {}
+    onDismissFriendBanner: () -> Unit = {},
+    groupOffsetFraction: Float = 0.4f
 ) {
     // 1) HomeContent 최상단에 Box 추가
-    Box(modifier = Modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+
+        val parentHeight = this.maxHeight
+        val yOffset = parentHeight * groupOffsetFraction
 
         // 2) Box 안 최상단에 알림 호출
         if (showFriendBanner) {
@@ -496,16 +501,17 @@ fun HomeContent(
             Spacer(modifier = Modifier.height(32.dp))
         }
 
-
-        // 기존 FloatingActionButton 블록 전체를 지우고, 아래처럼 교체하세요.
         Box(
             modifier = Modifier
-                .align(Alignment.CenterEnd)    // 절대 위치
-                .padding(end = 16.dp, bottom = 24.dp)
-                .zIndex(5f),
+                .offset(y = yOffset)
+                .align(Alignment.TopEnd)
+                .wrapContentSize()
+                .zIndex(5f)
         ) {
-            // Today 버튼과 Nearby 토글만 유지하려면, 필요한 부분만 남기고요:
             Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(end = 12.dp, top = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.End
             ) {
@@ -554,7 +560,6 @@ fun HomeContent(
                         nearbyMgr = nearbyMgr,
                         userNickname = userNickname,
                         modifier = Modifier
-                            .padding(end = 0.dp, bottom = 24.dp)
                             .align(Alignment.End)
                     )
                 }

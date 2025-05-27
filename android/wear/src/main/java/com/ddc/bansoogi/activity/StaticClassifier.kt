@@ -21,7 +21,7 @@ class StaticClassifier(
     companion object {
         private const val TAG = "StaticClassifier"
         private const val WINDOW_SECONDS = 5
-        private const val ENTRY_DELAY_MS = 7_000L          // ⭐ 10 초 진입 지연
+        private const val ENTRY_DELAY_MS = 5_000L          // ⭐ 10 초 진입 지연
     }
 
     private val scope = externalScope ?: CoroutineScope(SupervisorJob() + Dispatchers.Default)
