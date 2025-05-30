@@ -165,7 +165,7 @@ fun FriendFoundNotification(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "$friendName 님에게 인사를 보냈어요!",
+                        text = "$friendName 님에게 인사를 보내보세요!",
                         color = Color.White.copy(alpha = 0.9f),
                         fontSize = 14.sp
                     )
