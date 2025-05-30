@@ -19,32 +19,32 @@ class StateHandler(
         BansoogiStateHolder.update(state)
     }
 
-    fun handleSimulateStatic(rawData: ByteArray) {
-        try {
-            val map = JsonMapper.fromJson<Map<String, String>>(String(rawData))
-            val type = map["type"] ?: return
-
-            val warnCode = when (type.uppercase()) {
-                "SITTING" -> "SITTING_LONG"
-                "LYING"   -> "LYING_LONG"
-                else      -> return
-            }
-            val durationMin = MyInfoStateHolder.myInfoDto?.notificationDuration ?: 0
-
-            Log.d("StateHandler", "simulateStatic → type=$warnCode, duration=$durationMin")
-
-            val pending =
-                if (type.uppercase() == "SITTING")
-                    com.ddc.bansoogi.state.ProlongedStaticMonitor.Pending.SITTING
-                else
-                    com.ddc.bansoogi.state.ProlongedStaticMonitor.Pending.LYING
-
-            com.ddc.bansoogi.state.ProlongedStaticMonitorHolder
-                .monitor
-                .simulateWarn(pending)
-
-        } catch (e: Exception) {
-            Log.e("StateHandler", "simulateStatic 실패", e)
-        }
-    }
+//    fun handleSimulateStatic(rawData: ByteArray) {
+//        try {
+//            val map = JsonMapper.fromJson<Map<String, String>>(String(rawData))
+//            val type = map["type"] ?: return
+//
+//            val warnCode = when (type.uppercase()) {
+//                "SITTING" -> "SITTING_LONG"
+//                "LYING"   -> "LYING_LONG"
+//                else      -> return
+//            }
+//            val durationMin = MyInfoStateHolder.myInfoDto?.notificationDuration ?: 0
+//
+//            Log.d("StateHandler", "simulateStatic → type=$warnCode, duration=$durationMin")
+//
+//            val pending =
+//                if (type.uppercase() == "SITTING")
+//                    com.ddc.bansoogi.state.ProlongedStaticMonitor.Pending.SITTING
+//                else
+//                    com.ddc.bansoogi.state.ProlongedStaticMonitor.Pending.LYING
+//
+//            com.ddc.bansoogi.state.ProlongedStaticMonitorHolder
+//                .monitor
+//                .simulateWarn(pending)
+//
+//        } catch (e: Exception) {
+//            Log.e("StateHandler", "simulateStatic 실패", e)
+//        }
+//    }
 }

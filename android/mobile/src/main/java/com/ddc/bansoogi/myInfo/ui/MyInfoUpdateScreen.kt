@@ -326,7 +326,7 @@ fun MyInfoUpdateScreen(navController: NavController) {
                     durationState = notificationDuration,
                     min   = 1,
                     max   = 180,
-                    step  = 2
+                    step  = 1
                 )
 
                 Spacer(Modifier.width(4.dp))

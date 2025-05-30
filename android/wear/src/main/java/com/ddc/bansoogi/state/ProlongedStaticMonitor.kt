@@ -20,13 +20,13 @@ class ProlongedStaticMonitor(
 
     /* ---- 슬라이딩 윈도우 ---- */
     private var windowLenMin = latestDurationMin().coerceAtLeast(1)
-    private var window       = SlidingWindowStaticTracker(40_000L)
+    private var window       = SlidingWindowStaticTracker(windowLenMin * 60_000L)
     private val threshold    = 0.95
 
-    // 시연용
-    fun simulateWarn(type: Pending) {
-        warn(type)
-    }
+//    // 시연용
+//    fun simulateWarn(type: Pending) {
+//        warn(type)
+//    }
 
     // ────────────────────────────────────────────────
     /** 항상 최신 notificationDuration(분) 반환 */
@@ -39,7 +39,7 @@ class ProlongedStaticMonitor(
         if (newLen != windowLenMin) {
             Log.d("ProlongedStaticMonitor", "🔄 windowLenMin 변경: $windowLenMin → $newLen")
             windowLenMin = newLen
-            window = SlidingWindowStaticTracker(40_000L)
+            window = SlidingWindowStaticTracker(windowLenMin * 60_000L)
         } else {
             Log.d("ProlongedStaticMonitor", "✅ windowLenMin 유지: $windowLenMin")
         }
@@ -63,11 +63,11 @@ class ProlongedStaticMonitor(
             else      -> Pending.NONE
         }
 
-//        if (pending == Pending.NONE                       // 아직 경고 안 보냈고
-//            && window.staticRatio() >= threshold          // 비율 충족
-//        ) {
-//            warn(newType)
-//        }
+        if (pending == Pending.NONE                       // 아직 경고 안 보냈고
+            && window.staticRatio() >= threshold          // 비율 충족
+        ) {
+            warn(newType)
+        }
     }
 
     /** 동적 전이·오프바디 등 → 상태 초기화 */

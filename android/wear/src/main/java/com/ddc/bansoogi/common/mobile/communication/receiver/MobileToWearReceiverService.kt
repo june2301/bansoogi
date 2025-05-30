@@ -35,7 +35,7 @@ class MobileToWearReceiverService : WearableListenerService() {
 
             CommunicationPaths.MobileToWear.BANSOOGI_ANIMATION -> stateHandler.handleBansoogiStateData(messageEvent.data)
 
-            CommunicationPaths.MobileToWear.SIMULATE -> stateHandler.handleSimulateStatic(messageEvent.data)
+//            CommunicationPaths.MobileToWear.SIMULATE -> stateHandler.handleSimulateStatic(messageEvent.data)
 
             else -> Log.w("WatchReceiver", "알 수 없는 경로: ${messageEvent.path}")
         }
