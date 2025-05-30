@@ -1,15 +1,25 @@
 package com.ddc.bansoogi.main.ui.manage
 
+import android.R.attr.maxWidth
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,10 +28,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,9 +56,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
@@ -48,6 +66,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -68,7 +87,10 @@ import com.ddc.bansoogi.main.ui.util.BansoogiState
 import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.main.ui.util.InteractionUtil
 import com.ddc.bansoogi.myInfo.controller.MyInfoController
+import com.ddc.bansoogi.nearby.NearbyConnectionManager
+import com.ddc.bansoogi.nearby.data.BansoogiFriend
 import com.ddc.bansoogi.nearby.ui.FriendFoundNotification
+import com.ddc.bansoogi.nearby.ui.NearbyFloatingButton
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -81,12 +103,21 @@ fun HomeContent(
     todayRecordController: TodayRecordController,
     isInSleepRange: Boolean,
     healthData: CustomHealthData,
+    isSearching: Boolean,
+    toggleNearby: () -> Unit,
+    peers: List<com.ddc.bansoogi.nearby.data.BansoogiFriend>,
+    nearbyMgr: NearbyConnectionManager,
+    userNickname: String,
     showFriendBanner: Boolean = false,
     friendName: String = "",
-    onDismissFriendBanner: () -> Unit = {}
+    onDismissFriendBanner: () -> Unit = {},
+    groupOffsetFraction: Float = 0.4f
 ) {
     // 1) HomeContent 최상단에 Box 추가
-    Box(modifier = Modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+
+        val parentHeight = this.maxHeight
+        val yOffset = parentHeight * groupOffsetFraction
 
         // 2) Box 안 최상단에 알림 호출
         if (showFriendBanner) {
@@ -333,62 +364,7 @@ fun HomeContent(
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 20.dp),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    val context = LocalContext.current
-                    val imageLoader = remember {
-                        ImageLoader.Builder(context)
-                            .components {
-                                add(GifDecoder.Factory())
-                                add(ImageDecoderDecoder.Factory())
-                            }
-                            .build()
-                    }
 
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            ImageRequest.Builder(context)
-                                .data(R.drawable.ic_today)
-                                .build(),
-                            imageLoader = imageLoader
-                        ),
-                        contentDescription = "버튼 이미지",
-                        modifier = Modifier
-                            .width(55.dp)
-                            .height(55.dp)
-                            .clickable {
-                                showModal = true
-                            },
-                        contentScale = ContentScale.Fit
-                    )
-
-                    Text(
-                        text = "Today",
-                        color = Color.Black,
-                        textAlign = TextAlign.Center,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-
-//                if (showFriendBanner) {
-//                    Spacer(modifier = Modifier.height(8.dp))
-//
-//                    FriendFoundNotification(
-//                        friendName = friendName,
-//                        isVisible = showFriendBanner,
-//                        onDismiss = onDismissFriendBanner,
-//                        modifier = Modifier
-//                    )
-//                }
-                }
-            }
 
             Box(
                 modifier = Modifier
@@ -398,36 +374,32 @@ fun HomeContent(
             ) {
                 Box(
                     modifier = Modifier
-                        .sizeIn(
-                            maxWidth = 200.dp,
-                            maxHeight = 200.dp
-                        )
-                        .offset(y = (-40).dp)
-                        .aspectRatio(1f), // 1:1 비율
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth(0.5f)
+                        .aspectRatio(1f),
+                        contentAlignment = Alignment.Center
                 ) {
-                    if (triggerInteraction) {
-                        BansoogiAnimation(
-                            state = BansoogiState.SMILE,
-                            loop = false,
-                            loopCouont = 3,
-                            onAnimationEnd = {
-                                triggerInteraction = false
-                            }
-                        )
-                    } else if (triggerMeal) {
-                        BansoogiAnimation(
-                            state = BansoogiState.EAT,
-                            loop = false,
-                            loopCouont = 1,
-                            onAnimationEnd = {
-                                triggerMeal = false
-                            }
-                        )
-                    } else {
-                        BansoogiAnimation(
-                            state = BansoogiStateHolder.state
-                        )
+                    when {
+                        triggerInteraction -> {
+                            BansoogiAnimation(
+                                state = BansoogiState.SMILE,
+                                loop = false,
+                                loopCouont = 3,
+                                onAnimationEnd = { triggerInteraction = false }
+                            )
+                        }
+                        triggerMeal -> {
+                            BansoogiAnimation(
+                                state = BansoogiState.EAT,
+                                loop = false,
+                                loopCouont = 1,
+                                onAnimationEnd = { triggerMeal = false }
+                            )
+                        }
+                        else -> {
+                            BansoogiAnimation(
+                                state = BansoogiStateHolder.state
+                            )
+                        }
                     }
                 }
             }
@@ -529,6 +501,71 @@ fun HomeContent(
             Spacer(modifier = Modifier.height(32.dp))
         }
 
+        Box(
+            modifier = Modifier
+                .offset(y = yOffset)
+                .align(Alignment.TopEnd)
+                .wrapContentSize()
+                .zIndex(5f)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(end = 12.dp, top = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                // ───────── Today 버튼 ─────────
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val context = LocalContext.current
+                    val imageLoader = remember {
+                        ImageLoader.Builder(context)
+                            .components {
+                                add(GifDecoder.Factory())
+                                add(ImageDecoderDecoder.Factory())
+                            }
+                            .build()
+                    }
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(context).data(R.drawable.ic_today).build(),
+                            imageLoader = imageLoader
+                        ),
+                        contentDescription = "Today",
+                        modifier = Modifier
+                            .size(55.dp)
+                            .clickable { showModal = true },
+                        contentScale = ContentScale.Fit
+                    )
+                    Text(
+                        text = "Today",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
+
+                // ───────── Nearby 토글 ─────────
+                NearbyFloatingButton(
+                    isSearching = isSearching,
+                    onClick = { toggleNearby() }
+                )
+
+                // Floating 버튼 대신
+                if (peers.isNotEmpty()) {
+                    VerticalFriendList(
+                        peers = peers,
+                        nearbyMgr = nearbyMgr,
+                        userNickname = userNickname,
+                        modifier = Modifier
+                            .align(Alignment.End)
+                    )
+                }
+            }
+        }
+
         if (showModal) {
             if (!isInSleepRange) {
                 DayTimeModal(
@@ -547,6 +584,114 @@ fun HomeContent(
                 RecordedModal(
                     onDismissRequest = { showModal = false },
                     selectedDate = formatDate
+                )
+            }
+        }
+    }
+}
+
+//@OptIn(ExperimentalLayoutApi::class)
+//@Composable
+//private fun FriendList(
+//    peers: List<BansoogiFriend>,
+//    nearbyMgr: NearbyConnectionManager,
+//    userNickname: String,
+//    modifier: Modifier = Modifier
+//) {
+//    FlowRow(
+//        horizontalArrangement = Arrangement.spacedBy(8.dp),
+//        verticalArrangement   = Arrangement.spacedBy(4.dp),
+//        modifier = modifier
+//    ) {
+//        peers.take(5).forEach { p ->
+//            Card(
+//                modifier = Modifier
+//                    .wrapContentWidth()
+//                    .clickable { nearbyMgr.sendStaticWarnTo(p.endpointId, "SITTING_LONG", userNickname) }
+//            ) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+//                ) {
+//                    Text(
+//                        text = "🥚 ${p.nickname}",
+//                        fontWeight = FontWeight.Bold,
+//                        fontSize = 14.sp
+//                    )
+//                    p.distanceRssi?.let {
+//                        Spacer(Modifier.width(4.dp))
+//                        Text(
+//                            text = "(${it}dBm)",
+//                            style = MaterialTheme.typography.bodySmall
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//        if (peers.size > 5) {
+//            Card(modifier = Modifier.wrapContentWidth()) {
+//                Text(
+//                    text = "... 외 ${peers.size - 5}명",
+//                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+//                    style = MaterialTheme.typography.bodySmall
+//                )
+//            }
+//        }
+//    }
+//}
+
+// HomeContent 안의 호출부는 그대로 두시고, Composable만 교체합니다.
+
+@Composable
+private fun VerticalFriendList(
+    peers: List<BansoogiFriend>,
+    nearbyMgr: NearbyConnectionManager,
+    userNickname: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier
+    ) {
+        // 최대 5명까지만
+        peers.take(5).forEach { p ->
+            Card(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .clickable {
+                        nearbyMgr.sendStaticWarnTo(
+                            p.endpointId,
+                            "SITTING_LONG",
+                            userNickname
+                        )
+                    }
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "🥚 ${p.nickname}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
+                    p.distanceRssi?.let {
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            text = "(${it}dBm)",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+            }
+        }
+        // 나머지 개수 표시
+        if (peers.size > 5) {
+            Card(modifier = Modifier.wrapContentWidth()) {
+                Text(
+                    text = "... 외 ${peers.size - 5}명",
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }

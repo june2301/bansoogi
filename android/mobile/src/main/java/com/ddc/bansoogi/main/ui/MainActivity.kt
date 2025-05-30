@@ -16,7 +16,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
@@ -51,13 +50,8 @@ import com.ddc.bansoogi.myInfo.data.local.MyInfoDataSource
 import com.ddc.bansoogi.nearby.NearbyConnectionManager
 import com.ddc.bansoogi.nearby.NearbyPermissionManager
 import com.ddc.bansoogi.nearby.data.BansoogiFriend
-import com.ddc.bansoogi.nearby.ui.FriendFoundNotification
-import com.ddc.bansoogi.nearby.ui.NearbyFloatingButton
-import com.ddc.bansoogi.person.data.local.PersonDataSource
-import com.ddc.bansoogi.person.data.model.PersonModel
 import com.samsung.android.sdk.health.data.HealthDataService
 import com.samsung.android.sdk.health.data.HealthDataStore
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -391,24 +385,16 @@ private fun MainScreen(
                 onModalOpen   = onModalOpen,
                 onModalClose  = onModalClose,
                 isFirstUser   = isFirstUser,
+                // ← pass the five Nearby params:
+                isSearching          = isSearching,
+                toggleNearby         = toggleNearby,
+                peers                = peers,
+                nearbyMgr            = nearbyMgr,
+                userNickname         = userNickname,
                 showFriendBanner = showFriendBanner,
                 friendName = friendName,
                 onDismissFriendBanner = dismissBanner
             )
-
-//            /* 친구 배너 + 리스트 (Home 화면) */
-//            if (currentRoute == NavRoutes.HOME) {
-//                NearbyStatusBanner(isSearching = isSearching, peers = peers,
-//                    modifier = Modifier.align(Alignment.TopCenter))
-//
-//                if (peers.isNotEmpty()) {
-//                    FriendList(
-//                        peers, nearbyMgr, userNickname, Modifier
-//                            .align(Alignment.BottomStart)
-//                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 88.dp) // ← 추가됨
-//                    )
-//                }
-//            }
         }
         /* ---------------- 홈 전용 UI ---------------- */
         if (currentRoute == NavRoutes.HOME) {
@@ -426,35 +412,13 @@ private fun MainScreen(
                     enter = slideInHorizontally { full -> -full } + fadeIn(),
                     exit  = slideOutHorizontally { full -> -full } + fadeOut()
                 ) {
-                    FriendList(
-                        peers = peers,
-                        nearbyMgr = nearbyMgr,
-                        userNickname = userNickname,
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                    )
-                }
-
-                /* 버튼 Row */
-                Column(horizontalAlignment = Alignment.End) {
-                    NearbyFloatingButton(
-                        isSearching = isSearching,
-                        onClick = { toggleNearby() }
-                    )
-                    Spacer(Modifier.height(8.dp))
-
-                    /* 확장 토글 */
-                    FloatingActionButton(
-                        onClick = { isFriendExpanded = !isFriendExpanded },
-                        containerColor = Color(0xFFFFC107),
-                        contentColor = Color.Black,
-                        modifier = Modifier.size(48.dp)
-                    ) {
-                        Icon(
-                            imageVector = if (isFriendExpanded) Icons.Default.Close else Icons.Default.Menu,
-                            contentDescription = if (isFriendExpanded) "닫기" else "친구 목록 열기"
-                        )
-                    }
+//                    FriendList(
+//                        peers = peers,
+//                        nearbyMgr = nearbyMgr,
+//                        userNickname = userNickname,
+//                        modifier = Modifier
+//                            .padding(bottom = 8.dp)
+//                    )
                 }
             }
         }
@@ -469,62 +433,55 @@ private fun MainScreen(
     }
 }
 
-/* =================================================================== */
-/*                  Home 관련 보조 로직 (FriendList 등)                */
-/* =================================================================== */
-//private fun RealmInstant.toLocalDate(): LocalDate =
-//    Instant.ofEpochSecond(epochSeconds, nanosecondsOfSecond.toLong())
-//        .atZone(ZoneId.systemDefault()).toLocalDate()
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun FriendList(
-    peers: List<BansoogiFriend>,
-    nearbyMgr: NearbyConnectionManager,
-    userNickname: String,
-    modifier: Modifier = Modifier
-) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement   = Arrangement.spacedBy(4.dp),
-        modifier = modifier
-    ) {
-        peers.take(5).forEach { p ->
-            Card(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .clickable { nearbyMgr.sendStaticWarnTo(p.endpointId, "SITTING_LONG", userNickname) }
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = "🥚 ${p.nickname}",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                    p.distanceRssi?.let {
-                        Spacer(Modifier.width(4.dp))
-                        Text(
-                            text = "(${it}dBm)",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-            }
-        }
-        if (peers.size > 5) {
-            Card(modifier = Modifier.wrapContentWidth()) {
-                Text(
-                    text = "... 외 ${peers.size - 5}명",
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
-    }
-}
+//@OptIn(ExperimentalLayoutApi::class)
+//@Composable
+//private fun FriendList(
+//    peers: List<BansoogiFriend>,
+//    nearbyMgr: NearbyConnectionManager,
+//    userNickname: String,
+//    modifier: Modifier = Modifier
+//) {
+//    FlowRow(
+//        horizontalArrangement = Arrangement.spacedBy(8.dp),
+//        verticalArrangement   = Arrangement.spacedBy(4.dp),
+//        modifier = modifier
+//    ) {
+//        peers.take(5).forEach { p ->
+//            Card(
+//                modifier = Modifier
+//                    .wrapContentWidth()
+//                    .clickable { nearbyMgr.sendStaticWarnTo(p.endpointId, "SITTING_LONG", userNickname) }
+//            ) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+//                ) {
+//                    Text(
+//                        text = "🥚 ${p.nickname}",
+//                        fontWeight = FontWeight.Bold,
+//                        fontSize = 14.sp
+//                    )
+//                    p.distanceRssi?.let {
+//                        Spacer(Modifier.width(4.dp))
+//                        Text(
+//                            text = "(${it}dBm)",
+//                            style = MaterialTheme.typography.bodySmall
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//        if (peers.size > 5) {
+//            Card(modifier = Modifier.wrapContentWidth()) {
+//                Text(
+//                    text = "... 외 ${peers.size - 5}명",
+//                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+//                    style = MaterialTheme.typography.bodySmall
+//                )
+//            }
+//        }
+//    }
+//}
 
 
 /* 권한 다이얼로그 (재사용) */
@@ -538,46 +495,3 @@ fun PermissionDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
         dismissButton = { TextButton(onDismiss) { Text("취소") } }
     )
 }
-
-//@Composable
-//private fun NearbyStatusBanner(
-//    isSearching: Boolean,
-//    peers: List<BansoogiFriend>,
-//    modifier: Modifier = Modifier
-//) {
-//    AnimatedVisibility(
-//        visible = isSearching || peers.isNotEmpty(),
-//        enter = fadeIn(tween(300)),
-//        exit  = fadeOut(tween(300)),
-//        modifier = modifier
-//            .fillMaxWidth()
-//            .padding(top = 28.dp)
-//    ) {
-//        Surface(
-//            color = if (isSearching) Color(0xFF4CAF50) else Color(0xFF9E9E9E),
-//            tonalElevation = 4.dp,
-//            shadowElevation = 2.dp,
-//            shape = MaterialTheme.shapes.medium
-//        ) {
-//            Row(
-//                Modifier
-//                    .fillMaxWidth()
-//                    .padding(horizontal = 16.dp, vertical = 8.dp),
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Text(
-//                    text = if (isSearching) "탐색 중…" else "탐색 중지됨",
-//                    color = Color.White,
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    fontWeight = FontWeight.Bold
-//                )
-//                Spacer(Modifier.width(12.dp))
-//                Text(
-//                    text = "친구 ${peers.size}명",
-//                    color = Color.White,
-//                    style = MaterialTheme.typography.bodySmall
-//                )
-//            }
-//        }
-//    }
-//}

@@ -165,7 +165,7 @@ fun FriendFoundNotification(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "$friendName 님에게 인사를 보냈어요!",
+                        text = "$friendName 님에게 인사를 보내보세요!",
                         color = Color.White.copy(alpha = 0.9f),
                         fontSize = 14.sp
                     )
@@ -191,45 +191,6 @@ fun FriendFoundNotification(
         if (isVisible) {
             delay(3000)
             onDismiss()
-        }
-    }
-}
-
-@Composable
-fun BluetoothTriggerButton(
-    isScanning: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    FloatingActionButton(
-        onClick = onClick,
-        modifier = modifier,
-        containerColor = if (isScanning) Color(0xFFFF9800) else Color(0xFF2196F3),
-        contentColor = Color.White
-    ) {
-        if (isScanning) {
-            // 스캔 중일 때 회전하는 아이콘
-            val infiniteTransition = rememberInfiniteTransition(label = "scan")
-            val rotation by infiniteTransition.animateFloat(
-                initialValue = 0f,
-                targetValue = 360f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(2000, easing = LinearEasing),
-                    repeatMode = RepeatMode.Restart
-                ),
-                label = "rotation"
-            )
-
-            Icon(
-                Icons.Default.BluetoothSearching,
-                contentDescription = "스캔 중",
-                modifier = Modifier.graphicsLayer(rotationZ = rotation)
-            )
-        } else {
-            Icon(
-                Icons.Default.WavingHand,
-                contentDescription = "친구 찾기"
-            )
         }
     }
 }

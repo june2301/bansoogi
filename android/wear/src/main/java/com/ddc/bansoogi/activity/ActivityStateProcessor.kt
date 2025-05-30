@@ -6,6 +6,7 @@ import com.ddc.bansoogi.main.ui.util.BansoogiState
 import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.sensor.AndroidSensorManager
 import com.ddc.bansoogi.state.ProlongedStaticMonitor
+import com.ddc.bansoogi.state.ProlongedStaticMonitorHolder
 import com.ddc.bansoogi.state.StaticBreakRewardMonitor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -89,6 +90,8 @@ class ActivityStateProcessor(
         startStaticTicker()
 
         prolongedMonitor.rewardCallback = { rewardMonitor.onWarnIssued(it) }
+
+        ProlongedStaticMonitorHolder.monitor = prolongedMonitor
     }
 
     fun stop() {
