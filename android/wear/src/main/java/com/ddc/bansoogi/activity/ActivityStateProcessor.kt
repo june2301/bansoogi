@@ -75,6 +75,7 @@ class ActivityStateProcessor(
     private var latestStatic: StaticType? = null
     private var latestDynamic: DynamicType? = null
     private var isPhoneUsing = false
+    private var staticTickerJob: Job? = null
 
     /* ───── Lifecycle */
     fun start() {
@@ -96,6 +97,7 @@ class ActivityStateProcessor(
 
     fun stop() {
         sensorManager.stopAll()
+        staticTickerJob?.cancel()
         staticCls.stop(); dynamicCls.stop(); idleActiveDetector.stop(); sleepDetector.stop()
         scope.cancel()
     }
@@ -112,7 +114,8 @@ class ActivityStateProcessor(
 
     /* ─── 5분 주기 누계 & 창 업데이트 ─── */
     private fun startStaticTicker() {
-        scope.launch {
+        staticTickerJob?.cancel()
+        staticTickerJob = scope.launch {
             while (scope.isActive) {
                 // 1) 누계 타이머
                 rewardMonitor.onStaticFrame(latestStatic)
@@ -138,13 +141,20 @@ class ActivityStateProcessor(
             if (!offBody) {
                 Log.i(TAG, "🔌 Off‑Body → stop sensors")
                 sensorManager.stopAll()
+                stopStaticTicker()
                 prolongedMonitor.onNonStaticWindowReset() // ✔ pending 유지
             } else {
                 Log.i(TAG, "⚡ On‑Body → restart sensors")
                 sensorManager.startAll()
+                startStaticTicker()
             }
             recompute()
         }.launchIn(scope)
+
+    private fun stopStaticTicker() {
+        staticTickerJob?.cancel()
+        staticTickerJob = null
+    }
 
     private fun collectIdleActive() = idleActiveDetector.state
         .onEach { s ->
