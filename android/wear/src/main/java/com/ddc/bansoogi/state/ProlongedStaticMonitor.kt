@@ -20,7 +20,7 @@ class ProlongedStaticMonitor(
 
     /* ---- 슬라이딩 윈도우 ---- */
     private var windowLenMin = latestDurationMin().coerceAtLeast(1)
-    private var window       = SlidingWindowStaticTracker(windowLenMin * 60_000L)
+    private var window       = SlidingWindowStaticTracker(windowLenMin * 1_000L)
     private val threshold    = 0.95
 
 //    // 시연용
@@ -39,7 +39,7 @@ class ProlongedStaticMonitor(
         if (newLen != windowLenMin) {
             Log.d("ProlongedStaticMonitor", "🔄 windowLenMin 변경: $windowLenMin → $newLen")
             windowLenMin = newLen
-            window = SlidingWindowStaticTracker(windowLenMin * 60_000L)
+            window = SlidingWindowStaticTracker(windowLenMin * 1_000L)
         } else {
             Log.d("ProlongedStaticMonitor", "✅ windowLenMin 유지: $windowLenMin")
         }
@@ -63,6 +63,8 @@ class ProlongedStaticMonitor(
             else      -> Pending.NONE
         }
 
+        Log.d("check : ", "$newType")
+        Log.d("checkPending : ", "$pending")
         if (pending == Pending.NONE                       // 아직 경고 안 보냈고
             && window.staticRatio() >= threshold          // 비율 충족
         ) {

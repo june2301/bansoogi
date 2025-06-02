@@ -91,7 +91,7 @@ object PhoneUsageAnalyzer {
         val start = UsageStateHolder.usageStartTime ?: return false
         val now = System.currentTimeMillis()
 
-        return now - start >= min * 60 * 1000
+        return now - start >= min * 1000
 //        return now - start >= 5 * 1000 // 시연용 기준 시간 단축
     }
 

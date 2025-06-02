@@ -9,7 +9,7 @@ object NotificationFactory {
     fun phoneUsage(context: Context, minutes: Int): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_PHONE_USAGE)
             .setContentTitle("핸드폰 그만해!")
-            .setContentText("$minutes 분이나 핸드폰?")
+            .setContentText("$minutes 초나 핸드폰?")
             .setContentIntent(
                 buildDeepLinkPendingIntent(
                     context,
@@ -21,7 +21,7 @@ object NotificationFactory {
     fun sitting(context: Context, minutes: Int): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_SITTING)
             .setContentTitle("좀 쉬었다 해!")
-            .setContentText("$minutes 분 동안 앉아 있었어!")
+            .setContentText("$minutes 초 동안 앉아 있었어!")
             .setContentIntent(
                 buildDeepLinkPendingIntent(
                     context,
@@ -33,7 +33,7 @@ object NotificationFactory {
     fun lying(context: Context, minutes: Int): NotificationCompat.Builder =
         baseBuilder(context, NotificationHelper.CHANNEL_LYING)
             .setContentTitle("일어나! 이 게으름뱅이야!")
-            .setContentText("$minutes 분 동안 누워 있었어!")
+            .setContentText("$minutes 초 동안 누워 있었어!")
             .setContentIntent(
                 buildDeepLinkPendingIntent(
                     context,

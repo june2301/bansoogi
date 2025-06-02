@@ -324,13 +324,13 @@ fun MyInfoUpdateScreen(navController: NavController) {
 
                 DurationPicker(
                     durationState = notificationDuration,
-                    min   = 1,
+                    min   = 5,
                     max   = 180,
-                    step  = 1
+                    step  = 5
                 )
 
                 Spacer(Modifier.width(4.dp))
-                Text("분", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF888888))
+                Text("초", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF888888))
             }
 
             Spacer(Modifier.height(32.dp))

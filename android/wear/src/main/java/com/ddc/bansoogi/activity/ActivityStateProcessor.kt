@@ -123,7 +123,7 @@ class ActivityStateProcessor(
                     isLying   = latestStatic == StaticType.LYING
                 )
 
-                delay(10_000L)
+                delay(1_000L)
             }
         }
     }

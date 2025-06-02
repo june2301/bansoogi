@@ -210,7 +210,7 @@ fun MyInfoContent(
                 )
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text = " 분",
+                    text = " 초",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF888888)
