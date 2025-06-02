@@ -258,14 +258,28 @@ class CollectionDataSource {
                 })
 
                 copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 6
+                    acquisitionCount = 2
+                    createdAt = toRealmInstant("2025-05-24 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-31 00:00:00")
+                })
+
+                copyToRealm(UnlockedCharacter().apply {
                     bansoogiId = 7
-                    acquisitionCount = 3
+                    acquisitionCount = 4
                     createdAt = toRealmInstant("2025-05-09 00:00:00")
-                    updatedAt = toRealmInstant("2025-05-25 00:00:00")
+                    updatedAt = toRealmInstant("2025-06-02 00:00:00")
                 })
 
                 copyToRealm(UnlockedCharacter().apply {
                     bansoogiId = 8
+                    acquisitionCount = 1
+                    createdAt = toRealmInstant("2025-05-10 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-10 00:00:00")
+                })
+
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 9
                     acquisitionCount = 1
                     createdAt = toRealmInstant("2025-05-10 00:00:00")
                     updatedAt = toRealmInstant("2025-05-10 00:00:00")
@@ -288,7 +302,7 @@ class CollectionDataSource {
 
                 copyToRealm(UnlockedCharacter().apply {
                     bansoogiId = 12
-                    acquisitionCount = 2
+                    acquisitionCount = 3
                     createdAt = toRealmInstant("2025-05-12 00:00:00")
                     updatedAt = toRealmInstant("2025-05-14 00:00:00")
                 })
@@ -302,6 +316,13 @@ class CollectionDataSource {
 
                 copyToRealm(UnlockedCharacter().apply {
                     bansoogiId = 15
+                    acquisitionCount = 2
+                    createdAt = toRealmInstant("2025-05-15 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-20 00:00:00")
+                })
+
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 16
                     acquisitionCount = 2
                     createdAt = toRealmInstant("2025-05-15 00:00:00")
                     updatedAt = toRealmInstant("2025-05-20 00:00:00")
@@ -323,6 +344,13 @@ class CollectionDataSource {
 
                 copyToRealm(UnlockedCharacter().apply {
                     bansoogiId = 33
+                    acquisitionCount = 2
+                    createdAt = toRealmInstant("2025-05-06 00:00:00")
+                    updatedAt = toRealmInstant("2025-05-26 00:00:00")
+                })
+
+                copyToRealm(UnlockedCharacter().apply {
+                    bansoogiId = 34
                     acquisitionCount = 2
                     createdAt = toRealmInstant("2025-05-06 00:00:00")
                     updatedAt = toRealmInstant("2025-05-26 00:00:00")
