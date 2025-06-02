@@ -105,7 +105,7 @@ object PhoneUsageAnalyzer {
             val now = System.currentTimeMillis()
             val ms = now - start
 
-            return (ms / 1_000).toInt()
+            return (ms / 60_000).toInt()
         }
     }
 

@@ -9,6 +9,7 @@ import com.ddc.bansoogi.common.wear.communication.receiver.RequestHandler
 //import com.ddc.bansoogi.common.wear.communication.sender.SimulateStaticSender
 import com.ddc.bansoogi.main.ui.util.BansoogiState
 import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
+import com.ddc.bansoogi.myInfo.data.model.MyInfoModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -41,11 +42,13 @@ object PhoneUsageMonitor {
                         // 핸드폰 사용 시간 증가
                         TodayRecordModel().updatePhoneTime(time)
 
+                        val myInfoDto = MyInfoModel().getMyInfoSync()
+                        val notificationDuration = myInfoDto?.notificationDuration ?: 0
                         // 알림 발생
                         NotificationDispatcher.show(
                             context,
                             NotificationDispatcher.Id.PHONE,
-                            NotificationFactory.phoneUsage(context, time)
+                            NotificationFactory.phoneUsage(context, notificationDuration)
                         )
 
                         // 핸드폰 off 모니터링 시작
