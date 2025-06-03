@@ -215,7 +215,7 @@ class CollectionDataSource {
             characterList.forEach { copyToRealm(it) }
         }
 
-        dummyData()
+//        dummyData()
     }
 
     suspend fun saveUnlockedCharacter(character: Character) {

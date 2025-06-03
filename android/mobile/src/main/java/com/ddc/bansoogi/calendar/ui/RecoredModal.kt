@@ -189,19 +189,36 @@ fun RecordContent(
                         ) {
                             Text(
                                 text = buildAnnotatedString {
-                                    append("에너지 : ")
-                                    // 점수만 다른 색상으로 표기
                                     withStyle(
                                         style = SpanStyle(
-                                            color = Color(0xFF2E616A),  // 색상 변경
+                                            fontSize = 18.sp,
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    ) {
+                                        append("에너지 : ")
+                                    }
+
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontSize = 20.sp,
+                                            color = Color(0xFF2E616A),
+                                            fontWeight = FontWeight.Bold
                                         )
                                     ) {
                                         append("${report.finalEnergyPoint}")
                                     }
-                                    append(" / 100")
-                                },
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
+
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontSize = 16.sp,
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    ) {
+                                        append("/100")
+                                    }
+                                }
                             )
 
                             VerticalSpacer(height = 20.dp)

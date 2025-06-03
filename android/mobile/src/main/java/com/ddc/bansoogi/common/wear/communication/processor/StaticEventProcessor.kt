@@ -29,10 +29,10 @@ object StaticEventProcessor {
             val rec    = model.getTodayRecordSync() ?: return@launch
 
             /* DB 반영 */
-            when (dto.type) {
-                "SITTING_LONG" -> model.dataSource.updateSittingTime(rec.recordId, dto.duration)
-                "LYING_LONG"   -> model.dataSource.updateLyingTime(rec.recordId, dto.duration)
-            }
+//            when (dto.type) {
+//                "SITTING_LONG" -> model.dataSource.updateSittingTime(rec.recordId, dto.duration)
+//                "LYING_LONG"   -> model.dataSource.updateLyingTime(rec.recordId, dto.duration)
+//            }
 
             /* 로그 */
             val from  = if (dto.type == "SITTING_LONG") "SITTING" else "LYING"

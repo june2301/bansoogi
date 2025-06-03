@@ -36,55 +36,55 @@ class RecordedReportDataSource {
 
     // 더미데이터
     suspend fun initialize() {
-        val hasRecordedReport = realm.query<RecordedReport>().find().isNotEmpty()
-
-        if (!hasRecordedReport) {
-            realm.write {
-                for (day in 2..16) {
-                    copyToRealm(RecordedReport().apply {
-                        finalEnergyPoint = 90
-                        bansoogiId = day
-                        standupCount = 3
-                        stretchCount = 2
-                        phoneOffCount = 1
-                        lyingTime = 180
-                        sittingTime = 600
-                        phoneTime = 200
-                        walkCount = 5000
-                        stairsClimbed = 300
-                        sleepTime = 5
-                        exerciseTime = 30
-                        breakfast = true
-                        lunch = true
-                        dinner = true
-                        reportedDate = "2025-04-%02d".format(day)
-                    })
-                }
-
-                for (day in 1..4) {
-                    copyToRealm(RecordedReport().apply {
-                        finalEnergyPoint = 90
-                        bansoogiId = day + 30
-                        standupCount = 3
-                        stretchCount = 2
-                        phoneOffCount = 1
-                        lyingTime = 180
-                        sittingTime = 600
-                        phoneTime = 200
-                        walkCount = 5000
-                        stairsClimbed = 300
-                        sleepTime = 5
-                        exerciseTime = 30
-                        breakfast = true
-                        lunch = true
-                        dinner = true
-                        reportedDate = "2025-04-%02d".format(day + 20)
-                    })
-                }
-            }
-
-            dummyData()
-        }
+//        val hasRecordedReport = realm.query<RecordedReport>().find().isNotEmpty()
+//
+//        if (!hasRecordedReport) {
+//            realm.write {
+//                for (day in 2..16) {
+//                    copyToRealm(RecordedReport().apply {
+//                        finalEnergyPoint = 90
+//                        bansoogiId = day
+//                        standupCount = 3
+//                        stretchCount = 2
+//                        phoneOffCount = 1
+//                        lyingTime = 180
+//                        sittingTime = 600
+//                        phoneTime = 200
+//                        walkCount = 5000
+//                        stairsClimbed = 300
+//                        sleepTime = 5
+//                        exerciseTime = 30
+//                        breakfast = true
+//                        lunch = true
+//                        dinner = true
+//                        reportedDate = "2025-04-%02d".format(day)
+//                    })
+//                }
+//
+//                for (day in 1..4) {
+//                    copyToRealm(RecordedReport().apply {
+//                        finalEnergyPoint = 90
+//                        bansoogiId = day + 30
+//                        standupCount = 3
+//                        stretchCount = 2
+//                        phoneOffCount = 1
+//                        lyingTime = 180
+//                        sittingTime = 600
+//                        phoneTime = 200
+//                        walkCount = 5000
+//                        stairsClimbed = 300
+//                        sleepTime = 5
+//                        exerciseTime = 30
+//                        breakfast = true
+//                        lunch = true
+//                        dinner = true
+//                        reportedDate = "2025-04-%02d".format(day + 20)
+//                    })
+//                }
+//            }
+//
+//            dummyData()
+//        }
     }
 
     suspend fun dummyData() {

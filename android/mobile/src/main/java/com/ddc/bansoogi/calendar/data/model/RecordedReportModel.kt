@@ -21,10 +21,10 @@ class RecordedReportModel {
     private val logModel = ActivityLogModel()
     private val collectionModel = CollectionModel()
 
-    // 더미데이터용 추후 삭제 예정
+//    // 더미데이터용 추후 삭제 예정
     suspend fun initialize() {
-        dataSource.initialize()
-        logModel.initialize()
+//        dataSource.initialize()
+//        logModel.initialize()
     }
 
     fun getCurrentWeekDetailReports(): List<Character?> {
