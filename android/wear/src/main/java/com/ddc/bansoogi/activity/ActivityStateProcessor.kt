@@ -171,7 +171,7 @@ class ActivityStateProcessor(
         }.launchIn(scope)
 
     private fun collectStatic() = staticCls.state
-//        .map { _ -> StaticType.STANDING }
+        .map { _ -> StaticType.STANDING }
         .onEach { st ->
             latestStatic = st
             val isStatic = st == StaticType.SITTING || st == StaticType.LYING

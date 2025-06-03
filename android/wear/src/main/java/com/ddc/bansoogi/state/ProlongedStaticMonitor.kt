@@ -41,7 +41,7 @@ class ProlongedStaticMonitor(
             windowLenMin = newLen
             window = SlidingWindowStaticTracker(windowLenMin * 1_000L)
         } else {
-            Log.d("ProlongedStaticMonitor", "✅ windowLenMin 유지: $windowLenMin")
+//            Log.d("ProlongedStaticMonitor", "✅ windowLenMin 유지: $windowLenMin")
         }
     }
     // ────────────────────────────────────────────────
@@ -63,8 +63,8 @@ class ProlongedStaticMonitor(
             else      -> Pending.NONE
         }
 
-        Log.d("check : ", "$newType")
-        Log.d("checkPending : ", "$pending")
+//        Log.d("check : ", "$newType")
+//        Log.d("checkPending : ", "$pending")
         if (pending == Pending.NONE                       // 아직 경고 안 보냈고
             && window.staticRatio() >= threshold          // 비율 충족
         ) {

@@ -29,7 +29,7 @@ class SlidingWindowStaticTracker(
     fun update(isStatic: Boolean) {
         val now = System.currentTimeMillis()
         states.addLast(now to isStatic)
-        android.util.Log.d("SlidingWindow", "add: $isStatic at $now, total=${states.size}")
+//        android.util.Log.d("SlidingWindow", "add: $isStatic at $now, total=${states.size}")
         evictOld(now)
     }
 

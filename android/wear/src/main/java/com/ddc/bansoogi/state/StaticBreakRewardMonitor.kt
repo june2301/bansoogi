@@ -48,7 +48,7 @@ class StaticBreakRewardMonitor(
         }
 
         // ✨ 로그 추가
-        android.util.Log.d("StaticAccum", "lyingMs=${lyingMs}ms, sittingMs=${sittingMs}ms (Δ=${dt}ms)")
+//        android.util.Log.d("StaticAccum", "lyingMs=${lyingMs}ms, sittingMs=${sittingMs}ms (Δ=${dt}ms)")
 
         sendAccumIfNeeded()                    // ★ 1 분 넘었는지 검사
     }

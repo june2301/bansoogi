@@ -1,5 +1,6 @@
 package com.ddc.bansoogi.main.ui
 
+import android.view.WindowManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -49,6 +51,7 @@ import com.ddc.bansoogi.main.ui.util.BansoogiStateHolder
 import com.ddc.bansoogi.main.ui.util.getConfig
 import com.ddc.bansoogi.myinfo.data.dto.MyInfoDto
 import com.ddc.bansoogi.myinfo.state.MyInfoStateHolder
+import com.ddc.bansoogi.presentation.MainActivity
 import com.ddc.bansoogi.today.data.dto.ReportDto
 import com.ddc.bansoogi.today.data.store.getCachedReport
 import com.ddc.bansoogi.today.state.TodayRecordStateHolder
@@ -60,6 +63,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun MainScreen(navController: NavHostController) {
     val context = LocalContext.current
+
+    KeepScreenOnEffect()
 
     // 초기 로컬 데이터 로딩
     LaunchedEffect(Unit) {
@@ -362,6 +367,19 @@ fun EnergyBar(progressValue: Int) {
                 .fillMaxHeight()
                 .background(Color.Green)
         )
+    }
+}
+
+@Composable
+fun KeepScreenOnEffect() {
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val activity = context as? MainActivity
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        onDispose {
+            activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
     }
 }
 
